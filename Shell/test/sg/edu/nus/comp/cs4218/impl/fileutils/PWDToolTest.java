@@ -52,7 +52,5 @@ public class PWDToolTest {
 		//Test error-handling 2
 		pwdtool.getStringForDirectory(null);
 		assertNotEquals(pwdtool.getStatusCode(), 0);
-		
 	}
-
 }
