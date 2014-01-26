@@ -9,4 +9,5 @@ import sg.edu.nus.comp.cs4218.ITool;
  */
 public interface IPwdTool extends ITool {
 	String getStringForDirectory(File directory);
+	
 }
