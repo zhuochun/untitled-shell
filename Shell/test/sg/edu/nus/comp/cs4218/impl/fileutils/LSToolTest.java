@@ -9,11 +9,16 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.fileutils.ILsTool;
 
 public class LSToolTest {
+	
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 	
 	ILsTool lstool;
 
@@ -32,7 +37,7 @@ public class LSToolTest {
 		List<File> files = lstool.getFiles(null);
 
 		assertEquals(0, files.size());
-		assertEquals(1, lstool.getStatusCode());
+		assertNotEquals(0, lstool.getStatusCode());
 	}
 	
 	@Test
@@ -41,17 +46,25 @@ public class LSToolTest {
 		List<File> files = lstool.getFiles(notExistsDir);
 
 		assertEquals(0, files.size());
-		assertEquals(1, lstool.getStatusCode());
+		assertNotEquals(0, lstool.getStatusCode());
+	}
+	
+	@Test
+	public void testGetFilesFromEmptyDirectory() throws IOException {
+		List<File> files = lstool.getFiles(folder.getRoot());
+		
+		assertEquals(0, files.size());
+		assertEquals(0, lstool.getStatusCode());
 	}
 
 	@Test
 	public void testGetFilesFromDirectory() throws IOException {
-		File tempFile = File.createTempFile("exists", "tmp");
-		File existsDir = new File(tempFile.getParent());
+		folder.newFile("test1.txt");
+
+		List<File> files = lstool.getFiles(folder.getRoot());
 		
-		List<File> files = lstool.getFiles(existsDir);
-		
-		assertTrue(files.size() > 0);
+		assertEquals(1, files.size());
+		assertEquals("test1.txt", files.get(0).getName());
 		assertEquals(0, lstool.getStatusCode());
 	}
 	

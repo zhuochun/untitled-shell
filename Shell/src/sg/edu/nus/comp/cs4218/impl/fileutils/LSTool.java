@@ -6,22 +6,27 @@ import java.util.List;
 
 import sg.edu.nus.comp.cs4218.fileutils.ILsTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
+import sg.edu.nus.comp.cs4218.impl.ArgList;
 
 /*
- * Ls Command: ls [path]
+ * ls - list directory contents
+ * 
+ * ls [OPTION]... [FILE]...
+ * 
+ * List  information  about	 the FILEs (the current directory by default).
  */
 public class LSTool extends ATool implements ILsTool {
 	
 	private List<File> argDirectories = new ArrayList<File>();
+	private ArgList argList = new ArgList();
 
 	public LSTool(String[] arguments) {
 		super(arguments);
-
-		if (this.args != null) {
-			for (String arg : this.args) {
-				if (arg != null && !arg.startsWith("-") && !arg.isEmpty()) {
-					this.argDirectories.add(new File(arg));
-				}
+		argList.parseArgs(this.args);
+		
+		if (argList.hasParams()) {
+			for (String param : argList.getParams()) {
+				this.argDirectories.add(new File(param));
 			}
 		}
 	}
