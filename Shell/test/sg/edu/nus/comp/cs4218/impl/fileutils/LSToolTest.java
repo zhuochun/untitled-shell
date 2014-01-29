@@ -67,6 +67,23 @@ public class LSToolTest {
 		assertEquals("test1.txt", files.get(0).getName());
 		assertEquals(0, lstool.getStatusCode());
 	}
+
+	@Test
+	public void testGetFilesDirsFromDirectory() throws IOException {
+		List<String> fileNames = new ArrayList<String>();
+		fileNames.add("testFolder");
+		fileNames.add("test.txt");
+
+		folder.newFolder(fileNames.get(0));
+		folder.newFile(fileNames.get(1));
+
+		List<File> files = lstool.getFiles(folder.getRoot());
+		
+		assertEquals(2, files.size());
+		assertTrue(fileNames.contains(files.get(0).getName()));
+		assertTrue(fileNames.contains(files.get(0).getName()));
+		assertEquals(0, lstool.getStatusCode());
+	}
 	
 	@Test
 	public void testGetStringForNullFile() {

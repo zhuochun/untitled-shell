@@ -35,6 +35,7 @@ public class ArgListTest {
 	public void testParseNullArgs() {
 		args.parseArgs(null);
 
+		assertTrue(args.isEmpty());
 		assertFalse(args.hasParams());
 		assertFalse(args.hasOptions());
 		assertFalse(args.hasInvalidOptions());
@@ -44,6 +45,7 @@ public class ArgListTest {
 	public void testParseZeroArgs() {
 		args.parseArgs(new String[0]);
 
+		assertTrue(args.isEmpty());
 		assertFalse(args.hasParams());
 		assertFalse(args.hasOptions());
 		assertFalse(args.hasInvalidOptions());
@@ -56,6 +58,8 @@ public class ArgListTest {
 		args.registerAcceptableOption("test");
 		args.parseArgs(arguments);
 		
+		assertFalse(args.isEmpty());
+		assertEquals(3, args.getArguments().length);
 		assertTrue(args.hasParams());
 		assertEquals(2, args.getParams().length);
 		assertTrue(args.hasOptions());

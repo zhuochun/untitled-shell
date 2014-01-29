@@ -1,20 +1,24 @@
 package sg.edu.nus.comp.cs4218.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class ArgList {
 	
 	private Set<String> acceptableOptions;
-	private Set<String> options;
 	private Set<String> invalidOptions;
+	private Set<String> options;
 	private Set<String> params;
+	private List<String> arguments;
 
 	public ArgList() {
 		this.acceptableOptions = new TreeSet<String>();
-		this.options = new TreeSet<String>();
 		this.invalidOptions = new TreeSet<String>();
+		this.options = new TreeSet<String>();
 		this.params = new TreeSet<String>();
+		this.arguments = new ArrayList<String>();
 	}
 
 	public boolean registerAcceptableOption(String option) {
@@ -22,27 +26,36 @@ public class ArgList {
 	}
 	
 	public String[] getAcceptableOptions() {
-		return (String[]) this.acceptableOptions.toArray(new String[0]);
+		return this.acceptableOptions.toArray(new String[0]);
 	}
 	
+	public String[] getArguments() {
+		return this.arguments.toArray(new String[0]);
+	}
+	
+	
 	public String[] getInvalidOptions() {
-		return (String[]) this.invalidOptions.toArray(new String[0]);
+		return this.invalidOptions.toArray(new String[0]);
 	}
 	
 	public String[] getOptions() {
-		return (String[]) this.options.toArray(new String[0]);
+		return this.options.toArray(new String[0]);
 	}
 
-	public boolean hasOption(String option) {
-		return this.options.contains(option);
-	}
-	
 	public String[] getParams() {
 		return (String[]) this.params.toArray(new String[0]);
 	}
 	
 	public boolean isEmpty() {
-		return this.params.isEmpty() && this.options.isEmpty();
+		return this.arguments.isEmpty();
+	}
+	
+	public boolean hasArgument(String arg) {
+		return this.arguments.contains(arg);
+	}
+
+	public boolean hasOption(String option) {
+		return this.options.contains(option);
 	}
 	
 	public boolean hasParams() {
@@ -56,6 +69,10 @@ public class ArgList {
 	public boolean hasInvalidOptions() {
 		return !this.invalidOptions.isEmpty();
 	}
+	
+	public boolean isOption(String arg) {
+		return arg.length() > 1 && arg.startsWith("-");
+	}
 
 	public void parseArgs(String[] args) {
 		if (args == null) {
@@ -67,15 +84,17 @@ public class ArgList {
 
 			if (arg.isEmpty()) {
 				continue;
-			} else if (arg.length() > 1 && arg.startsWith("-")) {
+			} else if (isOption(arg)) {
 				String option = arg.substring(1);
 				
 				if (acceptableOptions.contains(option)) {
+					this.arguments.add(arg);
 					this.options.add(option);
 				} else {
 					this.invalidOptions.add(option);
 				}
 			} else {
+				this.arguments.add(arg);
 				this.params.add(arg);
 			}
 		}
