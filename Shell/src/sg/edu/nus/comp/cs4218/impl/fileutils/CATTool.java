@@ -60,10 +60,17 @@ public class CATTool extends ATool implements ICatTool {
 	
 	@Override
 	public String execute(File workingDir, String stdin) {
+		if (argList.hasInvalidOptions()) {
+			setStatusCode(9);
+			return "Error: Invalid Option " + argList.getInvalidOptions()[0];
+		}
+
 		StringBuilder output = new StringBuilder();
 		
+		// make sure stdin exists
 		if (stdin == null) { stdin = ""; }
 
+		// process arguments
 		if (argList.isEmpty()) {
 			output.append(stdin);
 		} else {

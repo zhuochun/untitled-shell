@@ -118,6 +118,13 @@ public class CATToolTest {
 		assertEquals(0, cattool.getStatusCode());
 	}
 	
+	@Test
+	public void testExecuteWithInvalidOptions() {
+		cattool = new CATTool(new String[] { "-a" });
+		cattool.execute(null, null);
+		assertNotEquals(0, cattool.getStatusCode());
+	}
+	
 	private File createFile(String filename, String content) throws IOException {
 		File file = folder.newFile(filename);
 
