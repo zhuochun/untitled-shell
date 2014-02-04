@@ -1,76 +1,140 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * @author zhuochun
+ *
+ */
+/**
+ * @author zhuochun
+ *
+ */
 public class ArgList {
 	
-	private Set<String> acceptableOptions;
+	public enum ArgType { RAW, VALUE }
+	
+	private HashMap<String, ArgType> acceptableOptions;
+	private HashMap<String, String> options;
 	private Set<String> invalidOptions;
-	private Set<String> options;
 	private Set<String> params;
 	private List<String> arguments;
 
 	public ArgList() {
-		this.acceptableOptions = new TreeSet<String>();
-		this.invalidOptions = new TreeSet<String>();
-		this.options = new TreeSet<String>();
-		this.params = new TreeSet<String>();
-		this.arguments = new ArrayList<String>();
+ 		initialize();
+	}
+	
+	public ArgList(String[] args) {
+		initialize();
+		parseArgs(args);
+	}
+	
+	private void initialize() {
+		acceptableOptions = new HashMap<String, ArgType>();
+		options = new HashMap<String, String>();
+		invalidOptions = new TreeSet<String>();
+		params = new TreeSet<String>();
+		arguments = new ArrayList<String>();
 	}
 
-	public boolean registerAcceptableOption(String option) {
-		return this.acceptableOptions.add(option);
+	/**
+	 * register acceptable options with type = ArgType.RAW
+	 * 
+	 * @param option
+	 */
+	public void registerAcceptableOption(String option) {
+		acceptableOptions.put(option, ArgType.RAW);
+	}
+	
+	/**
+	 * register acceptable options with specified type
+	 * 
+	 * @param option
+	 * @param type
+	 */
+	public void registerAcceptableOption(String option, ArgType type) {
+		acceptableOptions.put(option, type);
 	}
 	
 	public String[] getAcceptableOptions() {
-		return this.acceptableOptions.toArray(new String[0]);
+		return acceptableOptions.keySet().toArray(new String[0]);
+	}
+
+	/**
+	 * check whether the arguments list are empty
+	 * 
+	 * @return boolean
+	 */
+	public boolean isEmpty() {
+		return arguments.isEmpty();
+	}
+	
+	/**
+	 * check whether an argument exists in arg list
+	 * 
+	 * @param arg
+	 * @return boolean
+	 */
+	public boolean hasArgument(String arg) {
+		return arguments.contains(arg);
 	}
 	
 	public String[] getArguments() {
-		return this.arguments.toArray(new String[0]);
+		return arguments.toArray(new String[0]);
 	}
 	
-	
-	public String[] getInvalidOptions() {
-		return this.invalidOptions.toArray(new String[0]);
+	public boolean hasOption(String option) {
+		return options.containsKey(option);
+	}
+
+	public String getOptionValue(String option) {
+		return options.get(option);
 	}
 	
 	public String[] getOptions() {
-		return this.options.toArray(new String[0]);
+		return options.keySet().toArray(new String[0]);
 	}
 
-	public String[] getParams() {
-		return (String[]) this.params.toArray(new String[0]);
-	}
-	
-	public boolean isEmpty() {
-		return this.arguments.isEmpty();
-	}
-	
-	public boolean hasArgument(String arg) {
-		return this.arguments.contains(arg);
-	}
-
-	public boolean hasOption(String option) {
-		return this.options.contains(option);
-	}
-	
-	public boolean hasParams() {
-		return !this.params.isEmpty();
-	}
-	
+	/**
+	 * check whether there is any options
+	 * 
+	 * @return boolean
+	 */
 	public boolean hasOptions() {
 		return !this.options.isEmpty();
 	}
 	
+	public String[] getParams() {
+		return params.toArray(new String[0]);
+	}
+
+	/**
+	 * check whether there is any parameters
+	 * 
+	 * @return boolean
+	 */
+	public boolean hasParams() {
+		return !this.params.isEmpty();
+	}
+
+	public String[] getInvalidOptions() {
+		return invalidOptions.toArray(new String[0]);
+	}
+	
+	/**
+	 * check whether there is any invalid options
+	 * 
+	 * @return boolean
+	 */
 	public boolean hasInvalidOptions() {
 		return !this.invalidOptions.isEmpty();
 	}
-	
-	public boolean isOption(String arg) {
+
+	public boolean isAnOption(String arg) {
 		return arg.length() > 1 && arg.startsWith("-");
 	}
 
@@ -78,26 +142,41 @@ public class ArgList {
 		if (args == null) {
 			return;
 		}
-
-		for (String arg : args) {
-			arg = arg.trim();
+		
+		for (int i = 0; i < args.length; i++) {
+			String arg = args[i].trim();
 
 			if (arg.isEmpty()) {
 				continue;
-			} else if (isOption(arg)) {
+			} else if (isAnOption(arg)) {
 				String option = arg.substring(1);
 				
-				if (acceptableOptions.contains(option)) {
-					this.arguments.add(arg);
-					this.options.add(option);
+				if (params.isEmpty() && acceptableOptions.containsKey(option)) {
+					if (acceptableOptions.get(option) == ArgType.VALUE) {
+						i += 1;
+
+						if (i < args.length) {
+							options.put(option, args[i]);
+
+							arguments.add(arg);
+							arguments.add(args[i]);
+
+							continue;
+						} else {
+							invalidOptions.add(option);
+						}
+					} else {
+						options.put(option, null);
+					}
 				} else {
-					this.invalidOptions.add(option);
+					invalidOptions.add(option);
 				}
 			} else {
-				this.arguments.add(arg);
-				this.params.add(arg);
+				params.add(arg);
 			}
+
+			arguments.add(arg);
 		}
 	}
-
+	
 }

@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.impl.ArgList.ArgType;
+
 public class ArgListTest {
 	
 	ArgList args;
@@ -52,20 +54,51 @@ public class ArgListTest {
 	}
 	
 	@Test
+	public void testParseWithOptionAfterParams() {
+		
+	}
+	
+	@Test
 	public void testParseWithParamsAndOptions() {
-		String[] arguments = { "\r\n", "test", "", "-", "-test", "-1", "--" };
+		String[] arguments = { "\r\n", "-test", "", "-", "test", "-1", "--" };
 
 		args.registerAcceptableOption("test");
 		args.parseArgs(arguments);
 		
 		assertFalse(args.isEmpty());
-		assertEquals(3, args.getArguments().length);
+		assertEquals(5, args.getArguments().length);
 		assertTrue(args.hasParams());
 		assertEquals(2, args.getParams().length);
 		assertTrue(args.hasOptions());
 		assertEquals(1, args.getOptions().length);
 		assertTrue(args.hasInvalidOptions());
 		assertEquals(2, args.getInvalidOptions().length);
+	}
+
+	@Test
+	public void testParseWithValueOptions() {
+		String[] arguments = { "-N", "12", "-T", "-S", "tt", "-" };
+		
+		args.registerAcceptableOption("T", ArgType.RAW);
+		args.registerAcceptableOption("N", ArgType.VALUE);
+		args.registerAcceptableOption("S", ArgType.VALUE);
+		args.parseArgs(arguments);
+		
+		assertEquals("12", args.getOptionValue("N"));
+		assertEquals(null, args.getOptionValue("T"));
+		assertEquals("tt", args.getOptionValue("S"));
+	}
+	
+	@Test
+	public void testParseWithIncompleteValueOptionsAtLast() {
+		String[] arguments = { "-test" };
+
+		args.registerAcceptableOption("test", ArgType.VALUE);
+		args.parseArgs(arguments);
+		
+		assertFalse(args.hasOptions());
+		assertTrue(args.hasInvalidOptions());
+		assertArrayEquals(new String[] { "test" }, args.getInvalidOptions());
 	}
 	
 }
