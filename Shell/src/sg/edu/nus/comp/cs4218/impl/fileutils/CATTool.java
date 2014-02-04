@@ -13,7 +13,6 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;
  * cat - concatenate files and print on the standard output
  * 
  * cat [OPTION] [FILE]...
- * 
  */
 public class CATTool extends ATool implements ICatTool {
 	
@@ -33,66 +32,56 @@ public class CATTool extends ATool implements ICatTool {
 			setStatusCode(1);
 			return String.format("Error: {0} is a directory", toRead.getName());
 		} else if (toRead.isFile()) {
-			int ch;
-			StringBuilder sb = new StringBuilder();
-			BufferedReader br;
-
 			try {
-				br = new BufferedReader(new FileReader(toRead));
-
-				while ((ch = br.read()) != -1) {
-					sb.append((char) ch);
-				}
-
-				br.close();
+				setStatusCode(0);
+				return readFileContent(toRead);
 			} catch (IOException e) {
 				setStatusCode(1);
+				return e.toString();
 			}
-
-			setStatusCode(0);
-			return sb.toString();
 		}
 
 		return null;
 	}
 	
-	public String getStringForStandardInput() {
-		// TODO
-		return "";
+	private String readFileContent(File file) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		int ch;
+		while ((ch = br.read()) != -1) {
+			sb.append((char) ch);
+		}
+
+		br.close();
+
+		return sb.toString();
 	}
 	
-	public void writeStringToFile(File file) {
-		// TODO
-		if (file.exists()) {
-			
-		}
-	}
-
 	@Override
 	public String execute(File workingDir, String stdin) {
 		StringBuilder output = new StringBuilder();
+		
+		if (stdin == null) { stdin = ""; }
 
 		if (argList.isEmpty()) {
-			output.append(getStringForStandardInput());
+			output.append(stdin);
 		} else {
 			for (String arg : argList.getArguments()) {
 				if (arg.equals(">")) {
 					break;
 				} else if (arg.equals("-")) {
-					output.append(getStringForStandardInput());
+					output.append(stdin);
+					stdin = ""; // clear stdin after read
 				} else {
-					output.append(getStringForFile(new File(arg)));
+					// construct the file
+					File toRead = new File(workingDir, arg);
+					output.append(getStringForFile(toRead));
 				}
 			}
 		}
-		
-		if (argList.hasArgument(">")) {
-			
-		} else {
-			
-		}
 
-		return null;
+		return output.toString();
 	}
 
 }

@@ -1,14 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl.fileutils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -74,8 +72,50 @@ public class CATToolTest {
 	}
 
 	@Test
-	public void testGetStringForStandardInput() {
-		fail("Not yet implemented");
+	public void testExecuteWithNullStdIn() {
+		String stdout = cattool.execute(null, null);
+		
+		assertEquals("", stdout);
+		assertEquals(0, cattool.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithMultipleStdIn() {
+		cattool = new CATTool(new String[] { "-", "-" });
+		
+		String stdout = cattool.execute(null, "hello");
+		
+		assertEquals("hello", stdout);
+		assertEquals(0, cattool.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithFileAndStdIn() throws IOException {
+		String filename = "test.txt";
+		String content  = "abc\ncde\nfgh\t\nijk\r\n!@#$%^&*()";
+		createFile(filename, content);
+
+		cattool = new CATTool(new String[] { "-", filename });
+
+		String stdout = cattool.execute(folder.getRoot(), "abc");
+		
+		assertEquals("abc" + content, stdout);
+		assertEquals(0, cattool.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithRelativeFilePath() throws IOException {
+		String filename = "test.txt";
+		String content  = "abc\ncde\nfgh\t\nijk\r\n!@#$%^&*()";
+		createFile(filename, content);
+		File childFolder = folder.newFolder("testFolder");
+
+		cattool = new CATTool(new String[] { "../" + filename });
+
+		String stdout = cattool.execute(childFolder, null);
+		
+		assertEquals(content, stdout);
+		assertEquals(0, cattool.getStatusCode());
 	}
 	
 	private File createFile(String filename, String content) throws IOException {
