@@ -72,7 +72,21 @@ public class COPYToolTest {
 				File origin = new File("origin.txt");
 				File target = new File("target.txt");
 				
-				assertThrowsExcption(IcopyTool.copy(origin, target));
+				if(!origin.exists()){
+				     origin.createNewFile();
+				}
+				
+				FileWriter fw = new FileWriter(origin);
+				BufferedWriter bw = new BufferedWriter(fw);
+				FileReader fr = new FileReader(target);
+				BufferedReader br = new BufferedReader(fr);
+				
+				//construct origin file
+				bw.write("Hello World");
+				bw.flush();
+				IcopyTool.copy(origin, target);
+				
+				assertTrue(!target.exists());
 			}catch(Exception e){
 				e.printStackTrace();
 			}
