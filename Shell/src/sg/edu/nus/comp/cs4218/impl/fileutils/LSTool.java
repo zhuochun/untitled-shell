@@ -22,13 +22,6 @@ public class LSTool extends ATool implements ILsTool {
 
 	public LSTool(String[] arguments) {
 		super(arguments);
-		argList.parseArgs(this.args);
-		
-		if (argList.hasParams()) {
-			for (String param : argList.getParams()) {
-				this.argDirectories.add(new File(param));
-			}
-		}
 	}
 
 	@Override
@@ -68,6 +61,25 @@ public class LSTool extends ATool implements ILsTool {
 
 	@Override
 	public String execute(File workingDir, String stdin) {
+		// parse arguments
+		try {
+			argList.parseArgs(this.args);
+		} catch (IllegalArgumentException e) {
+			setStatusCode(9);
+			return e.getMessage();
+		}
+
+		if (argList.hasInvalidOptions()) {
+			setStatusCode(9);
+			return "Error: Invalid Option " + argList.getInvalidOptions()[0];
+		}
+		
+		if (argList.hasParams()) {
+			for (String param : argList.getParams()) {
+				this.argDirectories.add(new File(param));
+			}
+		}
+
 		if (argDirectories.size() > 0) {
 			return getStringForFiles(getFiles(argDirectories.get(0)));
 		} else {

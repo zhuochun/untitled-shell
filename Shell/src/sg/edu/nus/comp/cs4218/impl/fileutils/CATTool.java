@@ -19,7 +19,6 @@ public class CATTool extends ATool implements ICatTool {
 
 	public CATTool(String[] arguments) {
 		super(arguments);
-		argList.parseArgs(this.args);
 	}
 
 	@Override
@@ -37,6 +36,14 @@ public class CATTool extends ATool implements ICatTool {
 	
 	@Override
 	public String execute(File workingDir, String stdin) {
+		// parse arguments
+		try {
+			argList.parseArgs(this.args);
+		} catch (IllegalArgumentException e) {
+			setStatusCode(9);
+			return e.getMessage();
+		}
+
 		if (argList.hasInvalidOptions()) {
 			setStatusCode(9);
 			return "Error: Invalid Option " + argList.getInvalidOptions()[0];
@@ -51,7 +58,7 @@ public class CATTool extends ATool implements ICatTool {
 		if (argList.isEmpty()) {
 			output.append(stdin);
 		} else {
-			for (String arg : argList.getArguments()) {
+			for (String arg : argList.getParams()) {
 				if (arg.equals(">")) {
 					break;
 				} else if (arg.equals("-")) {
