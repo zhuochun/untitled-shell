@@ -2,14 +2,8 @@ package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,9 +36,6 @@ public class DELETEToolTest {
 			try{
 				File origin = folder.newFile("originForDelete.txt");
 				
-				if(!origin.exists()){
-				     origin.createNewFile();
-				}
 				assertTrue(origin.exists());
 				
 			    IDeleteTool.delete(origin);
@@ -57,17 +48,38 @@ public class DELETEToolTest {
 			}
 		}
 		@Test
-		public void testDeleteNotExists(){
+		public void testDeleteEmptyDirectoryExists(){
 			try{
-				File origin = folder.newFile("originForDdelete.txt");
-				assertFalse(origin.exists());
-                
-				IDeleteTool.delete(origin);
+				File origin = folder.newFolder("originForDelete");
+				
+				assertTrue(origin.exists());
+				
+			    IDeleteTool.delete(origin);
 			    
 			    assertFalse(origin.exists());
-			    
+		
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
+		
+		@Test
+		public void testDeleteNotEmptyDirectoryExists(){
+			try{
+				File origin = folder.newFile("originFileDelete.txt");
+				
+				
+				assertTrue(folder.getRoot().exists());
+				
+			    IDeleteTool.delete(folder.getRoot());
+			    
+			    assertTrue(folder.getRoot().exists());
+		
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 	}
