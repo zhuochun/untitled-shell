@@ -1,69 +1,82 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-/**
- * @author zhuochun
- *
- */
-/**
- * @author zhuochun
- *
- */
 public class ArgList {
 	
-	public enum ArgType { RAW, VALUE }
+	public enum ArgType { RAW, NUM, STRING }
 	
-	private HashMap<String, ArgType> acceptableOptions;
-	private HashMap<String, String> options;
-	private Set<String> invalidOptions;
-	private Set<String> params;
+	public class Option {
+		public String name;
+		public String value;
+		public String description;
+		public ArgType type;
+
+		public Option(String name, ArgType type, String desc) {
+			this.name  = name;
+			this.type  = type;
+			this.value = null;
+			this.description = desc;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+		
+		@Override
+		public String toString() {
+			if (type == ArgType.RAW) {
+				return String.format("-%s : %s", name, description);
+			} else {
+				return String.format("-%s %s : %s", name, type.toString(), description);
+			}
+		}
+	}
+	
+	private SortedMap<String, Option> acceptableOptions;
 	private List<String> arguments;
+	private List<String> options;
+	private List<String> params;
+	private List<String> invalidOptions;
 
 	public ArgList() {
- 		initialize();
-	}
-	
-	public ArgList(String[] args) {
-		initialize();
-		parseArgs(args);
-	}
-	
-	private void initialize() {
-		acceptableOptions = new HashMap<String, ArgType>();
-		options = new HashMap<String, String>();
-		invalidOptions = new TreeSet<String>();
-		params = new TreeSet<String>();
+		acceptableOptions = new TreeMap<String, Option>();
 		arguments = new ArrayList<String>();
-	}
-
-	/**
-	 * register acceptable options with type = ArgType.RAW
-	 * 
-	 * @param option
-	 */
-	public void registerAcceptableOption(String option) {
-		acceptableOptions.put(option, ArgType.RAW);
+		options = new ArrayList<String>();
+		params = new ArrayList<String>();
+		invalidOptions = new ArrayList<String>();
 	}
 	
 	/**
-	 * register acceptable options with specified type
+	 * register an acceptable option with type = ArgType.RAW
 	 * 
-	 * @param option
+	 * @param name
+	 * @param desc
+	 */
+	public void registerAcceptableOption(String name, String desc) {
+		acceptableOptions.put(name, new Option(name, ArgType.RAW, desc));
+	}
+	
+	/**
+	 * register an acceptable option with specified type
+	 * 
+	 * @param name
 	 * @param type
+	 * @param desc
 	 */
-	public void registerAcceptableOption(String option, ArgType type) {
-		acceptableOptions.put(option, type);
+	public void registerAcceptableOption(String name, ArgType type, String desc) {
+		acceptableOptions.put(name, new Option(name, type, desc));
 	}
 	
-	public String[] getAcceptableOptions() {
-		return acceptableOptions.keySet().toArray(new String[0]);
+	public Option[] getAcceptableOptions() {
+		return acceptableOptions.values().toArray(new Option[0]);
 	}
-
+	
 	/**
 	 * check whether the arguments list are empty
 	 * 
@@ -74,7 +87,7 @@ public class ArgList {
 	}
 	
 	/**
-	 * check whether an argument exists in arg list
+	 * check whether an argument exists in list
 	 * 
 	 * @param arg
 	 * @return boolean
@@ -86,18 +99,6 @@ public class ArgList {
 	public String[] getArguments() {
 		return arguments.toArray(new String[0]);
 	}
-	
-	public boolean hasOption(String option) {
-		return options.containsKey(option);
-	}
-
-	public String getOptionValue(String option) {
-		return options.get(option);
-	}
-	
-	public String[] getOptions() {
-		return options.keySet().toArray(new String[0]);
-	}
 
 	/**
 	 * check whether there is any options
@@ -108,8 +109,30 @@ public class ArgList {
 		return !this.options.isEmpty();
 	}
 	
-	public String[] getParams() {
-		return params.toArray(new String[0]);
+	/**
+	 * check whether an option exists
+	 * 
+	 * @param option
+	 * @return boolean
+	 */
+	public boolean hasOption(String option) {
+		return options.contains(option);
+	}
+
+	public Option getOption(int idx) {
+		if (idx < 0 || idx > options.size()) {
+			return null;
+		}
+
+		return acceptableOptions.get(options.get(idx));
+	}
+
+	public String getOptionValue(String option) {
+		return acceptableOptions.get(option).value;
+	}
+	
+	public String[] getOptions() {
+		return options.toArray(new String[0]);
 	}
 
 	/**
@@ -121,8 +144,12 @@ public class ArgList {
 		return !this.params.isEmpty();
 	}
 
-	public String[] getInvalidOptions() {
-		return invalidOptions.toArray(new String[0]);
+	public String[] getParams() {
+		return params.toArray(new String[0]);
+	}
+	
+	public String getParam(int idx) {
+		return params.get(idx);
 	}
 	
 	/**
@@ -134,48 +161,102 @@ public class ArgList {
 		return !this.invalidOptions.isEmpty();
 	}
 
-	public boolean isAnOption(String arg) {
-		return arg.length() > 1 && arg.startsWith("-");
+	public String[] getInvalidOptions() {
+		return invalidOptions.toArray(new String[0]);
 	}
 
+	/**
+	 * parse the args, rephrase them in arguments, separate items to
+	 * options or params lists
+	 * 
+	 * @param args
+	 */
 	public void parseArgs(String[] args) {
-		if (args == null) {
+		if (args == null || args.length == 0) {
 			return;
 		}
 		
-		for (int i = 0; i < args.length; i++) {
-			String arg = args[i].trim();
-
+		Iterator<String> argIter = Arrays.asList(args).iterator();
+		
+		while (argIter.hasNext()) {
+			String arg = argIter.next().trim();
+			
 			if (arg.isEmpty()) {
 				continue;
 			} else if (isAnOption(arg)) {
-				String option = arg.substring(1);
-				
-				if (params.isEmpty() && acceptableOptions.containsKey(option)) {
-					if (acceptableOptions.get(option) == ArgType.VALUE) {
-						i += 1;
-
-						if (i < args.length) {
-							options.put(option, args[i]);
-
-							arguments.add(arg);
-							arguments.add(args[i]);
-
-							continue;
-						} else {
-							invalidOptions.add(option);
-						}
-					} else {
-						options.put(option, null);
-					}
-				} else {
-					invalidOptions.add(option);
-				}
+				parseOptionStr(arg.substring(1), argIter);
 			} else {
-				params.add(arg);
+				if (arg.startsWith("\"")) {
+					parseQuotedStr(arg.substring(1), "\"", argIter);
+				} else if (arg.startsWith("'")) {
+					parseQuotedStr(arg.substring(1), "'", argIter);
+				} else {
+					params.add(arg);
+					arguments.add(arg);
+				}
+			}	
+		}
+	}
+
+	private void parseOptionStr(String option, Iterator<String> iter) {
+		if (!params.isEmpty()) {
+			throw new IllegalArgumentException("Options -" + option + " should appear before params");
+		}
+
+		Option opt = acceptableOptions.get(option);
+		arguments.add("-" + option);
+		
+		if (opt == null) {
+			addWithoutDuplicate(invalidOptions, option);
+			return ;
+		}
+
+		addWithoutDuplicate(options, option);
+		
+		if (opt.type == ArgType.NUM) {
+			if (!iter.hasNext()) {
+				throw new IllegalArgumentException("Incomplete option -" + option);
 			}
 
-			arguments.add(arg);
+			opt.value = iter.next();
+			arguments.add(opt.value);
+		} else {
+			// other types
+		}
+	}
+	
+	private void parseQuotedStr(String head, String quoteMark, Iterator<String> iter) {
+		StringBuilder quote = new StringBuilder(head);
+
+		boolean ended = false;
+		while (iter.hasNext()) {
+			String next = iter.next();
+
+			if (next.endsWith(quoteMark)) {
+				quote.append(" " + next.substring(0, next.length() - 1));
+				ended = true;
+				break;
+ 			} else {
+ 				quote.append(" " + next);
+ 			}
+		}
+		
+		if (ended) {
+			String output = quote.toString();
+			params.add(output);
+			arguments.add(quoteMark + output + quoteMark);
+		} else {
+			throw new IllegalArgumentException("Invalid starting quotation " + quoteMark);
+		}
+	}
+	
+	private boolean isAnOption(String arg) {
+		return arg.length() > 1 && arg.startsWith("-");
+	}
+	
+	private void addWithoutDuplicate(List<String> list, String val) {
+		if (!list.contains(val)) {
+			list.add(val);
 		}
 	}
 	

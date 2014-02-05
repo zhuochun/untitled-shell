@@ -26,11 +26,12 @@ public class ArgListTest {
 	public void testRegisterAcceptableOption() {
 		assertEquals(0, args.getAcceptableOptions().length);
 
-		args.registerAcceptableOption("a");
-		args.registerAcceptableOption("b");
-		args.registerAcceptableOption("a");
+		args.registerAcceptableOption("a", "a");
+		args.registerAcceptableOption("b", ArgType.NUM, "b");
 		
 		assertEquals(2, args.getAcceptableOptions().length);
+		assertEquals("-a : a", args.getAcceptableOptions()[0].toString());
+		assertEquals("-b NUM : b", args.getAcceptableOptions()[1].toString());
 	}
 	
 	@Test
@@ -54,15 +55,28 @@ public class ArgListTest {
 	}
 	
 	@Test
-	public void testParseWithOptionAfterParams() {
+	public void testParseSequenceInOrder() {
+		String[] arguments = { "-c", "-b", "-", "test" };
 		
+		args.registerAcceptableOption("b", null);
+		args.registerAcceptableOption("c", null);
+		args.parseArgs(arguments);
+		
+		assertArrayEquals(new String[] { "c", "b" }, args.getOptions());
+		assertArrayEquals(new String[] { "-", "test" }, args.getParams());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithOptionAfterParams() {
+		String arguments = "test.txt -c";
+		args.parseArgs(arguments.split(" "));
 	}
 	
 	@Test
 	public void testParseWithParamsAndOptions() {
-		String[] arguments = { "\r\n", "-test", "", "-", "test", "-1", "--" };
+		String[] arguments = { "\r\n", "-test", "", "-1", "--", "-", "test" };
 
-		args.registerAcceptableOption("test");
+		args.registerAcceptableOption("test", null);
 		args.parseArgs(arguments);
 		
 		assertFalse(args.isEmpty());
@@ -79,26 +93,49 @@ public class ArgListTest {
 	public void testParseWithValueOptions() {
 		String[] arguments = { "-N", "12", "-T", "-S", "tt", "-" };
 		
-		args.registerAcceptableOption("T", ArgType.RAW);
-		args.registerAcceptableOption("N", ArgType.VALUE);
-		args.registerAcceptableOption("S", ArgType.VALUE);
+		args.registerAcceptableOption("T", ArgType.RAW, null);
+		args.registerAcceptableOption("N", ArgType.NUM, null);
+		args.registerAcceptableOption("S", ArgType.NUM, null);
 		args.parseArgs(arguments);
 		
 		assertEquals("12", args.getOptionValue("N"));
 		assertEquals(null, args.getOptionValue("T"));
 		assertEquals("tt", args.getOptionValue("S"));
+		assertArrayEquals(new String[] { "N", "T", "S" }, args.getOptions());
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testParseWithIncompleteValueOptionsAtLast() {
 		String[] arguments = { "-test" };
 
-		args.registerAcceptableOption("test", ArgType.VALUE);
+		args.registerAcceptableOption("test", ArgType.NUM, null);
 		args.parseArgs(arguments);
+	}
+	
+	@Test
+	public void testParseWithDoubleQuotedOptions() {
+		String arguments = "\"quote string\"";
 		
-		assertFalse(args.hasOptions());
-		assertTrue(args.hasInvalidOptions());
-		assertArrayEquals(new String[] { "test" }, args.getInvalidOptions());
+		args.parseArgs(arguments.split(" "));
+		
+		assertEquals("quote string", args.getParams()[0]);
+		assertEquals(arguments, args.getArguments()[0]);
+	}
+
+	@Test
+	public void testParseWithSingleQuotedOptions() {
+		String arguments = "'single \"quote\" string'";
+		
+		args.parseArgs(arguments.split(" "));
+		
+		assertEquals("single \"quote\" string", args.getParams()[0]);
+		assertEquals(arguments, args.getArguments()[0]);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithIncompleteDoubleQuotedOptions() {
+		String[] arguments = { "\"quote" };
+		args.parseArgs(arguments);
 	}
 	
 }
