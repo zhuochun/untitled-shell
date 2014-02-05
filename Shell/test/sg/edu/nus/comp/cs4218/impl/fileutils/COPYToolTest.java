@@ -47,12 +47,6 @@ public class COPYToolTest {
 			try{
 				File origin = folder.newFile("originForCopy.txt");
 				File target = folder.newFile("targetForCopy.txt");
-				if(!origin.exists()){
-				     origin.createNewFile();
-				}
-				if(!target.exists()){
-				     target.createNewFile();
-				}
 				FileWriter fw = new FileWriter(origin);
 				BufferedWriter bw = new BufferedWriter(fw);
 				
@@ -62,9 +56,7 @@ public class COPYToolTest {
 				    bw.write("Hello World" + i);
 				    bw.flush();
 				}
-				
-				
-				
+
 				IcopyTool.copy(origin, target);
 				assertTrue(DiffTool.isDifferent(origin, target));
 				
@@ -78,9 +70,6 @@ public class COPYToolTest {
 				File origin = folder.newFile("origin.txt");
 				File target = folder.newFile("target.txt");
 				
-				if(!origin.exists()){
-				     origin.createNewFile();
-				}
 				
 				FileWriter fw = new FileWriter(origin);
 				BufferedWriter bw = new BufferedWriter(fw);
@@ -92,7 +81,6 @@ public class COPYToolTest {
 				bw.flush();
 				IcopyTool.copy(origin, target);
 				
-				//assertTrue(!target.exists());
 				
 			}catch(Exception e){
 				e.printStackTrace();
