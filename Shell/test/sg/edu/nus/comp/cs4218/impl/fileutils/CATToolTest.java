@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertt
 
 import java.io.BufferedWriter;
 import java.io.File;

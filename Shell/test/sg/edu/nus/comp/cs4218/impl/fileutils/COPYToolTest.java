@@ -15,21 +15,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
+import sg.edu.nus.comp.cs4218.impl.DiffUtils;
 
 
 public class COPYToolTest {
 	
 		
 		ICopyTool IcopyTool;
+		DiffUtils DiffTool;
 
 		@Before
 		public void setUp() throws Exception {
 			IcopyTool = new COPYTool(null);
+			DiffTool = new DiffUtils();
 		}
 
 		@After
 		public void tearDown() throws Exception {
 			IcopyTool = null;
+			DiffTool = null;
 		}
 		@Test
 		public void testCopyFileExists(){
@@ -44,20 +48,18 @@ public class COPYToolTest {
 				}
 				FileWriter fw = new FileWriter(origin);
 				BufferedWriter bw = new BufferedWriter(fw);
-				FileReader fr = new FileReader(target);
-				BufferedReader br = new BufferedReader(fr);
+				
 				
 				//construct origin file
-				bw.write("Hello World");
-				bw.flush();
-				String in = new String ("Hello World");
+				for(int i=0;i<50;i++){
+				    bw.write("Hello World" + i);
+				    bw.flush();
+				}
 				
 				
-				assertEquals(br.readLine(),null);
 				
 				IcopyTool.copy(origin, target);
-				br = new BufferedReader(fr);
-				assertEquals(br.readLine(), in);
+				assertTrue(DiffTool.isDifferent(origin, target));
 				
 				origin.delete();
 				target.delete();
@@ -87,6 +89,10 @@ public class COPYToolTest {
 				IcopyTool.copy(origin, target);
 				
 				assertTrue(!target.exists());
+				
+				origin.delete();
+				target.delete();
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
