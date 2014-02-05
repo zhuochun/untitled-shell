@@ -1,57 +1,39 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import sg.edu.nus.comp.cs4218.ITool;
-import sg.edu.nus.comp.cs4218.extended1.IGrepTool;
-import sg.edu.nus.comp.cs4218.fileutils.ICatTool;
-import sg.edu.nus.comp.cs4218.fileutils.ICdTool;
-import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
-import sg.edu.nus.comp.cs4218.fileutils.IDeleteTool;
-import sg.edu.nus.comp.cs4218.fileutils.IEchoTool;
-import sg.edu.nus.comp.cs4218.fileutils.ILsTool;
-import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
-import sg.edu.nus.comp.cs4218.fileutils.IPwdTool;
 import sg.edu.nus.comp.cs4218.impl.extended1.GREPTool;
 import sg.edu.nus.comp.cs4218.impl.fileutils.*;
 
 public class CommandToITool {
-	public static ITool cmdToITool(String cmd){
+	public static ITool cmdToITool(String cmd, String[] args){
 			if(cmd.equals("cat")){
-				ICatTool catTool = new CATTool(null);
-				return catTool;
+				return new CATTool(args);
 			}
 			else if(cmd.equals("cd")){
-				ICdTool cdTool = new CDTool(null);
-				return cdTool;
+				return new CDTool(args);
 			}
 			else if(cmd.equals("copy")){
-				ICopyTool copyTool = new COPYTool(null);
-				return copyTool;
+				return new COPYTool(args);
 			}
 			else if(cmd.equals("delete")){
-				IDeleteTool deleteTool = new DELETETool(null);
-				return deleteTool;
+				return new DELETETool(args);
 			}
 			else if(cmd.equals("echo")){
-				IEchoTool echoTool = new EchoTool(null);
-				return echoTool;
+				return new EchoTool(args);
 			}
 			else if(cmd.equals("ls")){
-				ILsTool lsTool =new LSTool(null);
-				return lsTool;
+				return new LSTool(args);
 			}
 			else if(cmd.equals("move")){
-				IMoveTool moveTool = new MoveTool (null);
-				return moveTool;
+				return new MoveTool (args);
 			}
 			else if(cmd.equals("pwd")){
-				IPwdTool pwdTool = new PWDTool();
-				return pwdTool;
+				return new PWDTool();
 			}
 			else if(cmd.endsWith("grep")){
-				IGrepTool grepTool = new GREPTool(null) ;
-				return grepTool;
+				return new GREPTool(args);
 			}
+			
 			return null;
-	
 	}
 }

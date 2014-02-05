@@ -1,24 +1,24 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
 import sg.edu.nus.comp.cs4218.impl.WorkerRunnable;
-import sg.edu.nus.comp.cs4218.impl.fileutils.PWDTool;
+
+import sg.edu.nus.comp.cs4218.impl.CommandToITool;;
 
 /**
  * The Shell is used to interpret and execute user's
- * commands. Following sequence explains how a basic
- * shell can be implemented in Java
+ * commands. Commands typed in the console will be discarded if the shell is
+ * running another command. "Ctrl-Z" will only be entertained when there is
+ * a command running at background. In this case, the command will be
+ * terminated, i.e. output of the command will not be available.
  */
 public class Shell implements IShell {
 
-	private String argList;
 	private String stdin;
 	
 	private static File workingDir;
@@ -31,13 +31,21 @@ public class Shell implements IShell {
 	
 	@Override
 	public ITool parse(String commandline) {
-		System.err.println("Cannot parse " + commandline);
-		return null;
+		String[] argList = commandline.split(" ");
+		String[] args = Arrays.copyOfRange(argList, 1, argList.length);
+		ITool tool = CommandToITool.cmdToITool(argList[1], args); 
+		
+		if (tool == null) {
+			System.err.println("Cannot parse " + commandline);
+		}
+		
+		return tool;
 	}
 
 	@Override
 	public Runnable execute(ITool tool) {		
-		WorkerRunnable worker = new WorkerRunnable(tool, workingDir, stdin, exitCode);
+		WorkerRunnable worker = new WorkerRunnable(tool, workingDir, stdin, 
+												   exitCode);
 		return worker;
 	}
 
@@ -52,7 +60,8 @@ public class Shell implements IShell {
      * 1. Wait for a user input
      * 2. Parse the user input. Separate the command and its arguments
      * 3. Create a new thread to execute the command
-     * 4. Execute the command and its arguments on the newly created thread. Exit with the status code of the executed command
+     * 4. Execute the command and its arguments on the newly created thread.
+	 *	  Exit with the status code of the executed command
      * 5. In the shell, wait for the thread to complete execution
      * 6. Report the exit status of the command to the user
 	 */
@@ -77,8 +86,6 @@ public class Shell implements IShell {
 			if (commandLine.equals("Ctrl-Z")) {
 				if (workingThread.isAlive()) {
 					shell.stop(workingThread);
-				} else {
-					System.err.println("Invalid Ctrl-Z!");
 				}
 			} else {
 				ITool newTool = shell.parse(commandLine);
