@@ -36,7 +36,10 @@ public class COPYTool extends ATool implements ICopyTool{
 		    	bw.write(buffer);
 		    	bw.flush();
 		    }
-		}catch(Exception e){
+		}catch (FileNotFoundException e){
+			e.printStackTrace();
+		}
+		catch(Exception e){
 			e.printStackTrace();
 		}
 		return false;

@@ -15,22 +15,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
+import sg.edu.nus.comp.cs4218.fileutils.IDeleteTool;
 
 
 public class DELETEToolTest {
 	
 		
-		ICopyTool IcopyTool;
+		IDeleteTool IDeleteTool;
 
 		@Before
 		public void setUp() throws Exception {
-			IcopyTool = new COPYTool(null);
+			IDeleteTool = new DELETETool(null);
 		}
 
 		@After
 		public void tearDown() throws Exception {
-			IcopyTool = null;
+			IDeleteTool = null;
 		}
 		@Test
 		public void testDeleteFileExists(){
@@ -40,7 +40,13 @@ public class DELETEToolTest {
 				if(!origin.exists()){
 				     origin.createNewFile();
 				}
-				assertFalse(origin.exists());
+				assertTrue(origin.exists());
+				
+			    IDeleteTool.delete(origin);
+			    
+			    assertFalse(origin.exists());
+			    
+			    origin.delete();
 		
 				
 			}catch(Exception e){
@@ -51,8 +57,11 @@ public class DELETEToolTest {
 		public void testDeleteNotExists(){
 			try{
 				File origin = new File("originForDdelete.txt");
-				
-				//assertThrowsExcption(IcopyTool.copy(origin, target));
+				assertFalse(origin.exists());
+                
+				IDeleteTool.delete(origin);
+			    
+			    assertFalse(origin.exists());
 			}catch(Exception e){
 				e.printStackTrace();
 			}
