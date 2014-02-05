@@ -10,6 +10,19 @@ public class GREPToolTest {
 	
 	private GREPTool grep;
 
+	private String input = "testtest\ntest world\n" +
+			"123\n789\n0123\nhello\n" +
+			"hello test\nyahoo\nk09lk\n";
+	private String matchOutput = "testtest\ntest world\nhello test\n";
+	private String matchTrailingOutput = "testtest\ntest world\n123\nhello test\nyahoo\n";
+	private String matchLeadingOutput = "testtest\ntest world\nhello\nhello test\n";
+	private String matchLeadingOutputAll = "testtest\ntest world\n123\n789\n0123\nhello\nhello test\n";
+	private String matchContextOutput = "testtest\ntest world\n123\n--\n--\nhello\nhello test\nyahoo\n";
+	private String matchContextOutputAll = "testtest\ntest world\n123\n789\n0123\nhello\n--\n" +
+			"123\n789\n0123\nhello\nhello test\nyahoo\nk09lk\n";
+	private String partMatchOutput= "test\ntest\ntest\ntest\n";
+	private String nonMatchOutput = "123\n789\n0123\nhello\nyahoo\nk09lk\n";
+
 	@Before
 	public void setUp() throws Exception {
 		grep = new GREPTool(null);
@@ -35,38 +48,94 @@ public class GREPToolTest {
 	}
 
 	@Test
+	public void testExecuteWithOptionWithInvalidNum() {
+		grep = new GREPTool("-A ab file1.txt".split(" "));
+		grep.execute(null, null);
+		assertNotEquals(0, grep.getStatusCode());
+	}
+
+	@Test
+	public void testGetCountOfMatchingLinesNoMatching() {
+		int output = grep.getCountOfMatchingLines("abc", input);
+		assertEquals(0, output);
+	}
+
+	@Test
 	public void testGetCountOfMatchingLines() {
-		fail("Not yet implemented");
+		int output = grep.getCountOfMatchingLines("test", input);
+		assertEquals(3, output);
+	}
+
+	@Test
+	public void testGetOnlyMatchingLinesWithNoMatching() {
+		String output = grep.getOnlyMatchingLines("abc", input);
+		assertEquals("", output);
 	}
 
 	@Test
 	public void testGetOnlyMatchingLines() {
-		fail("Not yet implemented");
+		String output = grep.getOnlyMatchingLines("test", input);
+		assertEquals(matchOutput, output);
 	}
 
 	@Test
 	public void testGetMatchingLinesWithTrailingContext() {
-		fail("Not yet implemented");
+		String output = grep.getMatchingLinesWithTrailingContext(1, "test", input);
+		assertEquals(matchTrailingOutput, output);
+	}
+
+	@Test
+	public void testGetMatchingLinesWithTrailingContextMoreLines() {
+		String output = grep.getMatchingLinesWithTrailingContext(30, "test", input);
+		assertEquals(input, output);
 	}
 
 	@Test
 	public void testGetMatchingLinesWithLeadingContext() {
-		fail("Not yet implemented");
+		String output = grep.getMatchingLinesWithLeadingContext(1, "test", input);
+		assertEquals(matchLeadingOutput, output);
+	}
+
+	@Test
+	public void testGetMatchingLinesWithLeadingContextMoreLines() {
+		String output = grep.getMatchingLinesWithLeadingContext(30, "test", input);
+		assertEquals(matchLeadingOutputAll, output);
 	}
 
 	@Test
 	public void testGetMatchingLinesWithOutputContext() {
-		fail("Not yet implemented");
+		String output = grep.getMatchingLinesWithOutputContext(1, "test", input);
+		assertEquals(matchContextOutput, output);
+	}
+
+	@Test
+	public void testGetMatchingLinesWithOutputContextMoreLines() {
+		String output = grep.getMatchingLinesWithOutputContext(30, "test", input);
+		assertEquals(matchContextOutputAll, output);
 	}
 
 	@Test
 	public void testGetMatchingLinesOnlyMatchingPart() {
-		fail("Not yet implemented");
+		String output = grep.getMatchingLinesOnlyMatchingPart("test", input);
+		assertEquals(partMatchOutput, output);
+	}
+
+	@Test
+	public void testGetMatchingLinesOnlyMatchingPartNoMatching() {
+		String output = grep.getMatchingLinesOnlyMatchingPart("abc", input);
+		assertEquals("", output);
 	}
 
 	@Test
 	public void testGetNonMatchingLines() {
-		fail("Not yet implemented");
+		String output = grep.getNonMatchingLines("test", input);
+		assertEquals(nonMatchOutput, output);
+	}
+
+	@Test
+	public void testGetNonMatchingLinesWithNoMatching() {
+		String output = grep.getNonMatchingLines("abc", input);
+		assertEquals(input, output);
 	}
 
 }
