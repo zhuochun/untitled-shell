@@ -88,7 +88,7 @@ public class MoveToolTest {
 		
 	}
 	@Test
-	public void testMove(){
+	public void testBeforeMove(){
 		try{
 				File src = folder.newFile("Src.txt");
 				File dest = folder.newFile("Dest.txt");
@@ -108,7 +108,7 @@ public class MoveToolTest {
 				String content = "abcde12345ABC@#$%-;()*";
 				bw.write(content);
 				bw.flush();
-				String in = new String (content);
+				//String in = new String (content);
 				
 				
 				assertEquals(br.readLine(),null);
@@ -117,12 +117,48 @@ public class MoveToolTest {
 				br = new BufferedReader(fr);
 				bw.close();
 				br.close();
-				assertEquals(br.readLine(), in);
+
 				
 				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-
+	}
+		@Test
+		public void testAfterMove(){
+			try{
+					File src = folder.newFile("Src.txt");
+					File dest = folder.newFile("Dest.txt");
+	/*				if(!src.exists()){
+					     src.createNewFile();
+					}
+					if(!dest.exists()){
+					     dest.createNewFile();
+					}
+					*/
+					FileWriter fw = new FileWriter(src);
+					BufferedWriter bw = new BufferedWriter(fw);
+					FileReader fr = new FileReader(dest);
+					BufferedReader br = new BufferedReader(fr);
+					
+					//construct origin file
+					String content = "abcde12345ABC@#$%-;()*";
+					bw.write(content);
+					bw.flush();
+					String in = new String (content);
+					
+					
+					assertEquals(br.readLine(),null);
+					
+					movetool.move(src, dest);
+					br = new BufferedReader(fr);
+					bw.close();
+					br.close();
+					assertEquals(br.readLine(), in);
+					
+					
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 		}
 }
