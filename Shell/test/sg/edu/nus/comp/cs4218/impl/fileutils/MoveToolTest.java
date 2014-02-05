@@ -55,7 +55,9 @@ public class MoveToolTest {
 			movetool.move(src, dest);
 			
 			assertTrue(dest.exists());
+
 			src.delete();
+			assertTrue(!src.exists());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -67,8 +69,7 @@ public class MoveToolTest {
 			File src = folder.newFile("Src.txt");
 			File dest = folder.newFile("Dest.txt");
 			
-			
-			
+	
 			FileWriter fw = new FileWriter(src);
 			BufferedWriter bw = new BufferedWriter(fw);
 			FileReader fr = new FileReader(dest);
