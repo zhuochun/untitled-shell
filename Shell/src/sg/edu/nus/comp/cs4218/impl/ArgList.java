@@ -2,9 +2,9 @@ package sg.edu.nus.comp.cs4218.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class ArgList {
@@ -38,14 +38,24 @@ public class ArgList {
 		}
 	}
 	
-	private SortedMap<String, Option> acceptableOptions;
+	private TreeMap<String, Option> acceptableOptions;
 	private List<String> arguments;
 	private List<String> options;
 	private List<String> params;
 	private List<String> invalidOptions;
 
 	public ArgList() {
-		acceptableOptions = new TreeMap<String, Option>();
+		Comparator<String> compare = new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				if (o1.length() != o2.length()) {
+					return o1.length() - o2.length();
+				} else {
+					return o1.compareTo(o2);
+				}
+			}
+		};
+
+		acceptableOptions = new TreeMap<String, Option>(compare);
 		arguments = new ArrayList<String>();
 		options = new ArrayList<String>();
 		params = new ArrayList<String>();
@@ -244,6 +254,11 @@ public class ArgList {
 		} else {
 			throw new IllegalArgumentException("Invalid starting quotation " + quoteMark);
 		}
+	}
+	
+	public static String[] split(String line) {
+		line = line.replaceAll("\\\\([^\\s]{1})", "$1");
+		return line.split("\\s+(?<=[^\\\\])");
 	}
 	
 	private boolean isAnOption(String arg) {

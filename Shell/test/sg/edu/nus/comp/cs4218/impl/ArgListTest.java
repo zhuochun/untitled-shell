@@ -138,4 +138,23 @@ public class ArgListTest {
 		args.parseArgs(arguments);
 	}
 	
+	@Test
+	public void testSplitLineNormal() {
+		String[] arguments = ArgList.split("ls -a ab\\r\\n d\\t ef");
+		assertArrayEquals(new String[] { "ls", "-a", "abrn", "dt", "ef" },  arguments);
+	}
+	
+	@Test
+	public void testSplitLineWithQuote() {
+		String[] arguments = ArgList.split("ls \"hello world.txt\"");
+		assertArrayEquals(new String[] { "ls", "\"hello", "world.txt\""},  arguments);
+	}
+	
+	@Test
+	public void testSplitLineWithDashSpace() {
+		// TODO fix me
+		String[] arguments = ArgList.split("ls -a test\\ hello.txt");
+		assertArrayEquals(new String[] { "ls", "-a", "test hello.txt" }, arguments);
+	}
+	
 }
