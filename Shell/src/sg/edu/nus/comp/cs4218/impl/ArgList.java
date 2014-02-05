@@ -119,12 +119,8 @@ public class ArgList {
 		return options.contains(option);
 	}
 
-	public Option getOption(int idx) {
-		if (idx < 0 || idx > options.size()) {
-			return null;
-		}
-
-		return acceptableOptions.get(options.get(idx));
+	public String getOption(int idx) {
+		return options.get(idx);
 	}
 
 	public String getOptionValue(String option) {
