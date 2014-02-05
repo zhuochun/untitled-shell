@@ -1,13 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl.fileutils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import sg.edu.nus.comp.cs4218.fileutils.ICatTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
+import sg.edu.nus.comp.cs4218.impl.FileUtils;
 
 /**
  * cat - concatenate files and print on the standard output
@@ -25,37 +24,15 @@ public class CATTool extends ATool implements ICatTool {
 
 	@Override
 	public String getStringForFile(File toRead) {
-		if (toRead == null || !toRead.exists()){
+		try {
+			return FileUtils.readFileContent(toRead);
+		} catch (IOException e) {
 			setStatusCode(1);
-			return String.format("Error: No such file or directory");
-		} else if (toRead.isDirectory()) {
-			setStatusCode(1);
-			return String.format("Error: {0} is a directory", toRead.getName());
-		} else if (toRead.isFile()) {
-			try {
-				setStatusCode(0);
-				return readFileContent(toRead);
-			} catch (IOException e) {
-				setStatusCode(1);
-				return e.toString();
-			}
+			return e.toString();
+		} catch (RuntimeException e) {
+			setStatusCode(2);
+			return e.toString();
 		}
-
-		return null;
-	}
-	
-	private String readFileContent(File file) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		BufferedReader br = new BufferedReader(new FileReader(file));
-
-		int ch;
-		while ((ch = br.read()) != -1) {
-			sb.append((char) ch);
-		}
-
-		br.close();
-
-		return sb.toString();
 	}
 	
 	@Override
