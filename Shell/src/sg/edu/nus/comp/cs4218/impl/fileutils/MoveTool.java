@@ -38,10 +38,11 @@ public class MoveTool extends ATool implements IMoveTool{
 			    while((buffer=bs.readLine()) != null){
 			    	bw.write(buffer);
 			    	bw.flush();
-
 			    }
-			    
-			  from.delete();
+			 bs.close();
+			 bw.close();
+			 from.delete();
+			 return true;
 			}	    
 		} catch(Exception e){
 			e.printStackTrace();
