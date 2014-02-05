@@ -13,7 +13,9 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.fileutils.IDeleteTool;
 
@@ -22,6 +24,9 @@ public class DELETEToolTest {
 	
 		
 		IDeleteTool IDeleteTool;
+		
+		 @Rule
+		 public TemporaryFolder folder = new TemporaryFolder();
 
 		@Before
 		public void setUp() throws Exception {
@@ -35,7 +40,7 @@ public class DELETEToolTest {
 		@Test
 		public void testDeleteFileExists(){
 			try{
-				File origin = new File("originForDelete.txt");
+				File origin = folder.newFile("originForDelete.txt");
 				
 				if(!origin.exists()){
 				     origin.createNewFile();
@@ -45,8 +50,6 @@ public class DELETEToolTest {
 			    IDeleteTool.delete(origin);
 			    
 			    assertFalse(origin.exists());
-			    
-			    origin.delete();
 		
 				
 			}catch(Exception e){
@@ -56,12 +59,13 @@ public class DELETEToolTest {
 		@Test
 		public void testDeleteNotExists(){
 			try{
-				File origin = new File("originForDdelete.txt");
+				File origin = folder.newFile("originForDdelete.txt");
 				assertFalse(origin.exists());
                 
 				IDeleteTool.delete(origin);
 			    
 			    assertFalse(origin.exists());
+			    
 			}catch(Exception e){
 				e.printStackTrace();
 			}

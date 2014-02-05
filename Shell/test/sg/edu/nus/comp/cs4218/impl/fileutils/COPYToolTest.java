@@ -13,7 +13,9 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
 import sg.edu.nus.comp.cs4218.impl.DiffUtils;
@@ -25,6 +27,9 @@ public class COPYToolTest {
 		
 		ICopyTool IcopyTool;
 		DiffUtils DiffTool;
+		
+		@Rule
+		 public TemporaryFolder folder = new TemporaryFolder();
 
 		@Before
 		public void setUp() throws Exception {
@@ -40,8 +45,8 @@ public class COPYToolTest {
 		@Test
 		public void testCopyFileExists(){
 			try{
-				File origin = new File("originForCopy.txt");
-				File target = new File("targetForCopy.txt");
+				File origin = folder.newFile("originForCopy.txt");
+				File target = folder.newFile("targetForCopy.txt");
 				if(!origin.exists()){
 				     origin.createNewFile();
 				}
@@ -63,9 +68,6 @@ public class COPYToolTest {
 				IcopyTool.copy(origin, target);
 				assertTrue(DiffTool.isDifferent(origin, target));
 				
-				origin.delete();
-				target.delete();
-				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -73,8 +75,8 @@ public class COPYToolTest {
 		@Test
 		public void testFileNotExists(){
 			try{
-				File origin = new File("origin.txt");
-				File target = new File("target.txt");
+				File origin = folder.newFile("origin.txt");
+				File target = folder.newFile("target.txt");
 				
 				if(!origin.exists()){
 				     origin.createNewFile();
@@ -91,9 +93,6 @@ public class COPYToolTest {
 				IcopyTool.copy(origin, target);
 				
 				//assertTrue(!target.exists());
-				
-				origin.delete();
-				target.delete();
 				
 			}catch(Exception e){
 				e.printStackTrace();
