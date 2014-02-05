@@ -28,7 +28,7 @@ public class MoveTool extends ATool implements IMoveTool{
 			if(!to.isFile()){
 				throw new FileNotFoundException();
 			}
-				
+			else {	
 				FileReader fr = new FileReader(from);
 			    FileWriter fw = new FileWriter(to);
 			    BufferedReader bs = new BufferedReader (fr);
@@ -42,8 +42,7 @@ public class MoveTool extends ATool implements IMoveTool{
 			    }
 			    
 			  from.delete();
-			  
-			    
+			}	    
 		} catch(Exception e){
 			e.printStackTrace();
 		}
