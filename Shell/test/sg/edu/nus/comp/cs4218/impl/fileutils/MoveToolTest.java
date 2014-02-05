@@ -115,6 +115,8 @@ public class MoveToolTest {
 				
 				movetool.move(src, dest);
 				br = new BufferedReader(fr);
+				bw.close();
+				br.close();
 				assertEquals(br.readLine(), in);
 				
 				
