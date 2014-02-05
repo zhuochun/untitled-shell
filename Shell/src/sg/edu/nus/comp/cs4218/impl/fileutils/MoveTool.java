@@ -22,10 +22,10 @@ public class MoveTool extends ATool implements IMoveTool{
 	public boolean move(File from, File to) {
 		// TODO Auto-generated method stub
 		try{
-			if(!from.exists()){
+			if(!from.isFile()){
 				throw new FileNotFoundException();
 			}
-			if(!to.exists()){
+			if(!to.isFile()){
 				throw new FileNotFoundException();
 			}
 				
@@ -41,7 +41,8 @@ public class MoveTool extends ATool implements IMoveTool{
 
 			    }
 			    
-			    from.delete();
+			  from.delete();
+			  
 			    
 		} catch(Exception e){
 			e.printStackTrace();
