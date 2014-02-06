@@ -110,6 +110,15 @@ public class ArgListTest {
 		assertEquals("tt", args.getOptionValue("S"));
 		assertArrayEquals(new String[] { "N", "T", "S" }, args.getOptions());
 	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithInvalidValueOptions() {
+		String[] arguments = { "-N", "-T" };
+		
+		args.invalidOptionCheck = true;
+		args.registerAcceptableOption("N", ArgType.NUM, null);
+		args.parseArgs(arguments);
+	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testParseWithIncompleteValueOptionsAtLast() {

@@ -231,9 +231,15 @@ public class ArgList {
 			if (!iter.hasNext()) {
 				throw new IllegalArgumentException("Error: Invalid option -" + option);
 			}
+			
+			String val = iter.next();
+			
+			if (isAnOption(val)) {
+				throw new IllegalArgumentException("Error: Invalid option -" + option);
+			}
 
-			opt.value = iter.next();
-			arguments.add(opt.value);
+			opt.setValue(val);
+			arguments.add(val);
 		} else {
 			// other types handled by default
 		}
