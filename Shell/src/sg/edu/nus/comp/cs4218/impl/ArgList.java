@@ -43,6 +43,9 @@ public class ArgList {
 	private List<String> options;
 	private List<String> params;
 	private List<String> invalidOptions;
+	
+	public boolean optionsFirstCheck = true;
+	public boolean invalidOptionCheck = false;
 
 	public ArgList() {
 		Comparator<String> compare = new Comparator<String>() {
@@ -185,7 +188,7 @@ public class ArgList {
 		Iterator<String> argIter = Arrays.asList(args).iterator();
 		
 		while (argIter.hasNext()) {
-			String arg = argIter.next().trim();
+			String arg = argIter.next();
 			
 			if (arg.isEmpty()) {
 				continue;
@@ -205,14 +208,19 @@ public class ArgList {
 	}
 
 	private void parseOptionStr(String option, Iterator<String> iter) {
-		if (!params.isEmpty()) {
-			throw new IllegalArgumentException("Options -" + option + " should appear before params");
+		if (!params.isEmpty() && optionsFirstCheck) {
+			throw new IllegalArgumentException(
+					"Error: Option -" + option + " should appear in front");
 		}
 
 		Option opt = acceptableOptions.get(option);
 		arguments.add("-" + option);
 		
 		if (opt == null) {
+			if (invalidOptionCheck) {
+				throw new IllegalArgumentException("Error: Illegal option -" + option);
+			}
+
 			addWithoutDuplicate(invalidOptions, option);
 			return ;
 		}
@@ -221,13 +229,13 @@ public class ArgList {
 		
 		if (opt.type == ArgType.NUM) {
 			if (!iter.hasNext()) {
-				throw new IllegalArgumentException("Incomplete option -" + option);
+				throw new IllegalArgumentException("Error: Invalid option -" + option);
 			}
 
 			opt.value = iter.next();
 			arguments.add(opt.value);
 		} else {
-			// other types
+			// other types handled by default
 		}
 	}
 	
@@ -250,15 +258,22 @@ public class ArgList {
 		if (ended) {
 			String output = quote.toString();
 			params.add(output);
-			arguments.add(quoteMark + output + quoteMark);
+			arguments.add(output);
 		} else {
-			throw new IllegalArgumentException("Invalid starting quotation " + quoteMark);
+			throw new IllegalArgumentException("Error: Invalid starting quotation " + quoteMark);
 		}
 	}
 	
 	public static String[] split(String line) {
-		line = line.replaceAll("\\\\([^\\s]{1})", "$1");
-		return line.split("\\s+(?<=[^\\\\])");
+		// split by \s but not \\s
+		String[] result = line.split("(?<!\\\\)\\s+");
+
+		// trim and replace \? to ? if any
+		for (int i = 0; i < result.length; i++) {
+			result[i] = result[i].replaceAll("\\\\(.)", "$1").trim();
+		}
+
+		return result;
 	}
 	
 	private boolean isAnOption(String arg) {

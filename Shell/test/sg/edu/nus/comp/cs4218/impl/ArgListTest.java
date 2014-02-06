@@ -72,21 +72,28 @@ public class ArgListTest {
 		args.parseArgs(arguments.split(" "));
 	}
 	
+	public void testParseWithOptionAfterParamsNoCheck() {
+		String arguments = "test.txt -c";
+
+		args.optionsFirstCheck = false;
+		args.parseArgs(arguments.split(" "));
+
+		assertArrayEquals(arguments.split(" "), args.getArguments());
+		assertArrayEquals("-c".split(" "), args.getInvalidOptions());
+	}
+	
 	@Test
 	public void testParseWithParamsAndOptions() {
-		String[] arguments = { "\r\n", "-test", "", "-1", "--", "-", "test" };
+		String[] arguments = { "-test", "", "-1", "--", "\'h", "we\'", ">", "|", "-", "test" };
 
 		args.registerAcceptableOption("test", null);
 		args.parseArgs(arguments);
 		
 		assertFalse(args.isEmpty());
-		assertEquals(5, args.getArguments().length);
-		assertTrue(args.hasParams());
-		assertEquals(2, args.getParams().length);
-		assertTrue(args.hasOptions());
-		assertEquals(1, args.getOptions().length);
-		assertTrue(args.hasInvalidOptions());
-		assertEquals(2, args.getInvalidOptions().length);
+		assertArrayEquals(new String[] { "-test", "-1", "--", "h we", ">", "|", "-", "test" }, args.getArguments());
+		assertArrayEquals(new String[] { "h we", ">", "|", "-", "test" }, args.getParams());
+		assertArrayEquals(new String[] { "test" }, args.getOptions());
+		assertArrayEquals(new String[] { "1", "-" }, args.getInvalidOptions());
 	}
 
 	@Test
@@ -119,7 +126,7 @@ public class ArgListTest {
 		args.parseArgs(arguments.split(" "));
 		
 		assertEquals("quote string", args.getParams()[0]);
-		assertEquals(arguments, args.getArguments()[0]);
+		assertEquals("quote string", args.getArguments()[0]);
 	}
 
 	@Test
@@ -129,12 +136,19 @@ public class ArgListTest {
 		args.parseArgs(arguments.split(" "));
 		
 		assertEquals("single \"quote\" string", args.getParams()[0]);
-		assertEquals(arguments, args.getArguments()[0]);
+		assertEquals("single \"quote\" string", args.getArguments()[0]);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testParseWithIncompleteDoubleQuotedOptions() {
 		String[] arguments = { "\"quote" };
+		args.parseArgs(arguments);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithInvalidOptions() {
+		args.invalidOptionCheck = true;
+		String[] arguments = { "-quote", "-well" };
 		args.parseArgs(arguments);
 	}
 	
@@ -152,7 +166,6 @@ public class ArgListTest {
 	
 	@Test
 	public void testSplitLineWithDashSpace() {
-		// TODO fix me
 		String[] arguments = ArgList.split("ls -a test\\ hello.txt");
 		assertArrayEquals(new String[] { "ls", "-a", "test hello.txt" }, arguments);
 	}
