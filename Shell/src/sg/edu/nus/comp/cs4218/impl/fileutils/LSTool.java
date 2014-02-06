@@ -22,6 +22,8 @@ public class LSTool extends ATool implements ILsTool {
 
 	public LSTool(String[] arguments) {
 		super(arguments);
+
+		argList.invalidOptionCheck = true;
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class LSTool extends ATool implements ILsTool {
 	@Override
 	public String getStringForFiles(List<File> files) {
 		if (files == null || files.size() == 0) {
-			return "\n";
+			return "";
 		}
 		
 		StringBuffer ls = new StringBuffer();
@@ -68,15 +70,10 @@ public class LSTool extends ATool implements ILsTool {
 			setStatusCode(9);
 			return e.getMessage();
 		}
-
-		if (argList.hasInvalidOptions()) {
-			setStatusCode(9);
-			return "Error: Invalid Option " + argList.getInvalidOptions()[0];
-		}
 		
 		if (argList.hasParams()) {
 			for (String param : argList.getParams()) {
-				this.argDirectories.add(new File(param));
+				this.argDirectories.add(new File(workingDir, param));
 			}
 		}
 

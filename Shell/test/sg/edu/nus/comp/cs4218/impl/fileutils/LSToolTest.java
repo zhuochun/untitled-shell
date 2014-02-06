@@ -81,7 +81,7 @@ public class LSToolTest {
 		
 		assertEquals(2, files.size());
 		assertTrue(fileNames.contains(files.get(0).getName()));
-		assertTrue(fileNames.contains(files.get(0).getName()));
+		assertTrue(fileNames.contains(files.get(1).getName()));
 		assertEquals(0, lstool.getStatusCode());
 	}
 	
@@ -89,7 +89,7 @@ public class LSToolTest {
 	public void testGetStringForNullFile() {
 		String ls = lstool.getStringForFiles(null);
 
-		assertEquals("\n", ls);
+		assertEquals("", ls);
 		assertEquals(0, lstool.getStatusCode());
 	}
 	
@@ -114,6 +114,37 @@ public class LSToolTest {
 		String ls = lstool.getStringForFiles(files);
 
 		assertEquals("file1.txt\ntestDir\nfile2.java\n", ls);
+		assertEquals(0, lstool.getStatusCode());
+	}
+
+	@Test
+	public void testExecuteWithInvalidOptions() {
+		lstool = new LSTool(new String[] { "-a" });
+		lstool.execute(null, null);
+		assertNotEquals(0, lstool.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithFile() throws IOException {
+		folder.newFile("file1.txt");
+
+		lstool = new LSTool("file1.txt".split(" "));
+		String stdout = lstool.execute(folder.getRoot(), null);
+		
+		assertEquals("file1.txt\n", stdout);
+		assertEquals(0, lstool.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithFileAndDirectory() throws IOException {
+		folder.newFile("file1.txt");
+		folder.newFolder("testDir");
+		folder.newFile("file2.java");
+		
+		lstool = new LSTool(null);
+		String stdout = lstool.execute(folder.getRoot(), null);
+
+		assertEquals("file1.txt\nfile2.java\ntestDir\n", stdout);
 		assertEquals(0, lstool.getStatusCode());
 	}
 

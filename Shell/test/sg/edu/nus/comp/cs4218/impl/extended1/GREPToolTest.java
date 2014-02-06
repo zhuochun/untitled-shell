@@ -34,27 +34,6 @@ public class GREPToolTest {
 	}
 	
 	@Test
-	public void testExecuteWithInvalidArgs() {
-		grep = new GREPTool(new String[] { "-D" });
-		grep.execute(null, null);
-		assertNotEquals(0, grep.getStatusCode());
-	}
-	
-	@Test
-	public void testExecuteWithOptionAfterFileArgs() {
-		grep = new GREPTool(new String[] { "file1.txt", "-C" });
-		grep.execute(null, null);
-		assertNotEquals(0, grep.getStatusCode());
-	}
-
-	@Test
-	public void testExecuteWithOptionWithInvalidNum() {
-		grep = new GREPTool("-A ab file1.txt".split(" "));
-		grep.execute(null, null);
-		assertNotEquals(0, grep.getStatusCode());
-	}
-
-	@Test
 	public void testGetCountOfMatchingLinesNoMatching() {
 		int output = grep.getCountOfMatchingLines("abc", input);
 		assertEquals(0, output);
@@ -136,6 +115,27 @@ public class GREPToolTest {
 	public void testGetNonMatchingLinesWithNoMatching() {
 		String output = grep.getNonMatchingLines("abc", input);
 		assertEquals(input, output);
+	}
+
+	@Test
+	public void testExecuteWithInvalidArgs() {
+		grep = new GREPTool(new String[] { "-D" });
+		grep.execute(null, null);
+		assertNotEquals(0, grep.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithOptionAfterFileArgs() {
+		grep = new GREPTool(new String[] { "file1.txt", "-C" });
+		grep.execute(null, null);
+		assertNotEquals(0, grep.getStatusCode());
+	}
+
+	@Test
+	public void testExecuteWithOptionWithInvalidNum() {
+		grep = new GREPTool("-A ab -".split(" "));
+		grep.execute(null, null);
+		assertNotEquals(0, grep.getStatusCode());
 	}
 
 }

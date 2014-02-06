@@ -22,6 +22,8 @@ public class GREPTool extends ATool implements IGrepTool {
 	public GREPTool(String[] arguments) {
 		super(arguments);
 		
+		argList.invalidOptionCheck = true;
+		
 		argList.registerAcceptableOption("A", ArgType.NUM,
 				"Print NUM lines of trailing context after matching lines");
 		argList.registerAcceptableOption("B", ArgType.NUM,
@@ -245,43 +247,36 @@ public class GREPTool extends ATool implements IGrepTool {
 		return help.toString();
 	}
 	
-	private String executeOption(String option, String stdin) {
+	private String executeOption(String option, String input) {
 		try {
 			if (option.equals("A")) {
 				return getMatchingLinesWithTrailingContext(
 						Integer.parseInt(argList.getOptionValue("A")),
-						argList.getParams()[0],
-						stdin);
+						argList.getParam(0), input);
 			} else if (option.equals("B")) {
 				return getMatchingLinesWithLeadingContext(
 						Integer.parseInt(argList.getOptionValue("B")),
-						argList.getParams()[0],
-						stdin);
+						argList.getParam(0), input);
 			} else if (option.equals("C")) {
 				return getMatchingLinesWithOutputContext(
 						Integer.parseInt(argList.getOptionValue("C")),
-						argList.getParams()[0],
-						stdin);
+						argList.getParam(0), input);
 			}
 		} catch (NumberFormatException e) {
 			setStatusCode(3);
-			return "Error: Invalid Number for Option " + option;
+			return "Error: Invalid Number for Option -" + option;
 		}
 
 		if (option.equals("c")) {
-			Integer count = getCountOfMatchingLines(
-					argList.getParams()[0],
-					stdin);
+			Integer count = getCountOfMatchingLines( argList.getParams()[0], input);
 			return count.toString();
 		} else if (option.equals("o")) {
-			return getMatchingLinesOnlyMatchingPart(
-					argList.getParams()[0],
-					stdin);
+			return getMatchingLinesOnlyMatchingPart( argList.getParams()[0], input);
 		} else if (option.equals("v")) {
-			return getNonMatchingLines(argList.getParams()[0], stdin);
+			return getNonMatchingLines(argList.getParams()[0], input);
 		} else {
 			setStatusCode(9);
-			return "Error: Invalid Option " + option;
+			return "Error: Invalid Option -" + option;
 		}
 	}
 	
@@ -295,12 +290,6 @@ public class GREPTool extends ATool implements IGrepTool {
 			return e.getMessage();
 		}
 
-		// validate valid options
-		if (argList.hasInvalidOptions()) {
-			setStatusCode(9);
-			return "Error: Invalid Option " + argList.getInvalidOptions()[0];
-		}
-		
 		// help option?
 		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
 			return getHelp();
@@ -313,9 +302,9 @@ public class GREPTool extends ATool implements IGrepTool {
 		}
 		
 		// set input from stdin or file
-		String input = stdin;
+		String input = stdin == null ? stdin : "";
 		
-		if (!argList.getParam(0).equals("-")) {
+		if (argList.getParams().length > 1 && !argList.getParam(1).equals("-")) {
 			try {
 				input = FileUtils.readFileContent(new File(workingDir, argList.getParam(1)));
 			} catch (IOException e) {
@@ -329,15 +318,14 @@ public class GREPTool extends ATool implements IGrepTool {
 		
 		// option provided?
 		if (argList.hasOptions()) {
-			executeOption(argList.getOption(0), input);
+			return executeOption(argList.getOption(0), input);
 		}
 
 		// default
-		return getOnlyMatchingLines(argList.getParams()[0], input);
+		return getOnlyMatchingLines(argList.getParam(0), input);
 	}
 
 	class LineBuffer {
-		
 		private LinkedList<String> lines;
 		private int size;
 		
@@ -371,6 +359,5 @@ public class GREPTool extends ATool implements IGrepTool {
 			
 			return out.toString();
 		}
-		
 	}
 }

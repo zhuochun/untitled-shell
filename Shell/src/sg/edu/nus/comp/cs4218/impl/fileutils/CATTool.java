@@ -19,6 +19,8 @@ public class CATTool extends ATool implements ICatTool {
 
 	public CATTool(String[] arguments) {
 		super(arguments);
+		
+		argList.invalidOptionCheck = true;
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class CATTool extends ATool implements ICatTool {
 		} catch (IllegalArgumentException e) {
 			setStatusCode(9);
 			return e.getMessage();
-		}
-
-		if (argList.hasInvalidOptions()) {
-			setStatusCode(9);
-			return "Error: Invalid Option " + argList.getInvalidOptions()[0];
 		}
 
 		StringBuilder output = new StringBuilder();

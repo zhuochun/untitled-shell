@@ -2,7 +2,6 @@ package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertt
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -103,7 +102,19 @@ public class CATToolTest {
 		assertEquals("abc" + content, stdout);
 		assertEquals(0, cattool.getStatusCode());
 	}
-	
+
+	@Test
+	public void testExecuteWithFile() throws IOException {
+		String content = "abc\ncde\nfgh\t\nijk\r\n!@#$%^&*()";
+		createFile("test test.cab", content);
+
+		cattool = new CATTool(new String[] { "test test.cab" });
+		String stdout = cattool.execute(folder.getRoot(), null);
+
+		assertEquals(content, stdout);
+		assertEquals(0, cattool.getStatusCode());
+	}
+
 	@Test
 	public void testExecuteWithRelativeFilePath() throws IOException {
 		String filename = "test.txt";
