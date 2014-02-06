@@ -4,7 +4,7 @@ import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.impl.extended1.GREPTool;
 import sg.edu.nus.comp.cs4218.impl.fileutils.*;
 
-public class CommandToITool {
+public class CommandInterpreter {
 	public static ITool cmdToITool(String cmd, String[] args){
 			if(cmd.equals("cat")){
 				return new CATTool(args);

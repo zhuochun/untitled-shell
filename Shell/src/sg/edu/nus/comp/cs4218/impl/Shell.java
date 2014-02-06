@@ -8,7 +8,7 @@ import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
 import sg.edu.nus.comp.cs4218.impl.WorkerRunnable;
 
-import sg.edu.nus.comp.cs4218.impl.CommandToITool;
+import sg.edu.nus.comp.cs4218.impl.CommandInterpreter;
 import sg.edu.nus.comp.cs4218.impl.ArgList;;
 
 /**
@@ -35,7 +35,7 @@ public class Shell implements IShell {
 		//TODO: confirm with Zhuochun if this is the correct usage
 		String[] argList = ArgList.split(commandline);
 		String[] args = Arrays.copyOfRange(argList, 1, argList.length);
-		ITool tool = CommandToITool.cmdToITool(argList[0], args); 
+		ITool tool = CommandInterpreter.cmdToITool(argList[0], args); 
 		
 		if (tool == null) {
 			System.err.println("Cannot parse " + commandline);
