@@ -8,7 +8,8 @@ import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
 import sg.edu.nus.comp.cs4218.impl.WorkerRunnable;
 
-import sg.edu.nus.comp.cs4218.impl.CommandToITool;;
+import sg.edu.nus.comp.cs4218.impl.CommandToITool;
+import sg.edu.nus.comp.cs4218.impl.ArgList;;
 
 /**
  * The Shell is used to interpret and execute user's
@@ -31,9 +32,10 @@ public class Shell implements IShell {
 	
 	@Override
 	public ITool parse(String commandline) {
-		String[] argList = commandline.split(" ");
+		//TODO: confirm with Zhuochun if this is the correct usage
+		String[] argList = ArgList.split(commandline);
 		String[] args = Arrays.copyOfRange(argList, 1, argList.length);
-		ITool tool = CommandToITool.cmdToITool(argList[1], args); 
+		ITool tool = CommandToITool.cmdToITool(argList[0], args); 
 		
 		if (tool == null) {
 			System.err.println("Cannot parse " + commandline);
