@@ -7,6 +7,7 @@ import java.util.List;
 import sg.edu.nus.comp.cs4218.fileutils.ILsTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 /*
  * ls - list directory contents
@@ -17,7 +18,6 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;
  */
 public class LSTool extends ATool implements ILsTool {
 	
-	private List<File> argDirectories = new ArrayList<File>();
 	private ArgList argList = new ArgList();
 
 	public LSTool(String[] arguments) {
@@ -71,17 +71,15 @@ public class LSTool extends ATool implements ILsTool {
 			return e.getMessage();
 		}
 		
+		// set ls directory
+		File lsDir = workingDir;
+		
+		// only take the first one for now
 		if (argList.hasParams()) {
-			for (String param : argList.getParams()) {
-				this.argDirectories.add(new File(workingDir, param));
-			}
+			lsDir = new File(PathUtils.PathResolver(workingDir, argList.getParam(0)));
 		}
 
-		if (argDirectories.size() > 0) {
-			return getStringForFiles(getFiles(argDirectories.get(0)));
-		} else {
-			return getStringForFiles(getFiles(workingDir));
-		}
+		return getStringForFiles(getFiles(lsDir));
 	}
 
 }
