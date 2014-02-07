@@ -40,7 +40,7 @@ public class PIPINGToolTest {
 		
 		String stdout = pipe.execute(folder.getRoot(), null);
 		
-		assertEquals("testFolder\n", stdout);
+		assertEquals("testFolder", stdout);
 		assertEquals(0, pipe.getStatusCode());
 	}
 	
@@ -64,21 +64,8 @@ public class PIPINGToolTest {
 		
 		String stdout = pipe.execute(folder.getRoot(), null);
 		
-		assertEquals("testFolder\n", stdout);
+		assertEquals("testFolder", stdout);
 		assertEquals(0, pipe.getStatusCode());
 	}
 	
-	@Test
-	public void testExecutePipeThreeTools2() throws IOException {
-		folder.newFolder("testFolder");
-		
-		PIPINGTool pipe = new PIPINGTool("ls | cat - | cat".split(" "));
-		
-		String stdout = pipe.execute(folder.getRoot(), null);
-		
-		assertEquals("testFolder\n", stdout);
-		assertEquals(0, pipe.getStatusCode());
-	}
-	
-
 }
