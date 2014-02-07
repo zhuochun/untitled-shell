@@ -4,10 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
-import sg.edu.nus.comp.cs4218.impl.WorkerRunnable;
+import sg.edu.nus.comp.cs4218.impl.WorkerCallable;
 import sg.edu.nus.comp.cs4218.impl.CommandInterpreter;
 import sg.edu.nus.comp.cs4218.impl.ArgList;;
 
@@ -24,10 +29,15 @@ public class Shell implements IShell {
 	
 	private static File workingDir;
 	private static int[] exitCode;
+	private static String[] output;
+	private static boolean isCd;
+	private static Callable<File> callable;
+	private static Future<File> future;
 	
 	public Shell() {
 		exitCode = new int[1];
 		workingDir = new File(System.getProperty("user.dir"));
+		output = new String[1];
 	}
 	
 	@Override
@@ -35,7 +45,9 @@ public class Shell implements IShell {
 		ArrayList<String> params = new ArrayList<String>();
 		String cmd = ArgList.split(commandline, params);
 		
-		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0])); 
+		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0]));
+		
+		callable = new WorkerCallable(tool, workingDir, "", exitCode, cmd);
 		
 		if (tool == null) {
 			System.err.println("Cannot parse " + commandline);
@@ -45,16 +57,13 @@ public class Shell implements IShell {
 	}
 
 	@Override
-	public Runnable execute(ITool tool) {		
-		WorkerRunnable worker = new WorkerRunnable(tool, workingDir, stdin, 
-												   exitCode);
-		return worker;
+	public Runnable execute(ITool tool) {
+		return null;
 	}
 
 	@Override
 	public void stop(Runnable toolExecution) {
-		Thread worker = (Thread) toolExecution;
-		worker.stop();
+		return;
 	}
 	
 	/**
@@ -69,31 +78,38 @@ public class Shell implements IShell {
 	 */
 	public static void main(String[] args){	
 		Shell shell = new Shell();
+		ExecutorService executor = Executors.newFixedThreadPool(2);
 		
-		System.out.print("[" + workingDir + "]$ ");
+		System.out.print("[" + workingDir.toString() + "]$ ");
 
 		// Take in the user input
 		Scanner scanner = new Scanner(System.in);
-		Thread workingThread = null;
 		
 		while (true) {
 			// If no thread is working, we should print the working
 			// directory
-			if (!workingThread.isAlive()) {
-				System.out.print("[" + workingDir + "]$ ");
+			if (future.isDone()) {
+				try {
+					workingDir = future.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.print("[" + workingDir.toString() + "]$ ");
 			}
 			
 			String commandLine = scanner.nextLine();
 			
 			if (commandLine.equals("Ctrl-Z")) {
-				if (workingThread.isAlive()) {
-					shell.stop(workingThread);
+				if (!future.isDone()) {
+					future.cancel(true);
 				}
 			} else {
-				ITool newTool = shell.parse(commandLine);
-				workingThread = new Thread(shell.execute(newTool));
-				
-				workingThread.start();
+				shell.parse(commandLine);
+				future = executor.submit(callable);
 			}
 		}
 	}
