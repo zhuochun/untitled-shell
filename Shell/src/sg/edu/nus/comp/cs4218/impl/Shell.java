@@ -1,13 +1,13 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
 import sg.edu.nus.comp.cs4218.impl.WorkerRunnable;
-
 import sg.edu.nus.comp.cs4218.impl.CommandInterpreter;
 import sg.edu.nus.comp.cs4218.impl.ArgList;;
 
@@ -32,10 +32,10 @@ public class Shell implements IShell {
 	
 	@Override
 	public ITool parse(String commandline) {
-		String[] argList = ArgList.split(commandline);
+		ArrayList<String> params = new ArrayList<String>();
+		String cmd = ArgList.split(commandline, params);
 		
-		String[] args = Arrays.copyOfRange(argList, 1, argList.length);
-		ITool tool = CommandInterpreter.cmdToITool(argList[0], args); 
+		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0])); 
 		
 		if (tool == null) {
 			System.err.println("Cannot parse " + commandline);
