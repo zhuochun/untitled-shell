@@ -318,4 +318,12 @@ public class PathUtilTest {
 		
 		assertEquals(path + "~~/~~/", actualPath);
 	}
+	
+	@Test
+	public void testGetRandomSubpath() {
+		Path p = Paths.get(currentDir);
+		Path newP = PathUtils.GetRandomSubpath(p);
+		
+		assertEquals(newP.toString() + "/", PathUtils.PathResolver(currentDir, newP.toString()));
+	}
 }

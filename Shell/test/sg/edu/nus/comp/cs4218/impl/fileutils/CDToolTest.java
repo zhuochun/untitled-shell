@@ -11,9 +11,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.fileutils.ICdTool;
+
 public class CDToolTest {
 
-	CDTool tool;
+	ICdTool tool;
 	
 	String workingDir;
 	String homeDir;

@@ -73,4 +73,11 @@ public class PathUtils {
 	public static String GetLastElementOfPath(File path) {
 		return GetLastElementOfPath(path.toString());
 	}
+	
+	public static Path GetRandomSubpath(Path path) {
+		int depth = path.getNameCount();
+		int newDepth = 2 + (int)(Math.random() * 1000000) % (depth - 2);
+		
+		return Paths.get("/" + path.subpath(0, newDepth).toString());
+	}
 }
