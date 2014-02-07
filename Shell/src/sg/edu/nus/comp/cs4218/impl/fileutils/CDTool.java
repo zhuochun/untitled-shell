@@ -62,14 +62,11 @@ public class CDTool extends ATool implements ICdTool {
 			// now we should check if the path is essentially a file
 			if (newDir.isFile()) {
 				setStatusCode(9);
-				output = PathUtils.GetLastElementOfPath(newDir) + "is a file!";
+				output = PathUtils.GetLastElementOfPath(newDir) + " is a file!";
 			} else {
 				// everything is fine, we can change shell's default directory
-				workingDir = changeDirectory(newDir.toString());
-				// in this case, user will see the new directory in the shell
-				// when he executes the next command, so no explicit output is
-				// needed
-				output = "";
+				output = newDir.toString();
+				setStatusCode(0);
 			}
 		}
 
