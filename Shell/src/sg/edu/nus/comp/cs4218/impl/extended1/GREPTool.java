@@ -16,14 +16,14 @@ import sg.edu.nus.comp.cs4218.impl.ArgList.Option;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 
 public class GREPTool extends ATool implements IGrepTool {
-	
+
 	private ArgList argList = new ArgList();
 
 	public GREPTool(String[] arguments) {
 		super(arguments);
-		
+
 		argList.invalidOptionCheck = true;
-		
+
 		argList.registerAcceptableOption("A", ArgType.NUM,
 				"Print NUM lines of trailing context after matching lines");
 		argList.registerAcceptableOption("B", ArgType.NUM,
@@ -44,51 +44,61 @@ public class GREPTool extends ATool implements IGrepTool {
 	public int getCountOfMatchingLines(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		int output;
 
 		int count = 0;
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				if (m.find()) {
 					count += 1;
 				}
 			}
 
-			return count;
+			br.close();
+
+			output = count;
 		} catch (IOException e) {
 			setStatusCode(2);
-			return -1;
+			output = -1;
 		}
+
+		return output;
 	}
 
 	@Override
 	public String getOnlyMatchingLines(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		String output;
 
 		StringBuffer stdout = new StringBuffer();
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				if (m.find()) {
 					stdout.append(line + "\n");
 				}
 			}
+
+			br.close();
 
 			// remove the last trailing \n
 			if (stdout.length() > 0) {
 				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
-			return stdout.toString();
+			output = stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
-			return e.getMessage();
+			output = e.getMessage();
 		}
+
+		return output;
 	}
 
 	@Override
@@ -96,6 +106,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		String output;
 
 		StringBuffer stdout = new StringBuffer();
 		try {
@@ -103,7 +114,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			int trailingCount = 0;
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				if (m.find()) {
 					stdout.append(line + "\n");
 					trailingCount = option_A;
@@ -112,17 +123,21 @@ public class GREPTool extends ATool implements IGrepTool {
 					trailingCount -= 1;
 				}
 			}
+			
+			br.close();
 
 			// remove the last trailing \n
 			if (stdout.length() > 0) {
 				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
-			return stdout.toString();
+			output = stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
-			return e.getMessage();
+			output = e.getMessage();
 		}
+		
+		return output;
 	}
 
 	@Override
@@ -130,6 +145,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		String output;
 
 		StringBuffer stdout = new StringBuffer();
 		try {
@@ -137,7 +153,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			LineBuffer lineBuffer = new LineBuffer(option_B);
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				if (m.find()) {
 					stdout.append(lineBuffer.popAllToString());
 					stdout.append(line + "\n");
@@ -145,17 +161,21 @@ public class GREPTool extends ATool implements IGrepTool {
 					lineBuffer.add(line);
 				}
 			}
+			
+			br.close();
 
 			// remove the last trailing \n
 			if (stdout.length() > 0) {
 				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
-			return stdout.toString();
+			output = stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
-			return e.getMessage();
+			output = e.getMessage();
 		}
+
+		return output;
 	}
 
 	@Override
@@ -163,6 +183,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		String output;
 
 		StringBuffer stdout = new StringBuffer();
 		try {
@@ -171,7 +192,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			LineBuffer lineBuffer = new LineBuffer(option_C);
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				if (m.find()) {
 					if (trailingCount > 0 && trailingCount != option_C) {
 						stdout.append("--\n");
@@ -188,77 +209,91 @@ public class GREPTool extends ATool implements IGrepTool {
 						stdout.append(line + "\n");
 						trailingCount -= 1;
 					}
-					
+
 					lineBuffer.add(line);
 				}
 			}
+			
+			br.close();
 
 			// remove the last trailing \n
 			if (stdout.length() > 0) {
 				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
-			return stdout.toString();
+			output = stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
-			return e.getMessage();
+			output = e.getMessage();
 		}
+
+		return output;
 	}
 
 	@Override
 	public String getMatchingLinesOnlyMatchingPart(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		String output;
 
 		StringBuffer stdout = new StringBuffer();
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				while (m.find()) {
 					stdout.append(m.group() + "\n");
 				}
 			}
+			
+			br.close();
 
 			// remove the last trailing \n
 			if (stdout.length() > 0) {
 				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
-			return stdout.toString();
+			output = stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
-			return e.getMessage();
+			output = e.getMessage();
 		}
+
+		return output;
 	}
 
 	@Override
 	public String getNonMatchingLines(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
+		String output;
 
 		StringBuffer stdout = new StringBuffer();
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
-				
+
 				if (!m.find()) {
 					stdout.append(line + "\n");
 				}
 			}
 			
+			br.close();
+
 			// remove the last trailing \n
 			if (stdout.length() > 0) {
 				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
-			return stdout.toString();
+			output = stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
-			return e.getMessage();
+			output = e.getMessage();
 		}
+
+		return output;
 	}
 
 	@Override
@@ -266,22 +301,22 @@ public class GREPTool extends ATool implements IGrepTool {
 		StringBuilder help = new StringBuilder();
 
 		help.append("Command Format - grep [OPTIONS] PATTERN [FILE]\n");
- 		help.append("PATTERN - This specifies a regular expression pattern that describes a set of strings\n");
- 		help.append("FILE - Name of the file, when no file is present (denoted by \"-\") use standard input\n");
- 		help.append("OPTIONS\n");
- 		
- 		for (Option opt : argList.getAcceptableOptions()) {
- 			help.append("  " + opt.toString() + "\n");
- 		}
+		help.append("PATTERN - This specifies a regular expression pattern that describes a set of strings\n");
+		help.append("FILE - Name of the file, when no file is present (denoted by \"-\") use standard input\n");
+		help.append("OPTIONS\n");
 
- 		// remove the last trailing \n
- 		if (help.length() > 0) {
- 			help.deleteCharAt(help.length() - 1);
- 		}
- 		
+		for (Option opt : argList.getAcceptableOptions()) {
+			help.append("  " + opt.toString() + "\n");
+		}
+
+		// remove the last trailing \n
+		if (help.length() > 0) {
+			help.deleteCharAt(help.length() - 1);
+		}
+
 		return help.toString();
 	}
-	
+
 	private String executeOption(String option, String input) {
 		try {
 			if (option.equals("A")) {
@@ -303,10 +338,12 @@ public class GREPTool extends ATool implements IGrepTool {
 		}
 
 		if (option.equals("c")) {
-			Integer count = getCountOfMatchingLines( argList.getParams()[0], input);
+			Integer count = getCountOfMatchingLines(argList.getParams()[0],
+					input);
 			return count.toString();
 		} else if (option.equals("o")) {
-			return getMatchingLinesOnlyMatchingPart( argList.getParams()[0], input);
+			return getMatchingLinesOnlyMatchingPart(argList.getParams()[0],
+					input);
 		} else if (option.equals("v")) {
 			return getNonMatchingLines(argList.getParams()[0], input);
 		} else {
@@ -314,7 +351,7 @@ public class GREPTool extends ATool implements IGrepTool {
 			return "Error: Invalid Option -" + option;
 		}
 	}
-	
+
 	@Override
 	public String execute(File workingDir, String stdin) {
 		// parse arguments
@@ -329,19 +366,20 @@ public class GREPTool extends ATool implements IGrepTool {
 		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
 			return getHelp();
 		}
-		
+
 		// check pattern exists
 		if (!argList.hasParams()) {
 			setStatusCode(8);
 			return "Error: No Pattern Provided";
 		}
-		
+
 		// set input from stdin or file
 		String input = stdin == null ? "" : stdin;
-		
+
 		if (argList.getParams().length > 1 && !argList.getParam(1).equals("-")) {
 			try {
-				input = FileUtils.readFileContent(new File(workingDir, argList.getParam(1)));
+				input = FileUtils.readFileContent(new File(workingDir, argList
+						.getParam(1)));
 			} catch (IOException e) {
 				setStatusCode(1);
 				return e.getMessage();
@@ -350,7 +388,7 @@ public class GREPTool extends ATool implements IGrepTool {
 				return e.getMessage();
 			}
 		}
-		
+
 		// option provided?
 		if (argList.hasOptions()) {
 			return executeOption(argList.getOption(0), input);
@@ -363,12 +401,12 @@ public class GREPTool extends ATool implements IGrepTool {
 	class LineBuffer {
 		private LinkedList<String> lines;
 		private int size;
-		
+
 		public LineBuffer(int size) {
 			this.size = size;
 			this.lines = new LinkedList<String>();
 		}
-		
+
 		public void add(String line) {
 			if (lines.size() == size) {
 				lines.remove();
@@ -376,22 +414,22 @@ public class GREPTool extends ATool implements IGrepTool {
 
 			lines.add(line);
 		}
-		
+
 		public void clear() {
 			lines.clear();
 		}
-		
+
 		public String popAllToString() {
 			if (lines.size() == 0) {
 				return "";
 			}
 
 			StringBuffer out = new StringBuffer();
-			
+
 			while (!lines.isEmpty()) {
 				out.append(lines.remove() + "\n");
 			}
-			
+
 			return out.toString();
 		}
 	}
