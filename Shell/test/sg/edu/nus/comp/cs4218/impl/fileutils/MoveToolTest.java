@@ -39,21 +39,7 @@ public class MoveToolTest {
 			File src = folder.newFile("Src.txt");
 			File dest = folder.newFile("Dest.txt");
 
-			/*
-			if(!src.exists()){
-			     src.createNewFile();
-			}
-			
-			FileWriter fw = new FileWriter(src);
-			BufferedWriter bw = new BufferedWriter(fw);
-			FileReader fr = new FileReader(dest);
-			BufferedReader br = new BufferedReader(fr);
-			
-			//construct origin file
-			String content = "abc123^*&;(-)";
-			bw.write(content);
-			bw.flush();
-			*/
+		
 			movetool.move(src, dest);
 			assertTrue(dest.exists());
 		}catch(Exception e){
@@ -67,17 +53,7 @@ public class MoveToolTest {
 			File src = folder.newFile("Src.txt");
 			File dest = folder.newFile("Dest.txt");
 			
-	/*
-			FileWriter fw = new FileWriter(src);
-			BufferedWriter bw = new BufferedWriter(fw);
-			FileReader fr = new FileReader(dest);
-			BufferedReader br = new BufferedReader(fr);
-			
-			//construct origin file
-			String content = "abc123^*&;(-)";
-			bw.write(content);
-			bw.flush();
-			*/
+	
 			movetool.move(src, dest);
 			
 			assertTrue(!src.exists());
@@ -92,13 +68,7 @@ public class MoveToolTest {
 		try{
 				File src = folder.newFile("Src.txt");
 				File dest = folder.newFile("Dest.txt");
-/*				if(!src.exists()){
-				     src.createNewFile();
-				}
-				if(!dest.exists()){
-				     dest.createNewFile();
-				}
-				*/
+
 				FileWriter fw = new FileWriter(src);
 				BufferedWriter bw = new BufferedWriter(fw);
 				FileReader fr = new FileReader(dest);
