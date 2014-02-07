@@ -35,21 +35,21 @@ public class ECHOToolTest {
 	}
 	
 	@Test
-	public void testEcho1(){
+	public void testEchoWithDoubleQuotes(){
 		String st = new String();
 		st = "This is a test \"string\"";
 		
-		assertEquals(echotool.echo(st),"THis is a test string");
+		assertEquals(echotool.echo(st),"This is a test string");
 	}
 	@Test
-	public void testEcho2(){
+	public void testEchoWithSingleQuotes(){
 		String st = new String();
 		st = "'This is a test' string";
 		
 		assertEquals(echotool.echo(st),"This is a test string");
 	}
 	@Test
-	public void testEcho3(){
+	public void testEchoWitBothQuotes(){
 		String st = new String();
 		st = "This is a \"test\" 'string'";
 		assertEquals(echotool.echo(st),"This is a test string");
