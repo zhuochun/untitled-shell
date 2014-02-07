@@ -136,6 +136,16 @@ public class MoveToolTest {
 public void testExcuteWithNullStdin(){
 	assertEquals(movetool.execute(null,null), "Move command need to have Two params");
 }
-
+@Test
+public void testDiffFormatFile(){
+	try {
+		File src = new File(System.getProperty("use.dir")+"//test//rainbow1.jpg");
+		File dest = new File(System.getProperty("user.dir")+"//test//aloha.jpg");
+		movetool.move(src, dest);
+		assertEquals(dest.getName(),"aloha.jpg");
+	}catch(Exception e){
+		e.printStackTrace();
+	}
+}
 
 }

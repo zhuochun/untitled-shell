@@ -25,7 +25,7 @@ public class MoveTool extends ATool implements IMoveTool{
 				throw new FileNotFoundException();
 			}
 			if(!to.isFile()){
-				throw new FileNotFoundException();
+				to.createNewFile();
 			}
 				
 			 from.renameTo(to);
