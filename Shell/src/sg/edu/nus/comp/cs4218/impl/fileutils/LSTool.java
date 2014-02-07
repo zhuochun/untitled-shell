@@ -47,7 +47,7 @@ public class LSTool extends ATool implements ILsTool {
 
 	@Override
 	public String getStringForFiles(List<File> files) {
-		if (files == null || files.size() == 0) {
+		if (files == null || files.isEmpty()) {
 			return "";
 		}
 		
