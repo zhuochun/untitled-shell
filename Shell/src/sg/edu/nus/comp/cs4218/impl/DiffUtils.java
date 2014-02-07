@@ -13,7 +13,6 @@ public class DiffUtils {
 				throw new FileNotFoundException ("File is missing") ;
 			}
 
-
 			FileInputStream fis1 = new FileInputStream(file1);
 			FileInputStream fis2 = new FileInputStream(file2);
 

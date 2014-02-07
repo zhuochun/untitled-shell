@@ -16,13 +16,15 @@ import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.impl.DiffUtils;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
+
 public class MoveToolTest {
-	
+
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
-	 
+
 	private IMoveTool movetool;
 	private DiffUtils difftool;
+
 	@Before
 	public void setUp() throws Exception {
 		movetool = new MoveTool(null);
@@ -32,122 +34,108 @@ public class MoveToolTest {
 	public void tearDown() throws Exception {
 		movetool = null;
 	}
-	
+
 	@Test
-	public void testMovedFileExists(){
-		try{
+	public void testMovedFileExists() {
+		try {
 			File src = folder.newFile("Src.txt");
 			File dest = folder.getRoot();
 
-		
 			movetool.move(src, dest);
 			assertTrue(dest.exists());
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
 	}
+
 	@Test
-	public void testSrcFileNotExists(){
-		try{
+	public void testSrcFileNotExists() {
+		try {
 			File src = folder.newFile("Src.txt");
 			File dest = folder.getRoot();
-			
-	
+
 			movetool.move(src, dest);
-			
+
 			assertTrue(!src.exists());
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
+
 	@Test
-	public void testBeforeMove(){
-		try{
-				File src = folder.newFile("Src.txt");
-				File target = folder.newFile("target.txt");
+	public void testBeforeMove() {
+		try {
+			File src = folder.newFile("Src.txt");
+			File target = folder.newFile("target.txt");
 
-				FileWriter fw = new FileWriter(src);
-				BufferedWriter bw = new BufferedWriter(fw);
-				FileReader fr = new FileReader(target);
-				BufferedReader br = new BufferedReader(fr);
-				
-				//construct origin file
-				String content = "abcde12345ABC@#$%-;()*";
-				bw.write(content);
-				bw.flush();
-				//String in = new String (content);
-				
-				
-				assertEquals(br.readLine(),null);
-				
-				movetool.move(src, target);
-				br = new BufferedReader(fr);
-				bw.close();
-				br.close();
+			FileWriter fw = new FileWriter(src);
+			BufferedWriter bw = new BufferedWriter(fw);
+			FileReader fr = new FileReader(target);
+			BufferedReader br = new BufferedReader(fr);
 
-				
-				
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-	}
-		@Test
-		public void testAfterMove(){
-			try{
-					File src = folder.newFile("Src.txt");
-					File dest = folder.newFile("target.txt");
-	/*				if(!src.exists()){
-					     src.createNewFile();
-					}
-					if(!dest.exists()){
-					     dest.createNewFile();
-					}
-					*/
+			// construct origin file
+			String content = "abcde12345ABC@#$%-;()*";
+			bw.write(content);
+			bw.flush();
+			// String in = new String (content);
 
-					FileWriter fw = new FileWriter(src);
-					BufferedWriter bw = new BufferedWriter(fw);
-					FileReader fr = new FileReader(dest);
-					BufferedReader br = new BufferedReader(fr);
-					
-					//construct origin file
-					String content = "abcde12345ABC@#$%-;()*";
-					bw.write(content);
-					bw.flush();
-					String in = new String (content);
-					
-					
-					assertEquals(br.readLine(), null);
-					
-					movetool.move(src, dest);
-					br = new BufferedReader(fr);
-	
-					bw.close();
-					br.close();
-					assertEquals(br.readLine(), in);
-					
-					
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+			assertEquals(br.readLine(), null);
+
+			movetool.move(src, target);
+			br = new BufferedReader(fr);
+			bw.close();
+			br.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-@Test
-public void testExcuteWithNullStdin(){
-	assertEquals(movetool.execute(null,null), "Move command need to have Two params");
-}
-@Test
-public void testDiffFormatFile(){
-	try {
-		File src = new File("Shell/test/rainbow1.jpg");
-		File dest =new File("Shell/test/child");
-		
-		assertEquals(movetool.move(src, dest),false);
-	}catch(Exception e){
-		e.printStackTrace();
 	}
-}
+
+	@Test
+	public void testAfterMove() {
+		try {
+			File src = folder.newFile("Src.txt");
+			File dest = folder.newFile("target.txt");
+			/*
+			 * if(!src.exists()){ src.createNewFile(); } if(!dest.exists()){
+			 * dest.createNewFile(); }
+			 */
+
+			FileWriter fw = new FileWriter(src);
+			BufferedWriter bw = new BufferedWriter(fw);
+			FileReader fr = new FileReader(dest);
+			BufferedReader br = new BufferedReader(fr);
+
+			// construct origin file
+			String content = "abcde12345ABC@#$%-;()*";
+			bw.write(content);
+			bw.flush();
+			String in = new String(content);
+
+			assertEquals(br.readLine(), null);
+
+			movetool.move(src, dest);
+			br = new BufferedReader(fr);
+
+			bw.close();
+			br.close();
+			assertEquals(br.readLine(), in);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDiffFormatFile() {
+		try {
+			File src = new File("Shell/test/rainbow1.jpg");
+			File dest = new File("Shell/test/child");
+
+			assertEquals(movetool.move(src, dest), false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
