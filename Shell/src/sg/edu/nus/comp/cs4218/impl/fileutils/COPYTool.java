@@ -11,14 +11,14 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
 
 public class COPYTool extends ATool implements ICopyTool{
-	
+
 	private ArgList argList = new ArgList();
-	
+
 	public COPYTool(String[] arguments) {
 		super(arguments);
-		
+
 		argList.invalidOptionCheck = true;
-		
+
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class COPYTool extends ATool implements ICopyTool{
 			Files.copy(from.toPath(),to.toPath());
 		}catch (FileNotFoundException e){
 			e.printStackTrace();
-			
+
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -44,17 +44,17 @@ public class COPYTool extends ATool implements ICopyTool{
 
 	@Override
 	public String execute(File workingDir, String stdin) {
-		
+
 		// make sure stdin exists
 		if (stdin == null) { 
 			stdin = "";
-		    return "copy commmand must have two params";
-		
+			return "copy commmand must have two params";
+
 		}
-		
+
 		//TODO: at this moment we assume no stdin. confirm with others
 		// how to parse stdin!!!
-		
+
 		// parse arguments
 		try {
 			argList.parseArgs(this.args);
@@ -62,13 +62,19 @@ public class COPYTool extends ATool implements ICopyTool{
 			setStatusCode(9);
 			return e.getMessage();
 		}
-		
-		if(copy(new File(argList.getParam(1)),new File (argList.getParam(2)))){
-			return "copy successful";
+		if(argList.getParams().length >= 2){
+
+			if(copy(new File(argList.getParam(0)),new File (argList.getParam(1)))){
+				return "copy successful";
+			}
+			else{
+				setStatusCode(9);
+				return "copy unsuccessful";
+			}
 		}
 		else{
 			setStatusCode(9);
-			return "copy unsuccessful";
+			return "the number of parameters should not be less than 2";
 		}
 	}
 }
