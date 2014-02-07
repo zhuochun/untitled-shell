@@ -1,7 +1,8 @@
+//chen hao
+
 package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 
