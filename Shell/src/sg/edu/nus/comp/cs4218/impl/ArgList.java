@@ -319,7 +319,7 @@ public class ArgList {
 	 * @param params arguments in line other than the command
 	 * @return command name as String
 	 */
-	public static String split(String line, ArrayList<String> params) {
+	public static String split(String line, ArrayList<String> params) throws IllegalArgumentException {
 		// split by \s
 		String[] result = line.split("\\s+");
 		
@@ -335,6 +335,27 @@ public class ArgList {
 			params.add(t.replaceAll("\\\\(.)", "$1"));
 		}
 
-		return params.remove(0);
+		ArgList tempList = new ArgList();
+
+		tempList.invalidOptionCheck = false;
+		tempList.optionsFirstCheck = false;
+
+		tempList.parseArgs(params.toArray(new String[0]));
+		
+		// reset params
+		params.clear();
+		for (String arg : tempList.getArguments()) {
+			params.add(arg);
+		}
+		
+		// return cmd
+		if (tempList.hasArgument("|")) {
+			return "pipe";
+		} else if (params.isEmpty()) {
+			return "";
+		} else {
+			return params.remove(0);
+		}
 	}
+	
 }

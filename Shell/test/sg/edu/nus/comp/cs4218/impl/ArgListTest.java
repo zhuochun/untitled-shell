@@ -229,7 +229,29 @@ public class ArgListTest {
 		String cmd = ArgList.split(line, arguments);
 
 		assertEquals("ls", cmd);
-		assertArrayEquals(new String[] { "-a", "\"hello", "world\"" },  arguments.toArray(new String[0]));
+		assertArrayEquals(new String[] { "-a", "hello world" },  arguments.toArray(new String[0]));
+	}
+	
+	@Test
+	public void testSplitWithPipe() {
+		ArrayList<String> arguments = new ArrayList<String>();
+
+		String line = "\"test1 | test2\" | abc";
+		String cmd = ArgList.split(line, arguments);
+
+		assertEquals("pipe", cmd);
+		assertArrayEquals(new String[] { "test1 | test2", "|", "abc" },  arguments.toArray(new String[0]));
+	}
+
+	@Test
+	public void testSplitWithInvalidPipe() {
+		ArrayList<String> arguments = new ArrayList<String>();
+
+		String line = "\"test1 | test2\" abc";
+		String cmd = ArgList.split(line, arguments);
+
+		assertEquals("test1 | test2", cmd);
+		assertArrayEquals(new String[] { "abc" },  arguments.toArray(new String[0]));
 	}
 	
 }
