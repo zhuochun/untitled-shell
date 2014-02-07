@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
-
 public class PathUtilTest {
 	
 	String currentDir;

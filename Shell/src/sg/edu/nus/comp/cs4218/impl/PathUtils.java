@@ -4,8 +4,24 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * This class deals with path issues.
+ */
 public class PathUtils {
 
+	/**
+	 * This functions takes in the current working path and the new path, and
+	 * will return the resolved path. If the path represents a possible 
+	 * directory, the returned path will have a '/' at behind. Any duplicate
+	 * '/' will be resolved to only one '/'. E.g. "adsf///asdf//sd/s/" will be
+	 * resolved as "adsf/asdf/sd/s/", and "aa/bb" will be resolved as "aa/bb"
+	 * if "bb" does not exist or is a file under aa, if "bb" exists and is a
+	 * directory, "aa/bb/" will be returned.
+	 * 
+	 * @param currentPath
+	 * @param newPath
+	 * @return
+	 */
 	public static String PathResolver(String currentPath, String newPath) {
 		String finalAbsolutePath;
 		
