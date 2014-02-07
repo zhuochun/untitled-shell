@@ -82,7 +82,7 @@ public class Shell implements IShell {
 		
 		while (true) {
 			// If no thread is working, we should print the working
-			// directory
+			// directory			
 			if (future != null && future.isDone()) {
 				try {
 					future.cancel(true);
@@ -94,8 +94,9 @@ public class Shell implements IShell {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.print("[" + workingDir.toString() + "]$ ");
 			}
+			
+			System.out.print("[" + workingDir.toString() + "]$ ");
 			
 			String commandLine = scanner.nextLine();
 			
