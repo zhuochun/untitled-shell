@@ -88,7 +88,7 @@ public class Shell implements IShell {
 		while (true) {
 			// If no thread is working, we should print the working
 			// directory
-			if (future.isDone()) {
+			if (future != null && future.isDone()) {
 				try {
 					workingDir = future.get();
 				} catch (InterruptedException e) {
@@ -104,12 +104,14 @@ public class Shell implements IShell {
 			String commandLine = scanner.nextLine();
 			
 			if (commandLine.equals("Ctrl-Z")) {
-				if (!future.isDone()) {
+				if (future != null && !future.isDone()) {
 					future.cancel(true);
 				}
 			} else {
-				shell.parse(commandLine);
-				future = executor.submit(callable);
+				if (future == null || (future != null && future.isDone())) {
+					shell.parse(commandLine);
+					future = executor.submit(callable);
+				}
 			}
 		}
 	}

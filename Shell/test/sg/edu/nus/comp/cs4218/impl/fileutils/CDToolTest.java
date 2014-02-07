@@ -116,6 +116,15 @@ public class CDToolTest {
 	}
 	
 	@Test
+	public void testExecutePathWithEmptyString() {
+		tool = new CDTool(new String[] {""});
+		
+		String output = tool.execute(workingDirFile, null);
+		
+		assertEquals(homeDir, output);
+	}
+	
+	@Test
 	public void testExecutePathWithMultipleTudle() {
 		tool = new CDTool(new String[] {"~~~~~~~~~~"});
 		

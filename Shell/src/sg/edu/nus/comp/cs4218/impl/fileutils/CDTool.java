@@ -12,7 +12,13 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;;
  *
  * cd [new working directory]
  * 
- * new working directory = '/', '~', '..', path
+ * new working directory = '/', '~', '.', '..', "", path
+ * 
+ * '/' = root directory
+ * '~' = home directory
+ * '..' = parent directory
+ * ""(empty string) = home directory
+ * '.' = current directory
  * 
  * If the directory cannot be found, an error message will be returned and an
  * error code will be set.
@@ -50,9 +56,15 @@ public class CDTool extends ATool implements ICdTool {
 		
 		// if no error occurs, the first argument should be the path we want
 		// to change to
+		String param;
 		
-		File newDir = new File (PathUtils.PathResolver(workingDir,
-											   argList.getParam(0)));
+		if (!argList.hasParams()) {
+			param = "~";
+		} else {
+			param = argList.getParam(0);
+		}
+		
+		File newDir = new File (PathUtils.PathResolver(workingDir, param));
 		
 		// if the new directory is null, the input file does not exist
 		if (!newDir.exists()) {
