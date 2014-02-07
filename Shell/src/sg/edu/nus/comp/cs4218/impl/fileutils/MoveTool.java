@@ -59,7 +59,7 @@ public class MoveTool extends ATool implements IMoveTool{
 					return e.getMessage();
 				}
 				
-				if(move(new File(argList.getParam(1)),new File (argList.getParam(2)))){
+				if(move(new File(argList.getParam(0)),new File (argList.getParam(1)))){
 					return "Move File Successful!";
 				}
 				else{
