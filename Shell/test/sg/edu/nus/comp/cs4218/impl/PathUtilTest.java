@@ -12,39 +12,7 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
-/**
- * For cd command, we have these cases to test:
- * 
- * Case 1: Special Characters
- *	1.1 '.', current dir
- *	1.2 '..', parent dir
- *	1.3 '/', root dir
- *	1.4 '~', home dir (this case cannot be handled by Path class!!!!!)
- *
- * Case 2: Relative Path
- *	2.1 valid path (all directories/ files are exisiting)
- *	2.2 contain some non-exisit direcotories/ files
- *	2.3 contain special characters
- *
- * Case 3: Absolute Path
- *	3.1 valid path (all directories/ files are exisiting)
- *		3.1.1 not deeper than current directory's parent
- *		3.1.2 same as current directory
- *		3.1.3 deeper than current directory
- *	3.2 contain some non-exisit direcotories/ files
- *	3.3 contain special characters
- *
- * Case 5: Extremely Long Names
- *	5.1 File name longer than 2^31 - 1 characters
- *
- * Case 6: White Characters
- *	6.1 ' ' (Space)
- *	6.2 '	' (Tab)
- *
- * Case 8: Non-alphabetic/digit Characters
- * 	8.1 '@', '!', '#', '$'.....
- *
- */
+
 public class PathUtilTest {
 	
 	String currentDir;
