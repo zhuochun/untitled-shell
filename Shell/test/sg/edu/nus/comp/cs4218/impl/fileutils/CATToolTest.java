@@ -137,6 +137,13 @@ public class CATToolTest {
 		assertNotEquals(0, cattool.getStatusCode());
 	}
 	
+	@Test
+	public void testExecuteWithUnexistsFile() {
+		cattool = new CATTool("noExists".split(" "));
+		cattool.execute(folder.getRoot(), "");
+		assertNotEquals(0, cattool.getStatusCode());
+	}
+	
 	private File createFile(String filename, String content) throws IOException {
 		File file = folder.newFile(filename);
 

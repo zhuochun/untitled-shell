@@ -30,10 +30,10 @@ public class CATTool extends ATool implements ICatTool {
 			return FileUtils.readFileContent(toRead);
 		} catch (IOException e) {
 			setStatusCode(1);
-			return e.toString();
+			return e.getMessage();
 		} catch (RuntimeException e) {
 			setStatusCode(2);
-			return e.toString();
+			return e.getMessage();
 		}
 	}
 	
