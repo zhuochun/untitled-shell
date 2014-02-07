@@ -1,10 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 
-import sg.edu.nus.comp.cs4218.ITool;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 
 
