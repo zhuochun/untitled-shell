@@ -9,8 +9,13 @@ import java.nio.file.Paths;
 public class PathUtils {
 
 	public static String PathResolver(String currentPath, String newPath) {
-		// TODO: Implement ~ !!
 		String finalAbsolutePath;
+		
+		// only the leading '~' indicates home directory, other '~' will 
+		if (newPath.startsWith("~")) {
+			newPath = System.getProperty("user.home").
+							 concat('/' + newPath.substring(1));
+		}
 		
 		Path curPath = Paths.get(currentPath).resolve(newPath);
 		
