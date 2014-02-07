@@ -28,13 +28,13 @@ public class ToolRunnable implements Runnable {
 				if (tool.getStatusCode() == 0) {
 					Directory.set(stdout);
 				} else {
-					System.err.println(stdout + "\n");
+					System.err.println(stdout);
 				}
 			} else {
 				if (tool.getStatusCode() == 0) {
 					System.out.println(stdout);
 				} else {
-					System.err.println(stdout + "\n");
+					System.err.println(stdout);
 				}
 			}
 		}

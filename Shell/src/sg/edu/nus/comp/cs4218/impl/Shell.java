@@ -21,13 +21,15 @@ public class Shell implements IShell {
 	
 	@Override
 	public ITool parse(String commandline) {
+		if (commandline.trim().isEmpty()) { return null; }
+
 		ArrayList<String> params = new ArrayList<String>();
-		String cmd = ArgList.split(commandline, params);
+		String cmd = ArgList.split(commandline.trim(), params);
 		
 		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0]));
 		
 		if (tool == null) {
-			System.err.println("Cannot parse " + commandline + "\n");
+			System.err.println("Command not found: " + cmd);
 		}
 		
 		return tool;
