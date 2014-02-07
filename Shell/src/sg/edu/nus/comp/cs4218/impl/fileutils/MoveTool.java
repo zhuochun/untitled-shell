@@ -4,15 +4,18 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
-import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
-import sg.edu.nus.comp.cs4218.impl.fileutils.COPYTool;
+import sg.edu.nus.comp.cs4218.impl.ArgList;
+
 public class MoveTool extends ATool implements IMoveTool{
 	
+	private ArgList argList = new ArgList();
 	public MoveTool(String[] arguments){
 		super (arguments);
 	}
@@ -20,7 +23,7 @@ public class MoveTool extends ATool implements IMoveTool{
 
 	@Override
 	public boolean move(File from, File to) {
-		// TODO Auto-generated method stub
+
 		try{
 			if(!from.isFile()){
 				throw new FileNotFoundException();
@@ -28,22 +31,11 @@ public class MoveTool extends ATool implements IMoveTool{
 			if(!to.isFile()){
 				throw new FileNotFoundException();
 			}
-			else {	
-				FileReader fr = new FileReader(from);
-			    FileWriter fw = new FileWriter(to);
-			    BufferedReader bs = new BufferedReader (fr);
-			    BufferedWriter bw = new BufferedWriter (fw);
-			    String buffer = new String();;
-			    
-			    while((buffer=bs.readLine()) != null){
-			    	bw.write(buffer);
-			    	bw.flush();
-			    }
-			 bs.close();
-			 bw.close();
+				
+			 from.renameTo(to);
 			 from.delete();
 			 return true;
-			}	    
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -52,7 +44,27 @@ public class MoveTool extends ATool implements IMoveTool{
 
 	@Override
 	public String execute(File workingDir, String stdin) {
-		// TODO Auto-generated method stub
+		// parse arguments
+		try {
+			argList.parseArgs(this.args);
+		} catch (IllegalArgumentException e){
+			setStatusCode(9);
+			return e.getMessage();
+		}
+			StringBuilder output = new StringBuilder();
+		
+			if(stdin == null) {stdin = "";}
+			
+			if(argList.isEmpty()){
+				output.append(stdin);
+				}
+			else {
+				
+					
+				}
+				
+			
+		
 		return null;
 	}
 
