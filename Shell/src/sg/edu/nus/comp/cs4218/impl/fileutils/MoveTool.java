@@ -45,7 +45,10 @@ public class MoveTool extends ATool implements IMoveTool{
 	@Override
 	public String execute(File workingDir, String stdin) {
 		// make sure stdin exists
-				if (stdin == null) { stdin = ""; }
+				if (stdin == null) { 
+					stdin = "";
+					return "Move command need to have Two params";
+				}
 				
 				//TODO: at this moment we assume no stdin. confirm with others
 				// how to parse stdin!!!
