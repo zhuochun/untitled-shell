@@ -57,6 +57,8 @@ public class LSTool extends ATool implements ILsTool {
 			ls.append(file.getName());
 			ls.append("\n");
 		}
+		
+		ls.deleteCharAt(ls.length() - 1);
 
 		return ls.toString();
 	}

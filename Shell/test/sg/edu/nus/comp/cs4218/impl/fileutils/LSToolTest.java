@@ -92,6 +92,14 @@ public class LSToolTest {
 		assertEquals("", ls);
 		assertEquals(0, lstool.getStatusCode());
 	}
+
+	@Test
+	public void testGetStringForEmptyFiles() {
+		String ls = lstool.getStringForFiles(new ArrayList<File>());
+
+		assertEquals("", ls);
+		assertEquals(0, lstool.getStatusCode());
+	}
 	
 	@Test
 	public void testGetStringForOneFile() {
@@ -100,7 +108,7 @@ public class LSToolTest {
 		
 		String ls = lstool.getStringForFiles(files);
 
-		assertEquals("file1.txt\n", ls);
+		assertEquals("file1.txt", ls);
 		assertEquals(0, lstool.getStatusCode());
 	}
 
@@ -113,7 +121,7 @@ public class LSToolTest {
 		
 		String ls = lstool.getStringForFiles(files);
 
-		assertEquals("file1.txt\ntestDir\nfile2.java\n", ls);
+		assertEquals("file1.txt\ntestDir\nfile2.java", ls);
 		assertEquals(0, lstool.getStatusCode());
 	}
 
@@ -131,7 +139,7 @@ public class LSToolTest {
 		lstool = new LSTool("file1.txt".split(" "));
 		String stdout = lstool.execute(folder.getRoot(), null);
 		
-		assertEquals("file1.txt\n", stdout);
+		assertEquals("file1.txt", stdout);
 		assertEquals(0, lstool.getStatusCode());
 	}
 	
@@ -144,7 +152,7 @@ public class LSToolTest {
 		lstool = new LSTool(null);
 		String stdout = lstool.execute(folder.getRoot(), null);
 
-		assertEquals("file1.txt\nfile2.java\ntestDir\n", stdout);
+		assertEquals("file1.txt\nfile2.java\ntestDir", stdout);
 		assertEquals(0, lstool.getStatusCode());
 	}
 
