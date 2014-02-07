@@ -18,6 +18,7 @@ import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.impl.DiffUtils;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
 
 public class MoveToolTest {
@@ -59,6 +60,22 @@ public class MoveToolTest {
 		String output = tool.execute(currentDir, null);
 		
 		assertEquals("No such file or directory!", output);
+	}
+	
+	@Test
+	public void testMoveFileToNonExistFolder() {
+		tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("No such file or directory!", output);
+	}
+	
+	@Test
+	public void testMoveADirectory() {
+		tool = new MoveTool(new String[] {System.getProperty("user.dir"), "dfjklsa"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("Origin is not a file!", output);
 	}
 	
 	@Test
@@ -123,6 +140,36 @@ public class MoveToolTest {
 	}
 	
 	@Test
+	public void testMoveFileToSameFolderWithSameNameUsingDot() {
+		File testFile = new File("aklsadfjklsa.txt");
+		File testNewFile = new File("aklsadfjklsa.txt");
+		File compareFile = new File("compare");
+		
+		try {
+			FileUtils.createDummyFile(compareFile, 10);
+			FileUtils.createDummyFile(testFile, 10);
+			
+			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "."});
+			String output = tool.execute(currentDir, null);
+			
+			assertEquals("", output);
+			
+			assertTrue(testNewFile.exists());
+			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			testFile.delete();
+			testNewFile.delete();
+			compareFile.delete();
+		}
+	}
+	
+	@Test
 	public void testMoveFileToParentFolder() {
 		File testFile = new File("aklsadfjklsa.txt");
 		File testNewFile = new File(Paths.get(System.getProperty("user.dir")).getParent() + "/baklsadfjklsa");
@@ -152,97 +199,72 @@ public class MoveToolTest {
 			compareFile.delete();
 		}
 	}
-
-//
-//
-//	@Test
-//	public void testSrcFileNotExists() {
-//		try {
-//			File src = folder.newFile("Src.txt");
-//			File dest = folder.getRoot();
-//
-//			movetool.move(src, dest);
-//
-//			assertTrue(!src.exists());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testBeforeMove() {
-//		try {
-//			File src = folder.newFile("Src.txt");
-//			File target = folder.newFile("target.txt");
-//
-//			FileWriter fw = new FileWriter(src);
-//			BufferedWriter bw = new BufferedWriter(fw);
-//			FileReader fr = new FileReader(target);
-//			BufferedReader br = new BufferedReader(fr);
-//
-//			// construct origin file
-//			String content = "abcde12345ABC@#$%-;()*";
-//			bw.write(content);
-//			bw.flush();
-//			// String in = new String (content);
-//
-//			assertEquals(br.readLine(), null);
-//
-//			movetool.move(src, target);
-//			br = new BufferedReader(fr);
-//			bw.close();
-//			br.close();
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testAfterMove() {
-//		try {
-//			File src = folder.newFile("Src.txt");
-//			File dest = folder.newFile("target.txt");
-//			/*
-//			 * if(!src.exists()){ src.createNewFile(); } if(!dest.exists()){
-//			 * dest.createNewFile(); }
-//			 */
-//
-//			FileWriter fw = new FileWriter(src);
-//			BufferedWriter bw = new BufferedWriter(fw);
-//			FileReader fr = new FileReader(dest);
-//			BufferedReader br = new BufferedReader(fr);
-//
-//			// construct origin file
-//			String content = "abcde12345ABC@#$%-;()*";
-//			bw.write(content);
-//			bw.flush();
-//			String in = new String(content);
-//
-//			assertEquals(br.readLine(), null);
-//
-//			movetool.move(src, dest);
-//			br = new BufferedReader(fr);
-//
-//			bw.close();
-//			br.close();
-//			assertEquals(br.readLine(), in);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testDiffFormatFile() {
-//		try {
-//			File src = new File("Shell/test/rainbow1.jpg");
-//			File dest = new File("Shell/test/child");
-//
-//			assertEquals(movetool.move(src, dest), false);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
+	
+	@Test
+	public void testMoveFileToAFolder() {
+		File testFile = new File("aklsadfjklsa.txt");
+		File testFolder = new File("testFolder");
+		
+		testFolder.mkdir();
+		
+		File testNewFile = new File(testFolder.getAbsolutePath() + "/aklsadfjklsa.txt");
+		File compareFile = new File("compare");
+		
+		try {
+			FileUtils.createDummyFile(compareFile, 10);
+			FileUtils.createDummyFile(testFile, 10);
+			
+			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "testFolder"});
+			String output = tool.execute(currentDir, null);
+			
+			assertEquals("", output);
+			
+			assertFalse(testFile.exists());
+			assertTrue(testNewFile.exists());
+			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			testFile.delete();
+			testFolder.delete();
+			testNewFile.delete();
+			compareFile.delete();
+		}
+	}
+	
+	@Test
+	public void testMoveFileToOneOfFolderOnTheSubPath() {
+		File testFile = new File("aklsadfjklsa.txt");
+		String randomSubpath = PathUtils.GetRandomSubpath(Paths.get(currentDir.toString())).toString();
+		File testNewFile = new File(randomSubpath + "/baklsadfjklsa");
+		File compareFile = new File("compare");
+		
+		try {
+			FileUtils.createDummyFile(compareFile, 10);
+			FileUtils.createDummyFile(testFile, 10);
+			
+			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", randomSubpath + "/baklsadfjklsa"});
+			String output = tool.execute(currentDir, null);
+			
+			assertEquals("", output);
+			
+			assertFalse(testFile.exists());
+			assertTrue(testNewFile.exists());
+			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			testFile.delete();
+			testNewFile.delete();
+			compareFile.delete();
+		}
+	}
 }

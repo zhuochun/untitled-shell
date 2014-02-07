@@ -27,6 +27,10 @@ public class MoveTool extends ATool implements IMoveTool {
 		if (origin.equals(copy)) {
 			result = true;
 		} else {
+			if (copy.isDirectory()) {
+				copy = new File(copy.toString() + "/" + origin.getName());
+			}
+			
 			result = origin.renameTo(copy);
 		}
 		
