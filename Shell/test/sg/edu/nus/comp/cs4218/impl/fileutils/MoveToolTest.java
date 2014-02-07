@@ -37,7 +37,7 @@ public class MoveToolTest {
 	public void testMovedFileExists(){
 		try{
 			File src = folder.newFile("Src.txt");
-			File dest = folder.newFile("C://Dest.txt");
+			File dest = folder.getRoot();
 
 		
 			movetool.move(src, dest);
@@ -51,7 +51,7 @@ public class MoveToolTest {
 	public void testSrcFileNotExists(){
 		try{
 			File src = folder.newFile("Src.txt");
-			File dest = folder.newFile("Dest.txt");
+			File dest = folder.getRoot();
 			
 	
 			movetool.move(src, dest);
@@ -67,11 +67,11 @@ public class MoveToolTest {
 	public void testBeforeMove(){
 		try{
 				File src = folder.newFile("Src.txt");
-				File dest = folder.newFile("Dest.txt");
+				File target = folder.newFile("target.txt");
 
 				FileWriter fw = new FileWriter(src);
 				BufferedWriter bw = new BufferedWriter(fw);
-				FileReader fr = new FileReader(dest);
+				FileReader fr = new FileReader(target);
 				BufferedReader br = new BufferedReader(fr);
 				
 				//construct origin file
@@ -83,7 +83,7 @@ public class MoveToolTest {
 				
 				assertEquals(br.readLine(),null);
 				
-				movetool.move(src, dest);
+				movetool.move(src, target);
 				br = new BufferedReader(fr);
 				bw.close();
 				br.close();
@@ -98,7 +98,7 @@ public class MoveToolTest {
 		public void testAfterMove(){
 			try{
 					File src = folder.newFile("Src.txt");
-					File dest = folder.newFile("Dest.txt");
+					File dest = folder.newFile("target.txt");
 	/*				if(!src.exists()){
 					     src.createNewFile();
 					}
@@ -106,6 +106,7 @@ public class MoveToolTest {
 					     dest.createNewFile();
 					}
 					*/
+
 					FileWriter fw = new FileWriter(src);
 					BufferedWriter bw = new BufferedWriter(fw);
 					FileReader fr = new FileReader(dest);
@@ -132,6 +133,7 @@ public class MoveToolTest {
 					e.printStackTrace();
 				}
 		}
+		
 @Test
 public void testExcuteWithNullStdin(){
 	assertEquals(movetool.execute(null,null), "Move command need to have Two params");
@@ -139,10 +141,10 @@ public void testExcuteWithNullStdin(){
 @Test
 public void testDiffFormatFile(){
 	try {
-		File src = new File(System.getProperty("use.dir")+"//test//rainbow1.jpg");
-		File dest = new File(System.getProperty("user.dir")+"//test//aloha.jpg");
-		movetool.move(src, dest);
-		assertEquals(dest.getName(),"aloha.jpg");
+		File src = new File("Shell/test/rainbow1.jpg");
+		File dest =new File("Shell/test/child");
+		
+		assertEquals(movetool.move(src, dest),false);
 	}catch(Exception e){
 		e.printStackTrace();
 	}

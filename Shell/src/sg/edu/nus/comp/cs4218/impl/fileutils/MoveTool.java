@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 
+import java.nio.file.Files;
+
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
@@ -24,12 +26,12 @@ public class MoveTool extends ATool implements IMoveTool{
 			if(!from.isFile()){
 				throw new FileNotFoundException();
 			}
-			if(!to.isFile()){
-				to.createNewFile();
-			}
+			if(!to.exists()){
+					;
+				}
 				
-			 from.renameTo(to);
-			 from.delete();
+			from.renameTo(to);
+			from.delete();
 			 return true;
 			
 		} catch(Exception e){
