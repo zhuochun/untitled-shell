@@ -26,7 +26,7 @@ public class DiffUtils {
 			while(readByte1 != -1 && readByte2 != -1){
 				if(readByte1!=readByte2)
 				{
-					return false;
+					return true;
 				}
 				else{
 					readByte1 = dis1.readByte();
@@ -36,19 +36,19 @@ public class DiffUtils {
 			
 			//different length
 			if(readByte1 != -1 || readByte2 != -2){
-				return false;
+				return true;
 			}
 
 			fis1.close();
 			fis2.close();
 			dis1.close();
 			dis2.close();
-			return true;
+			return false;
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 }

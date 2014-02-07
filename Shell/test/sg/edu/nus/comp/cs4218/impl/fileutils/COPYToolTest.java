@@ -51,7 +51,7 @@ public class COPYToolTest {
 				bw.close();
 
 				IcopyTool.copy(origin, target);
-				assertTrue(DiffTool.isDifferent(origin, target));	
+				assertTrue(!DiffTool.isDifferent(origin, target));	
 				
 			}catch(Exception e){
 				e.printStackTrace();
@@ -66,7 +66,7 @@ public class COPYToolTest {
 				target.delete();
 				target.createNewFile();
 				IcopyTool.copy(origin, target);
-				assertTrue(DiffTool.isDifferent(origin, target));
+				assertTrue(!DiffTool.isDifferent(origin, target));
 				
 			}catch(Exception e){
 				e.printStackTrace();
@@ -88,7 +88,7 @@ public class COPYToolTest {
 				bw.close();
 
 				String result = IcopyTool.execute(folder.getRoot(), "copy "+"originForCopy.txt "+"targetForCopy.txt");
-				assertTrue(DiffTool.isDifferent(origin, target));	
+				assertTrue(!DiffTool.isDifferent(origin, target));	
 				assertEquals(result, "copy successful");
 				
 			}catch(Exception e){

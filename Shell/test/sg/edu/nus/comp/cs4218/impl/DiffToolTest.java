@@ -50,7 +50,7 @@ public class DiffToolTest {
 			bw1.close();
 			bw2.close();
 			
-			assertTrue(diffTool.isDifferent(file1, file2));
+			assertTrue(!diffTool.isDifferent(file1, file2));
 			
 			file1.delete();
 			file2.delete();
@@ -59,6 +59,28 @@ public class DiffToolTest {
 			e.printStackTrace();
 		}
 	}
+	@Test
+	public void testTwoSameMp3File(){
+		try{
+			File music1 =new File(System.getProperty("user.dir")+"//test//Lenka - Trouble Is A Friend.mp3");
+			File music2 = new File (System.getProperty("user.dir")+"//test//Lenka - Trouble Is A Friend - Copy.mp3");
+			assertTrue(diffTool.isDifferent(music1, music2));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testTwoDiffMp3File(){
+		try{
+			File music1 =new File(System.getProperty("user.dir")+"//test//Lenka - Trouble Is A Friend.mp3");
+			File music2 = new File (System.getProperty("user.dir")+"//test//Frankie Valli - Cant Take My Eyes Off You.mp3");
+			assertTrue(diffTool.isDifferent(music1, music2));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	@Test
 	public void testTwoFilesWithDifferentContent() {
 		try{
@@ -85,7 +107,7 @@ public class DiffToolTest {
 			bw1.close();
 			bw2.close();
 			
-			assertTrue(!diffTool.isDifferent(file1, file2));
+			assertTrue(diffTool.isDifferent(file1, file2));
 			
 			file1.delete();
 			file2.delete();
