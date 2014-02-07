@@ -37,7 +37,7 @@ public class MoveToolTest {
 	public void testMovedFileExists(){
 		try{
 			File src = folder.newFile("Src.txt");
-			File dest = folder.newFile("Dest.txt");
+			File dest = folder.newFile("C://Dest.txt");
 
 		
 			movetool.move(src, dest);
