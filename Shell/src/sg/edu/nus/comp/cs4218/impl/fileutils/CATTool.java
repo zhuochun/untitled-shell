@@ -71,5 +71,4 @@ public class CATTool extends ATool implements ICatTool {
 
 		return output.toString();
 	}
-
 }
