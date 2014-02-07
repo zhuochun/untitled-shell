@@ -1,8 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -11,20 +9,29 @@ public class PathUtils {
 	public static String PathResolver(String currentPath, String newPath) {
 		String finalAbsolutePath;
 		
-		// only the leading '~' indicates home directory, other '~' will 
-		if (newPath.startsWith("~")) {
+		if (newPath.equals("~")) {
+			newPath = System.getProperty("user.home") + "/";
+		} else
+		if (newPath.startsWith("~/")) {
 			newPath = System.getProperty("user.home").
-							 concat('/' + newPath.substring(1));
+							 concat('/' + newPath.substring(2));
 		}
 		
-		Path curPath = Paths.get(currentPath).resolve(newPath);
+		Path curPath = Paths.get(currentPath).resolve(newPath).normalize();
 		
-		try {
-			finalAbsolutePath = curPath.toRealPath().toString();
-		} catch (NoSuchFileException noSuchFile) {
-			finalAbsolutePath = null;
-		} catch (IOException e) {
-			finalAbsolutePath = null;
+		finalAbsolutePath = curPath.toString();
+		
+		// if new path is a directory exist, put "/" behind
+		if (curPath.toFile().exists() && curPath.toFile().isDirectory()) {
+			if (!finalAbsolutePath.endsWith("/")) {
+				finalAbsolutePath = finalAbsolutePath + "/";
+			}
+		}
+		
+		// if new path does not exist but should be a directory, put a "/"
+		// behind
+		if (newPath.endsWith("/") && !finalAbsolutePath.endsWith("/")) {
+			finalAbsolutePath = finalAbsolutePath + "/";
 		}
 		
 		return finalAbsolutePath;

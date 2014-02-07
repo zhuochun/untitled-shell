@@ -60,7 +60,7 @@ public class CDTool extends ATool implements ICdTool {
 		if (newDir == null) {
 			//TODO: now the status code is some random number, confirm again!
 			setStatusCode(9);
-			output = "Directory does not exisit!";
+			output = "No such file or directory!";
 		} else {
 			// now we should check if the path is essentially a file
 			if (new File(newDir).isFile()) {

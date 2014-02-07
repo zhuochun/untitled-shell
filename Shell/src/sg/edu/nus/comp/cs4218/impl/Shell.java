@@ -32,8 +32,8 @@ public class Shell implements IShell {
 	
 	@Override
 	public ITool parse(String commandline) {
-		//TODO: confirm with Zhuochun if this is the correct usage
 		String[] argList = ArgList.split(commandline);
+		
 		String[] args = Arrays.copyOfRange(argList, 1, argList.length);
 		ITool tool = CommandInterpreter.cmdToITool(argList[0], args); 
 		
