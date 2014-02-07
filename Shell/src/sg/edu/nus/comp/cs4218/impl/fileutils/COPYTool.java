@@ -2,10 +2,17 @@ package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
 
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
@@ -24,18 +31,23 @@ public class COPYTool extends ATool implements ICopyTool{
 				throw new FileNotFoundException("Missing original file"); 
 			}
 			if(!to.isFile()){
-				throw new FileNotFoundException("Missing target file"); 
+				to.createNewFile();
 			}
-		    FileReader fr = new FileReader(from);
-		    FileWriter fw = new FileWriter(to);
-		    BufferedReader bs = new BufferedReader (fr);
-		    BufferedWriter bw = new BufferedWriter (fw);
-		    String buffer = new String();;
-		    
-		    while((buffer=bs.readLine()) != null){
-		    	bw.write(buffer);
-		    	bw.flush();
-		    }
+	        	
+			
+//			FileInputStream fis = new FileInputStream(from);
+//			DataInputStream dis = new DataInputStream (fis);
+//			
+//			FileOutputStream fos = new FileOutputStream(to);
+//			DataOutputStream dos = new DataOutputStream (fos);
+			
+//		    byte inputByte;
+//
+//		    while((inputByte=dis.readByte())!=-1){
+//		    	dos.writeByte(inputByte);
+//		    	dos.flush();
+//		    }
+			Files.copy(from.toPath(),to.toPath());
 		}catch (FileNotFoundException e){
 			e.printStackTrace();
 			

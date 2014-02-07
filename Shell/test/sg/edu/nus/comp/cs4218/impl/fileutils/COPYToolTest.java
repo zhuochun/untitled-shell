@@ -1,15 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl.fileutils;
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,40 +41,33 @@ public class COPYToolTest {
 			try{
 				File origin = folder.newFile("originForCopy.txt");
 				File target = folder.newFile("targetForCopy.txt");
+				
 				FileWriter fw = new FileWriter(origin);
 				BufferedWriter bw = new BufferedWriter(fw);
 				
-				
-				//construct origin file
 				for(int i=0;i<50;i++){
 				    bw.write("Hello World" + i);
 				    bw.flush();
 				}
+				bw.close();
 
 				IcopyTool.copy(origin, target);
-				assertTrue(DiffTool.isDifferent(origin, target));
+				assertTrue(DiffTool.isDifferent(origin, target));	
 				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
 		@Test
-		public void testFileNotExists(){
+		public void testCopyFileNotTxtExists(){
 			try{
-				File origin = folder.newFile("origin.txt");
-				File target = folder.newFile("target.txt");
-				
-				
-				FileWriter fw = new FileWriter(origin);
-				BufferedWriter bw = new BufferedWriter(fw);
-				FileReader fr = new FileReader(target);
-				BufferedReader br = new BufferedReader(fr);
-				
-				//construct origin file
-				bw.write("Hello World");
-				bw.flush();
+			
+				File origin =new File(System.getProperty("user.dir")+"//test//Frankie Valli - Cant Take My Eyes Off You.mp3");
+				File target = new File(System.getProperty("user.dir")+"//test//Frankie Valli - Cant Take My Eyes Off You_copy.mp3");
+				target.delete();
+				target.createNewFile();
 				IcopyTool.copy(origin, target);
-				
+				assertTrue(DiffTool.isDifferent(origin, target));
 				
 			}catch(Exception e){
 				e.printStackTrace();
