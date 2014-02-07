@@ -1,34 +1,84 @@
 package sg.edu.nus.comp.cs4218.impl.extended1;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import java.io.IOException;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class PIPINGToolTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-	@After
-	public void tearDown() throws Exception {
+	@Test
+	public void testExecuteEmptyPipe() {
+		PIPINGTool pipe = new PIPINGTool("|".split(" "));
+		
+		pipe.execute(null, null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
+	
+	@Test
+	public void testExecutePartialEmptyPipe() {
+		PIPINGTool pipe = new PIPINGTool("ls |".split(" "));
+		
+		pipe.execute(null, null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
+	
+	@Test
+	public void testExecutePipeTwoTools() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls | cat -".split(" "));
+		
+		String stdout = pipe.execute(folder.getRoot(), null);
+		
+		assertEquals("testFolder\n", stdout);
+		assertEquals(0, pipe.getStatusCode());
+	}
+	
+	@Test
+	public void testExecutePipeTwoToolsWithArgs() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("echo hello world | cat -".split(" "));
+		
+		String stdout = pipe.execute(folder.getRoot(), null);
+		
+		assertEquals("hello world\n", stdout);
+		assertEquals(0, pipe.getStatusCode());
 	}
 
 	@Test
-	public void testExecute() {
-		fail("Not yet implemented");
+	public void testExecutePipeThreeTools() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls | cat - | cat".split(" "));
+		
+		String stdout = pipe.execute(folder.getRoot(), null);
+		
+		assertEquals("testFolder\n", stdout);
+		assertEquals(0, pipe.getStatusCode());
 	}
-
+	
 	@Test
-	public void testPipeIToolITool() {
-		fail("Not yet implemented");
+	public void testExecutePipeThreeTools2() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls | cat - | cat".split(" "));
+		
+		String stdout = pipe.execute(folder.getRoot(), null);
+		
+		assertEquals("testFolder\n", stdout);
+		assertEquals(0, pipe.getStatusCode());
 	}
-
-	@Test
-	public void testPipeStringITool() {
-		fail("Not yet implemented");
-	}
+	
 
 }
