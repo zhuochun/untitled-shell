@@ -7,6 +7,7 @@ import sg.edu.nus.comp.cs4218.fileutils.ICatTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 /**
  * cat - concatenate files and print on the standard output
@@ -52,18 +53,16 @@ public class CATTool extends ATool implements ICatTool {
 		if (stdin == null) { stdin = ""; }
 
 		// process arguments
-		if (argList.isEmpty()) {
+		if (argList.isEmpty() && argList.getParam(0) == "-") {
 			output.append(stdin);
 		} else {
 			for (String arg : argList.getParams()) {
 				if (arg.equals(">")) {
 					break;
 				} else if (arg.equals("-")) {
-					output.append(stdin);
-					stdin = ""; // clear stdin after read
+					continue;
 				} else {
-					// construct the file
-					File toRead = new File(workingDir, arg);
+					File toRead = new File(PathUtils.PathResolver(workingDir, arg));
 					output.append(getStringForFile(toRead));
 				}
 			}
@@ -71,4 +70,5 @@ public class CATTool extends ATool implements ICatTool {
 
 		return output.toString();
 	}
+
 }
