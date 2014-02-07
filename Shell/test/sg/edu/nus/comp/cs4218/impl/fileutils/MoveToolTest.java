@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import sg.edu.nus.comp.cs4218.impl.DiffUtils;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
 public class MoveToolTest {
 	
@@ -22,7 +22,7 @@ public class MoveToolTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 	 
 	private IMoveTool movetool;
-	
+	private DiffUtils DiffTool;
 	@Before
 	public void setUp() throws Exception {
 		movetool = new MoveTool(null);
@@ -118,10 +118,11 @@ public class MoveToolTest {
 					String in = new String (content);
 					
 					
-					assertEquals(br.readLine(),null);
+					assertEquals(br.readLine(), null);
 					
 					movetool.move(src, dest);
 					br = new BufferedReader(fr);
+	
 					bw.close();
 					br.close();
 					assertEquals(br.readLine(), in);
@@ -131,4 +132,10 @@ public class MoveToolTest {
 					e.printStackTrace();
 				}
 		}
+@Test
+public void testExcuteWithNullStdin(){
+	assertEquals(movetool.execute(null,null), "Move command need to have Two params");
+}
+
+
 }
