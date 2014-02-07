@@ -12,16 +12,16 @@ public class GREPToolTest {
 
 	private String input = "testtest\ntest world\n" +
 			"123\n789\n0123\nhello\n" +
-			"hello test\nyahoo\nk09lk\n";
-	private String matchOutput = "testtest\ntest world\nhello test\n";
-	private String matchTrailingOutput = "testtest\ntest world\n123\nhello test\nyahoo\n";
-	private String matchLeadingOutput = "testtest\ntest world\nhello\nhello test\n";
-	private String matchLeadingOutputAll = "testtest\ntest world\n123\n789\n0123\nhello\nhello test\n";
-	private String matchContextOutput = "testtest\ntest world\n123\n--\n--\nhello\nhello test\nyahoo\n";
+			"hello test\nyahoo\nk09lk";
+	private String matchOutput = "testtest\ntest world\nhello test";
+	private String matchTrailingOutput = "testtest\ntest world\n123\nhello test\nyahoo";
+	private String matchLeadingOutput = "testtest\ntest world\nhello\nhello test";
+	private String matchLeadingOutputAll = "testtest\ntest world\n123\n789\n0123\nhello\nhello test";
+	private String matchContextOutput = "testtest\ntest world\n123\n--\n--\nhello\nhello test\nyahoo";
 	private String matchContextOutputAll = "testtest\ntest world\n123\n789\n0123\nhello\n--\n" +
-			"123\n789\n0123\nhello\nhello test\nyahoo\nk09lk\n";
-	private String partMatchOutput= "test\ntest\ntest\ntest\n";
-	private String nonMatchOutput = "123\n789\n0123\nhello\nyahoo\nk09lk\n";
+			"123\n789\n0123\nhello\nhello test\nyahoo\nk09lk";
+	private String partMatchOutput= "test\ntest\ntest\ntest";
+	private String nonMatchOutput = "123\n789\n0123\nhello\nyahoo\nk09lk";
 
 	@Before
 	public void setUp() throws Exception {
@@ -136,6 +136,13 @@ public class GREPToolTest {
 		grep = new GREPTool("-A ab -".split(" "));
 		grep.execute(null, null);
 		assertNotEquals(0, grep.getStatusCode());
+	}
+	
+	@Test
+	public void testExecuteWithStdin() {
+		grep = new GREPTool("test".split(" "));
+		String stdout = grep.execute(null, input);
+		assertEquals(matchOutput, stdout);
 	}
 
 }

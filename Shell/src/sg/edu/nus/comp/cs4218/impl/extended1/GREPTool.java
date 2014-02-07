@@ -79,6 +79,11 @@ public class GREPTool extends ATool implements IGrepTool {
 				}
 			}
 
+			// remove the last trailing \n
+			if (stdout.length() > 0) {
+				stdout.deleteCharAt(stdout.length() - 1);
+			}
+
 			return stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
@@ -108,6 +113,11 @@ public class GREPTool extends ATool implements IGrepTool {
 				}
 			}
 
+			// remove the last trailing \n
+			if (stdout.length() > 0) {
+				stdout.deleteCharAt(stdout.length() - 1);
+			}
+
 			return stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
@@ -134,6 +144,11 @@ public class GREPTool extends ATool implements IGrepTool {
 				} else {
 					lineBuffer.add(line);
 				}
+			}
+
+			// remove the last trailing \n
+			if (stdout.length() > 0) {
+				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
 			return stdout.toString();
@@ -178,6 +193,11 @@ public class GREPTool extends ATool implements IGrepTool {
 				}
 			}
 
+			// remove the last trailing \n
+			if (stdout.length() > 0) {
+				stdout.deleteCharAt(stdout.length() - 1);
+			}
+
 			return stdout.toString();
 		} catch (IOException e) {
 			setStatusCode(2);
@@ -199,6 +219,11 @@ public class GREPTool extends ATool implements IGrepTool {
 				while (m.find()) {
 					stdout.append(m.group() + "\n");
 				}
+			}
+
+			// remove the last trailing \n
+			if (stdout.length() > 0) {
+				stdout.deleteCharAt(stdout.length() - 1);
 			}
 
 			return stdout.toString();
@@ -223,6 +248,11 @@ public class GREPTool extends ATool implements IGrepTool {
 					stdout.append(line + "\n");
 				}
 			}
+			
+			// remove the last trailing \n
+			if (stdout.length() > 0) {
+				stdout.deleteCharAt(stdout.length() - 1);
+			}
 
 			return stdout.toString();
 		} catch (IOException e) {
@@ -242,6 +272,11 @@ public class GREPTool extends ATool implements IGrepTool {
  		
  		for (Option opt : argList.getAcceptableOptions()) {
  			help.append("  " + opt.toString() + "\n");
+ 		}
+
+ 		// remove the last trailing \n
+ 		if (help.length() > 0) {
+ 			help.deleteCharAt(help.length() - 1);
  		}
  		
 		return help.toString();
@@ -302,7 +337,7 @@ public class GREPTool extends ATool implements IGrepTool {
 		}
 		
 		// set input from stdin or file
-		String input = stdin == null ? stdin : "";
+		String input = stdin == null ? "" : stdin;
 		
 		if (argList.getParams().length > 1 && !argList.getParam(1).equals("-")) {
 			try {
