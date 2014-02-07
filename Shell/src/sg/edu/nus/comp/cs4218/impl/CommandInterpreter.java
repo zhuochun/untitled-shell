@@ -19,7 +19,7 @@ public class CommandInterpreter {
 				return new DELETETool(args);
 			}
 			else if(cmd.equals("echo")){
-				return new EchoTool(args);
+				return new ECHOTool(args);
 			}
 			else if(cmd.equals("ls")){
 				return new LSTool(args);
