@@ -18,6 +18,7 @@ public class DELETETool extends ATool implements IDeleteTool {
 	}
 
 	@Override
+	//We can delete file or empty directory
 	public boolean delete(File toDelete) {
 		try{
 			if(!toDelete.exists())
