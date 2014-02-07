@@ -99,7 +99,7 @@ public class CATToolTest {
 
 		String stdout = cattool.execute(folder.getRoot(), "abc");
 		
-		assertEquals("abc" + content, stdout);
+		assertEquals("abc", stdout);
 		assertEquals(0, cattool.getStatusCode());
 	}
 
