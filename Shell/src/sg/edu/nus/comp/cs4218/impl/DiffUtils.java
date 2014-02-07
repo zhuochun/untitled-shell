@@ -11,14 +11,14 @@ public class DiffUtils {
 			if(!file1.exists()||!file2.exists()){
 				throw new FileNotFoundException ("File is missing") ;
 			}
-			
-			
+
+
 			FileInputStream fis1 = new FileInputStream(file1);
 			FileInputStream fis2 = new FileInputStream(file2);
-			
+
 			DataInputStream dis1= new DataInputStream(fis1);
 			DataInputStream dis2= new DataInputStream(fis2);
-			
+
 			byte readByte1, readByte2;
 			readByte1=dis1.readByte();
 			readByte2=dis2.readByte();
@@ -33,9 +33,12 @@ public class DiffUtils {
 					readByte2 = dis2.readByte();
 				}
 			}
+			
+			//different length
 			if(readByte1 != -1 || readByte2 != -2){
 				return false;
 			}
+
 			fis1.close();
 			fis2.close();
 			dis1.close();

@@ -13,7 +13,6 @@ import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
 import sg.edu.nus.comp.cs4218.impl.DiffUtils;
-import sg.edu.nus.comp.cs4218.impl.ArgList.ArgType;
 
 
 public class COPYToolTest {
@@ -73,6 +72,35 @@ public class COPYToolTest {
 				e.printStackTrace();
 			}
 		}
+		@Test
+		public void testExecuteNormalCommand(){
+			try{
+				File origin = folder.newFile("originForCopy.txt");
+				File target = folder.newFile("targetForCopy.txt");
+				
+				FileWriter fw = new FileWriter(origin);
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				for(int i=0;i<50;i++){
+				    bw.write("Hello World" + i);
+				    bw.flush();
+				}
+				bw.close();
+
+				String result = IcopyTool.execute(folder.getRoot(), "copy "+"originForCopy.txt "+"targetForCopy.txt");
+				assertTrue(DiffTool.isDifferent(origin, target));	
+				assertEquals(result, "copy successful");
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		@Test
+		public void CopyExecuteWihtNullSdtin(){
+			String result = IcopyTool.execute(null, null);
+			assertEquals(result,"copy commmand must have two params");
+		}
+		
 	}
 
 

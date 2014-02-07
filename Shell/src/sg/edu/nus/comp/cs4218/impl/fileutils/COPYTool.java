@@ -45,7 +45,11 @@ public class COPYTool extends ATool implements ICopyTool{
 	public String execute(File workingDir, String stdin) {
 		
 		// make sure stdin exists
-		if (stdin == null) { stdin = ""; }
+		if (stdin == null) { 
+			stdin = "";
+		    return "copy commmand must have two params";
+		
+		}
 		
 		//TODO: at this moment we assume no stdin. confirm with others
 		// how to parse stdin!!!

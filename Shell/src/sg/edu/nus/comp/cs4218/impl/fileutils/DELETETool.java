@@ -52,7 +52,10 @@ public class DELETETool extends ATool implements IDeleteTool {
 	@Override
 	public String execute(File workingDir, String stdin) {
 		// make sure stdin exists
-				if (stdin == null) { stdin = ""; }
+				if (stdin == null) { 
+					stdin = ""; 
+					return "delete command must have 1 param";
+					}
 				
 				//TODO: at this moment we assume no stdin. confirm with others
 				// how to parse stdin!!!
