@@ -44,28 +44,27 @@ public class MoveTool extends ATool implements IMoveTool{
 
 	@Override
 	public String execute(File workingDir, String stdin) {
-		// parse arguments
-		try {
-			argList.parseArgs(this.args);
-		} catch (IllegalArgumentException e){
-			setStatusCode(9);
-			return e.getMessage();
-		}
-			StringBuilder output = new StringBuilder();
-		
-			if(stdin == null) {stdin = "";}
-			
-			if(argList.isEmpty()){
-				output.append(stdin);
-				}
-			else {
+		// make sure stdin exists
+				if (stdin == null) { stdin = ""; }
 				
-					
+				//TODO: at this moment we assume no stdin. confirm with others
+				// how to parse stdin!!!
+				
+				// parse arguments
+				try {
+					argList.parseArgs(this.args);
+				} catch (IllegalArgumentException e) {
+					setStatusCode(9);
+					return e.getMessage();
 				}
 				
-			
-		
-		return null;
-	}
+				if(move(new File(argList.getParam(1)),new File (argList.getParam(2)))){
+					return "Move File Successful!";
+				}
+				else{
+					setStatusCode(9);
+					return "Move File Failed";
+				}
+			}
 
 }
