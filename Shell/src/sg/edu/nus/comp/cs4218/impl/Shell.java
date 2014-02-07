@@ -74,15 +74,13 @@ public class Shell implements IShell {
 	public static void main(String[] args){	
 		Shell shell = new Shell();
 		ExecutorService executor = Executors.newFixedThreadPool(1);
-		
-		System.out.print("[" + workingDir.toString() + "]$ ");
 
 		// Take in the user input
 		Scanner scanner = new Scanner(System.in);
 		
 		while (true) {
-			// If no thread is working, we should print the working
-			// directory			
+			// if no thread is working, we should retrieve the latest working
+			// directory
 			if (future != null && future.isDone()) {
 				try {
 					future.cancel(true);
