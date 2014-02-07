@@ -22,7 +22,7 @@ public class MoveToolTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 	 
 	private IMoveTool movetool;
-	private DiffUtils DiffTool;
+	private DiffUtils difftool;
 	@Before
 	public void setUp() throws Exception {
 		movetool = new MoveTool(null);
