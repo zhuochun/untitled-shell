@@ -1,21 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
-import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
-import sg.edu.nus.comp.cs4218.impl.WorkerCallable;
-import sg.edu.nus.comp.cs4218.impl.CommandInterpreter;
-import sg.edu.nus.comp.cs4218.impl.ArgList;;
+import sg.edu.nus.comp.cs4218.ITool;
 
 /**
  * The Shell is used to interpret and execute user's
@@ -26,15 +14,9 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;;
  */
 public class Shell implements IShell {
 
-	private String stdin;
-	
-	private static File workingDir;
-	private static Callable<File> callable;
-	private static Future<File> future;
+	private static ToolRunnable runnable;
 	
 	public Shell() {
-		workingDir = new File(System.getProperty("user.dir"));
-		future = null;
 	}
 	
 	@Override
@@ -44,10 +26,8 @@ public class Shell implements IShell {
 		
 		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0]));
 		
-		callable = new WorkerCallable(tool, workingDir, "", cmd);
-		
 		if (tool == null) {
-			System.err.println("Cannot parse " + commandline);
+			System.err.println("Cannot parse " + commandline + "\n");
 		}
 		
 		return tool;
@@ -60,7 +40,7 @@ public class Shell implements IShell {
 
 	@Override
 	public void stop(Runnable toolExecution) {
-		return;
+		return ;
 	}
 	
 	/**
@@ -75,42 +55,40 @@ public class Shell implements IShell {
 	 */
 	public static void main(String[] args){	
 		Shell shell = new Shell();
-		ExecutorService executor = Executors.newFixedThreadPool(1);
+		InputRunnable input = new InputRunnable();
+		input.start();
 
-		// Take in the user input
-		Scanner scanner = new Scanner(System.in);
+		System.out.print("[" + Directory.get().toString() + "] $ ");
 		
 		while (true) {
-			// if no thread is working, we should retrieve the latest working
-			// directory
-			if (future != null) {
-				try {
-					workingDir = future.get();
-					future.cancel(true);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			String commandLine = input.get();
+			
+			if (commandLine == null && runnable != null) {
+				if (runnable.isFinished()) {
+					runnable = null;
+					System.out.print("[" + Directory.get().toString() + "] $ ");
 				}
 			}
 			
-			System.out.print("[" + workingDir.toString() + "]$ ");
-			
-			String commandLine = scanner.nextLine();
-			
-			if (commandLine.equals("Ctrl-Z")) {
-				if (future != null && !future.isDone()) {
-					future.cancel(true);
-				}
-			} else {
-				if (future == null || (future != null && future.isDone())) {
-					if (shell.parse(commandLine) != null) {
-						future = executor.submit(callable);
+			if (commandLine != null) {
+				if (runnable == null) {
+					ITool tool = shell.parse(commandLine);
+
+					if (tool != null) {
+						runnable = new ToolRunnable(tool, "");
+						runnable.start();
+					} else {
+						System.out.print("[" + Directory.get().toString() + "] $ ");
+					}
+				} else {
+					if (commandLine.equalsIgnoreCase("Ctrl-Z")) {
+						runnable.stop();
+						runnable = null;
+						System.out.print("[" + Directory.get().toString() + "] $ ");
 					}
 				}
 			}
+
 		}
 	}
 }
