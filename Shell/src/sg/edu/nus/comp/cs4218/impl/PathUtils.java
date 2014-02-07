@@ -16,7 +16,8 @@ public class PathUtils {
 	 * '/' will be resolved to only one '/'. E.g. "adsf///asdf//sd/s/" will be
 	 * resolved as "adsf/asdf/sd/s/", and "aa/bb" will be resolved as "aa/bb"
 	 * if "bb" does not exist or is a file under aa, if "bb" exists and is a
-	 * directory, "aa/bb/" will be returned.
+	 * directory, "aa/bb/" will be returned. Further more, "/" is not allowed
+	 * in a file/folder name.
 	 * 
 	 * @param currentPath
 	 * @param newPath
