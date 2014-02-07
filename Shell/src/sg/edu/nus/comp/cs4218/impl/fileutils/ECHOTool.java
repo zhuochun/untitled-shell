@@ -3,56 +3,45 @@ package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 
 import java.io.File;
+import java.util.Arrays;
 
-
-import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.fileutils.IEchoTool;
-import sg.edu.nus.comp.cs4218.impl.ArgList;
+import sg.edu.nus.comp.cs4218.impl.ATool;
 public class ECHOTool extends ATool implements IEchoTool{
 
-	private ArgList argList = new ArgList();
-	
 	public ECHOTool(String[] arguments) {
 		super(arguments);
 
+		// remove first -
+		if (args != null && args.length > 0 && args[0].equals("-")) {
+			if (args.length > 1) {
+				args = Arrays.copyOfRange(args, 1, args.length);
+			} else {
+				args = new String[0];
+			}
+		}
 	}
 
 	@Override
 	public String echo(String toEcho) {
-		
-		if (!toEcho.isEmpty()){
-		/* in mac OS, in the cmd window, when you type echo as the option
-			both double quotes and single quotes will be removed. However in
-			windows cmd this does not happen, so we are following the mac OS 
-			standard here */
-			toEcho = toEcho.replace("\"","");
-			toEcho = toEcho.replace("'","");
-		}
-		return toEcho;
+		return toEcho + "\n";
 	}
 
 	@Override
 	public String execute(File workingDir, String stdin) {
-		
-		String sb = new String();
-		if (stdin==null) { stdin = "";}
-		try {
-			argList.parseArgs(this.args);
-		} catch (IllegalArgumentException e){
-		return e.getMessage();
+		StringBuilder stdout = new StringBuilder();
+
+		if (args != null && args.length > 0) {
+			for (String arg : args) {
+				stdout.append(arg);
+				stdout.append(" ");
+			}
+
+			stdout.deleteCharAt(stdout.length() - 1); // remove last space
 		}
-			
 		
-		if(argList.isEmpty()){
-			return stdin;
-		}
-		else{
-			sb = echo(stdin);
-		return sb.toString();
+		stdout.append("\n");
+		
+		return stdout.toString();
 	}
-	
-	// echo "hello world"
-	//tool = new ECHOTool(["hello, world"])
-		
-}
 }
