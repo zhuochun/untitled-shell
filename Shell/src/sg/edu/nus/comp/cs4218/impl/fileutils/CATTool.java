@@ -53,7 +53,7 @@ public class CATTool extends ATool implements ICatTool {
 		if (stdin == null) { stdin = ""; }
 
 		// process arguments
-		if (argList.isEmpty() || argList.getParam(0) == "-") {
+		if (argList.isEmpty() || argList.getParam(0).equals("-")) {
 			output.append(stdin);
 		} else {
 			for (String arg : argList.getParams()) {
