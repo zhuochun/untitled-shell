@@ -95,10 +95,12 @@ public class COPYToolTest {
 	public void testCopyTargetIsDirectory() throws IOException {
 		File origin = folder.newFile();
 		File target = folder.newFolder();
+		File realTarget = new File(PathUtils.PathResolver(target, origin.getName()));
 
 		IcopyTool.copy(origin, target);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertEquals(0, IcopyTool.getStatusCode());
+		assertTrue(realTarget.exists());
 	}
 
 	@Test

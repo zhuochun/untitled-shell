@@ -31,12 +31,11 @@ public class COPYTool extends ATool implements ICopyTool {
 
 				setStatusCode(7);
 				lastError = "Error: source is a directory";
-			} else if (to.isDirectory()) {
-				result = false;
-
-				setStatusCode(7);
-				lastError = "Error: target is a directory";
 			} else {
+				if (to.isDirectory()) {
+					to = new File(to, from.getName());
+				}
+
 				result = Files.copy(from.toPath(), to.toPath()) != null;
 			}
 		} catch (FileAlreadyExistsException e) {
@@ -48,7 +47,7 @@ public class COPYTool extends ATool implements ICopyTool {
 			result = false;
 
 			setStatusCode(7);
-			lastError = "Error: missing source or broken source";
+			lastError = "Error: missing source or missing target path";
 		} catch (SecurityException e) {
 			result = false;
 
