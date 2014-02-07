@@ -19,32 +19,31 @@ public class DELETETool extends ATool implements IDeleteTool {
 	}
 
 	@Override
-	//We can delete file or empty directory
+	// We can delete file or empty directory
 	public boolean delete(File toDelete) {
-		try{
-			if(!toDelete.exists())
+		try {
+			if (!toDelete.exists())
 				throw new FileNotFoundException();
-			else{
-				if(toDelete.isDirectory()){
-					// If it is a directory and not empty, cannot delete it 
-					if(toDelete.list().length>0){
-						System.out.println("Cannot delete the directory" + 
-								toDelete.toString()+" since the folder is not empty");
-						return false;
-					}
-					else{
+			else {
+				if (toDelete.isDirectory()) {
+					// If it is a directory and not empty, cannot delete it
+					if (toDelete.list().length > 0) {
+						throw new Exception("Cannot delete the directory"
+								+ toDelete.toString()
+								+ " since the folder is not empty");
+					} else {
 						toDelete.delete();
 						return true;
 					}
 				}
 				// if the directory is empty, delete it
-				else{
+				else {
 					// Delete the file
 					toDelete.delete();
 					return true;
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -52,15 +51,6 @@ public class DELETETool extends ATool implements IDeleteTool {
 
 	@Override
 	public String execute(File workingDir, String stdin) {
-		// make sure stdin exists
-		if (stdin == null) { 
-			stdin = ""; 
-			return "delete command must have 1 param";
-		}
-
-		//TODO: at this moment we assume no stdin. confirm with others
-		// how to parse stdin!!!
-
 		// parse arguments
 		try {
 			argList.parseArgs(this.args);
@@ -69,16 +59,14 @@ public class DELETETool extends ATool implements IDeleteTool {
 			return e.getMessage();
 		}
 
-		if(argList.getParams().length>=1){
-			if(delete(new File(argList.getParam(0)))){
+		if (argList.getParams().length >= 1) {
+			if (delete(new File(argList.getParam(0)))) {
 				return "delete successful";
-			}
-			else{
+			} else {
 				setStatusCode(9);
 				return "delete unsuccessful";
 			}
-		}
-		else{
+		} else {
 			setStatusCode(9);
 			return "the number of parameters should be more than 1";
 		}

@@ -10,7 +10,7 @@ import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.fileutils.ICopyTool;
 
-public class COPYTool extends ATool implements ICopyTool{
+public class COPYTool extends ATool implements ICopyTool {
 
 	private ArgList argList = new ArgList();
 
@@ -23,36 +23,34 @@ public class COPYTool extends ATool implements ICopyTool{
 
 	@Override
 	public boolean copy(File from, File to) {
-		try{
-			if(!from.isFile()){
-				throw new FileNotFoundException("Missing original file"); 
+		try {
+			if (!from.isFile()) {
+				throw new FileNotFoundException("Missing original file");
 			}
-			if(!to.isFile()){
+			if (!to.isFile()) {
 				to.createNewFile();
 			}
-			Files.copy(from.toPath(),to.toPath());
-		}catch (FileNotFoundException e){
+			Files.copy(from.toPath(), to.toPath());
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-
 	@Override
 	public String execute(File workingDir, String stdin) {
 
 		// make sure stdin exists
-		if (stdin == null) { 
+		if (stdin == null) {
 			stdin = "";
 			return "copy commmand must have two params";
 
 		}
 
-		//TODO: at this moment we assume no stdin. confirm with others
+		// TODO: at this moment we assume no stdin. confirm with others
 		// how to parse stdin!!!
 
 		// parse arguments
@@ -62,17 +60,16 @@ public class COPYTool extends ATool implements ICopyTool{
 			setStatusCode(9);
 			return e.getMessage();
 		}
-		if(argList.getParams().length >= 2){
+		if (argList.getParams().length >= 2) {
 
-			if(copy(new File(argList.getParam(0)),new File (argList.getParam(1)))){
+			if (copy(new File(argList.getParam(0)),
+					new File(argList.getParam(1)))) {
 				return "copy successful";
-			}
-			else{
+			} else {
 				setStatusCode(9);
 				return "copy unsuccessful";
 			}
-		}
-		else{
+		} else {
 			setStatusCode(9);
 			return "the number of parameters should not be less than 2";
 		}
