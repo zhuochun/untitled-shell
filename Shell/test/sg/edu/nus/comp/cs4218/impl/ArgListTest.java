@@ -2,6 +2,8 @@ package sg.edu.nus.comp.cs4218.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,6 +88,7 @@ public class ArgListTest {
 	public void testParseWithParamsAndOptions() {
 		String[] arguments = { "-test", "", "-1", "--", "\'h", "we\'", ">", "|", "-", "test" };
 
+		args.invalidOptionCheck = false;
 		args.registerAcceptableOption("test", null);
 		args.parseArgs(arguments);
 		
@@ -129,7 +132,29 @@ public class ArgListTest {
 	}
 	
 	@Test
-	public void testParseWithDoubleQuotedOptions() {
+	public void testParseWithDoubleQuotedStringInline() {
+		String arguments = "Desktop/\"hello world\"/file.txt";
+		
+		args.parseArgs(arguments.split(" "));
+		
+		assertEquals("Desktop/hello world/file.txt", args.getParam(0));
+		assertEquals("Desktop/hello world/file.txt", args.getArgument(0));
+	}
+	
+	@Test
+	public void testParseWithDoubleQuotedStringInline2() {
+		String arguments = "Des\"ktop/\"file.txt Desk\"top\"/\"file.txt\"";
+		
+		args.parseArgs(arguments.split(" "));
+		
+		assertEquals("Desktop/file.txt", args.getParam(0));
+		assertEquals("Desktop/file.txt", args.getArgument(0));
+		assertEquals("Desktop/file.txt", args.getParam(1));
+		assertEquals("Desktop/file.txt", args.getArgument(1));
+	}
+	
+	@Test
+	public void testParseWithDoubleQuotedStringStartEnd() {
 		String arguments = "\"quote string\"";
 		
 		args.parseArgs(arguments.split(" "));
@@ -162,21 +187,49 @@ public class ArgListTest {
 	}
 	
 	@Test
-	public void testSplitLineNormal() {
-		String[] arguments = ArgList.split("ls -a ab\\r\\n d\\t ef");
-		assertArrayEquals(new String[] { "ls", "-a", "abrn", "dt", "ef" },  arguments);
+	public void testSplitEmptyLine() {
+		ArrayList<String> arguments = new ArrayList<String>();
+
+		String line = "";
+		String cmd = ArgList.split(line, arguments);
+
+		assertEquals("", cmd);
+		assertArrayEquals(new String[] {},  arguments.toArray(new String[0]));
+	}
+
+	@Test
+	public void testSplitLineDashed() {
+		ArrayList<String> arguments = new ArrayList<String>();
+
+		// input: ls -a a\a\\a a\\\b a\\\\c
+		String line = "ls -a a\\a\\\\a b\\\\\\b c\\\\\\\\c";
+		String cmd = ArgList.split(line, arguments);
+
+		assertEquals("ls", cmd);
+		assertArrayEquals(new String[] { "-a", "aa\\a", "b\\b", "c\\\\c" },  arguments.toArray(new String[0]));
+	}
+	
+	@Test
+	public void testSplitLineDashedSpace() {
+		ArrayList<String> arguments = new ArrayList<String>();
+
+		// input: ls -a a\ a b\\ c d\\\ d e\\\\ f
+		String line = "ls -a a\\ a b\\\\ c d\\\\\\ d e\\\\\\\\ f";
+		String cmd = ArgList.split(line, arguments);
+
+		assertEquals("ls", cmd);
+		assertArrayEquals(new String[] { "-a", "a a", "b\\", "c", "d\\ d", "e\\\\", "f" },  arguments.toArray(new String[0]));
 	}
 	
 	@Test
 	public void testSplitLineWithQuote() {
-		String[] arguments = ArgList.split("ls \"hello world.txt\"");
-		assertArrayEquals(new String[] { "ls", "\"hello", "world.txt\""},  arguments);
-	}
-	
-	@Test
-	public void testSplitLineWithDashSpace() {
-		String[] arguments = ArgList.split("ls -a test\\ hello.txt");
-		assertArrayEquals(new String[] { "ls", "-a", "test hello.txt" }, arguments);
+		ArrayList<String> arguments = new ArrayList<String>();
+
+		String line = "ls -a \"hello world\"";
+		String cmd = ArgList.split(line, arguments);
+
+		assertEquals("ls", cmd);
+		assertArrayEquals(new String[] { "-a", "\"hello", "world\"" },  arguments.toArray(new String[0]));
 	}
 	
 }

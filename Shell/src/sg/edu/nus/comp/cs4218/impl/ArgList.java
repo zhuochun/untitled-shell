@@ -45,7 +45,7 @@ public class ArgList {
 	private List<String> invalidOptions;
 	
 	public boolean optionsFirstCheck = true;
-	public boolean invalidOptionCheck = false;
+	public boolean invalidOptionCheck = true;
 
 	public ArgList() {
 		Comparator<String> compare = new Comparator<String>() {
@@ -111,6 +111,10 @@ public class ArgList {
 	
 	public String[] getArguments() {
 		return arguments.toArray(new String[0]);
+	}
+	
+	public String getArgument(int idx) {
+		return arguments.get(idx);
 	}
 
 	/**
@@ -195,10 +199,24 @@ public class ArgList {
 			} else if (isAnOption(arg)) {
 				parseOptionStr(arg.substring(1), argIter);
 			} else {
-				if (arg.startsWith("\"")) {
-					parseQuotedStr(arg.substring(1), "\"", argIter);
-				} else if (arg.startsWith("'")) {
-					parseQuotedStr(arg.substring(1), "'", argIter);
+				if (arg.contains("\"")) {
+					if (hasIncompleteQuoteMark(arg, '"')) {
+						parseQuotedStr(arg.replace("\"", ""), "\"", argIter);
+					} else {
+						arg = arg.replace("\"", "");
+
+						params.add(arg);
+						arguments.add(arg);
+					}
+				} else if (arg.contains("'")) {
+					if (hasIncompleteQuoteMark(arg, '\'')) {
+						parseQuotedStr(arg.replace("'", ""), "'", argIter);
+					} else {
+						arg = arg.replace("'", "");
+
+						params.add(arg);
+						arguments.add(arg);
+					}
 				} else {
 					params.add(arg);
 					arguments.add(arg);
@@ -252,8 +270,8 @@ public class ArgList {
 		while (iter.hasNext()) {
 			String next = iter.next();
 
-			if (next.endsWith(quoteMark)) {
-				quote.append(" " + next.substring(0, next.length() - 1));
+			if (next.contains(quoteMark) && hasIncompleteQuoteMark(next, quoteMark.charAt(0))) {
+				quote.append(" " + next.replaceAll(quoteMark, ""));
 				ended = true;
 				break;
  			} else {
@@ -270,18 +288,20 @@ public class ArgList {
 		}
 	}
 	
-	public static String[] split(String line) {
-		// split by \s but not \\s
-		String[] result = line.split("(?<!\\\\)\\s+");
+	private boolean hasIncompleteQuoteMark(String word, char quote) {
+		char[] chars = word.toCharArray();
 
-		// trim and replace \? to ? if any
-		for (int i = 0; i < result.length; i++) {
-			result[i] = result[i].replaceAll("\\\\(.)", "$1").trim();
+		boolean alone = false;
+
+		for (char c : chars) {
+			if (c == quote) {
+				alone = !alone;
+			}
 		}
-
-		return result;
+		
+		return alone;
 	}
-	
+
 	private boolean isAnOption(String arg) {
 		return arg.length() > 1 && arg.startsWith("-");
 	}
@@ -292,4 +312,29 @@ public class ArgList {
 		}
 	}
 	
+	/**
+	 * split input line into command + params[]
+	 * 
+	 * @param line the input line
+	 * @param params arguments in line other than the command
+	 * @return command name as String
+	 */
+	public static String split(String line, ArrayList<String> params) {
+		// split by \s
+		String[] result = line.split("\\s+");
+		
+		for (int i = 0; i < result.length; i++) {
+			String t = result[i];
+			
+			// if it is odd number of \, merge next one
+			if (t.matches("^.*(?<!\\\\)((\\\\\\\\\\\\)+|\\\\)$")) {
+				i += 1;
+				t += " " + result[i];
+			}
+
+			params.add(t.replaceAll("\\\\(.)", "$1"));
+		}
+
+		return params.remove(0);
+	}
 }
