@@ -20,7 +20,7 @@ public class WorkerCallable implements Callable<File> {
 	}
 
 	@Override
-	public File call() {
+	public File call() throws Exception{
 		String output = rTool.execute(rWorkingDir, rStdin);
 		int exitCode = rTool.getStatusCode();
 		

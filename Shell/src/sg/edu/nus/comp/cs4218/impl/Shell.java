@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import sg.edu.nus.comp.cs4218.ITool;
 import sg.edu.nus.comp.cs4218.IShell;
@@ -33,6 +34,7 @@ public class Shell implements IShell {
 	
 	public Shell() {
 		workingDir = new File(System.getProperty("user.dir"));
+		future = null;
 	}
 	
 	@Override
@@ -81,10 +83,10 @@ public class Shell implements IShell {
 		while (true) {
 			// if no thread is working, we should retrieve the latest working
 			// directory
-			if (future != null && future.isDone()) {
+			if (future != null) {
 				try {
-					future.cancel(true);
 					workingDir = future.get();
+					future.cancel(true);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -104,8 +106,9 @@ public class Shell implements IShell {
 				}
 			} else {
 				if (future == null || (future != null && future.isDone())) {
-					shell.parse(commandLine);
-					future = executor.submit(callable);
+					if (shell.parse(commandLine) != null) {
+						future = executor.submit(callable);
+					}
 				}
 			}
 		}
