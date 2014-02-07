@@ -23,13 +23,12 @@ public class ECHOTool extends ATool implements IEchoTool{
 	@Override
 	public String echo(String toEcho) {
 		
-		if (!toEcho.equals(null)){
+		if (!toEcho.isEmpty()){
 		
 			toEcho = toEcho.replace("\"","");
 			toEcho = toEcho.replace("'","");
-			return toEcho;
 		}
-		return null;
+		return toEcho;
 	}
 
 	@Override
