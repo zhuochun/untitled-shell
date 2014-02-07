@@ -48,7 +48,7 @@ public class MoveTool extends ATool implements IMoveTool{
 					return "Move command need to have Two params";
 				}
 				
-				//TODO: at this moment we assume no stdin. confirm with others
+				// at this moment we assume no stdin. confirm with others
 				// how to parse stdin!!!
 				
 				// parse arguments
@@ -58,7 +58,7 @@ public class MoveTool extends ATool implements IMoveTool{
 					setStatusCode(9);
 					return e.getMessage();
 				}
-				
+				if(argList.getParams().length>=2){
 				if(move(new File(argList.getParam(0)),new File (argList.getParam(1)))){
 					return "Move File Successful!";
 				}
@@ -67,5 +67,10 @@ public class MoveTool extends ATool implements IMoveTool{
 					return "Move File Failed";
 				}
 			}
+				else {
+					setStatusCode(9);
+					return "Move Command need at least 2 params";
+				}
 
+}
 }
