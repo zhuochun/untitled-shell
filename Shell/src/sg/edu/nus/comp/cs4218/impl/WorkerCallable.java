@@ -10,10 +10,9 @@ public class WorkerCallable implements Callable<File> {
 	private ITool rTool;
 	private File rWorkingDir;
 	private String rStdin;
-	private int[] rExitCode;
 	private String rCmd;
 	
-	public WorkerCallable(ITool tool, File workingDir, String stdin, int[] exitCode, String cmd) {
+	public WorkerCallable(ITool tool, File workingDir, String stdin, String cmd) {
 		rTool = tool;
 		rWorkingDir = workingDir;
 		rStdin = stdin;
@@ -23,13 +22,15 @@ public class WorkerCallable implements Callable<File> {
 	@Override
 	public File call() {
 		String output = rTool.execute(rWorkingDir, rStdin);
-		rExitCode[0] = rTool.getStatusCode();
+		int exitCode = rTool.getStatusCode();
 		
 		if (!rCmd.equals("cd")) {
 			System.out.println(output);
 		} else {
-			if (rExitCode[0] == '0') {
+			if (exitCode != 0) {
 				System.out.println(output);
+			} else {
+				rWorkingDir = new File(output);
 			}
 		}
 		

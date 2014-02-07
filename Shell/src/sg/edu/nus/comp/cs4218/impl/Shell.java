@@ -28,16 +28,11 @@ public class Shell implements IShell {
 	private String stdin;
 	
 	private static File workingDir;
-	private static int[] exitCode;
-	private static String[] output;
-	private static boolean isCd;
 	private static Callable<File> callable;
 	private static Future<File> future;
 	
 	public Shell() {
-		exitCode = new int[1];
 		workingDir = new File(System.getProperty("user.dir"));
-		output = new String[1];
 	}
 	
 	@Override
@@ -47,7 +42,7 @@ public class Shell implements IShell {
 		
 		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0]));
 		
-		callable = new WorkerCallable(tool, workingDir, "", exitCode, cmd);
+		callable = new WorkerCallable(tool, workingDir, "", cmd);
 		
 		if (tool == null) {
 			System.err.println("Cannot parse " + commandline);
@@ -78,7 +73,7 @@ public class Shell implements IShell {
 	 */
 	public static void main(String[] args){	
 		Shell shell = new Shell();
-		ExecutorService executor = Executors.newFixedThreadPool(2);
+		ExecutorService executor = Executors.newFixedThreadPool(1);
 		
 		System.out.print("[" + workingDir.toString() + "]$ ");
 
@@ -90,6 +85,7 @@ public class Shell implements IShell {
 			// directory
 			if (future != null && future.isDone()) {
 				try {
+					future.cancel(true);
 					workingDir = future.get();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
