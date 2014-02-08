@@ -2,11 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.fileutils;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -16,7 +12,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import sg.edu.nus.comp.cs4218.impl.DiffUtils;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
