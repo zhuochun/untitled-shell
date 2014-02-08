@@ -64,10 +64,21 @@ public class MoveToolTest {
 	
 	@Test
 	public void testMoveFileToNonExistFolder() {
-		tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
-		String output = tool.execute(currentDir, null);
+		File testFile = new File("aklsadfjklsa.txt");
 		
-		assertEquals("No such file or directory!", output);
+		try {
+			testFile.createNewFile();
+			
+			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
+			String output = tool.execute(currentDir, null);
+			
+			assertEquals("No such file or directory!", output);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			testFile.delete();
+		}
 	}
 	
 	@Test
@@ -265,6 +276,24 @@ public class MoveToolTest {
 			testFile.delete();
 			testNewFile.delete();
 			compareFile.delete();
+		}
+	}
+	
+	@Test
+	public void testMoveToFolderCannotWrite() {
+		File testFile = new File("aklsadfjklsa.txt");
+		try {
+			testFile.createNewFile();
+			
+			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "/"});
+			String output = tool.execute(currentDir, null);
+			
+			assertEquals("File cannot be moved!", output);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			testFile.delete();
 		}
 	}
 }

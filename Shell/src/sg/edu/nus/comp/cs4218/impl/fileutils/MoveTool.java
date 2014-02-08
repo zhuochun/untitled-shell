@@ -67,7 +67,7 @@ public class MoveTool extends ATool implements IMoveTool {
 				setStatusCode(9);
 				output = "Origin is not a file!";
 			} else 
-			if (!new File(copyFile.getParent()).exists()) {
+			if (!copyFile.toString().equals("/") && !new File(copyFile.getParent()).exists()) {
 				setStatusCode(9);
 				output = "No such file or directory!";
 			} else {
