@@ -23,14 +23,12 @@ public class COPYTool extends ATool implements ICopyTool {
 
 	@Override
 	public boolean copy(File from, File to) {
-		boolean result;
+		boolean result = false;
 
 		try {
 			if (from.isDirectory()) {
-				result = false;
-
 				setStatusCode(7);
-				lastError = "Error: source is a directory";
+				lastError = "Error: " + from.getName() + " is a directory";
 			} else {
 				if (to.isDirectory()) {
 					to = new File(to, from.getName());
@@ -39,18 +37,12 @@ public class COPYTool extends ATool implements ICopyTool {
 				result = Files.copy(from.toPath(), to.toPath()) != null;
 			}
 		} catch (FileAlreadyExistsException e) {
-			result = false;
-
 			setStatusCode(7);
-			lastError = "Error: target file already exists";
+			lastError = "Error: " + to.getName() + " already exists";
 		} catch (IOException e) {
-			result = false;
-
 			setStatusCode(7);
 			lastError = "Error: missing source or missing target path";
 		} catch (SecurityException e) {
-			result = false;
-
 			setStatusCode(6);
 			lastError = "Error: no permission to access";
 		}

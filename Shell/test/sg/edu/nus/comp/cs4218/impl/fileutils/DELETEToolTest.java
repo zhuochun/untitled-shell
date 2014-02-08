@@ -1,9 +1,12 @@
-// chen hao
 package sg.edu.nus.comp.cs4218.impl.fileutils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.fileutils.IDeleteTool;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class DELETEToolTest {
 
@@ -31,51 +35,42 @@ public class DELETEToolTest {
 	}
 
 	@Test
-	public void testDeleteFileExists() {
-		try {
-			File origin = folder.newFile("originForDelete.txt");
+	public void testDeleteExistsFile() throws IOException {
+		File origin = folder.newFile();
 
-			assertTrue(origin.exists());
+		IDeleteTool.delete(origin);
 
-			IDeleteTool.delete(origin);
-
-			assertFalse(origin.exists());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		assertEquals(0, IDeleteTool.getStatusCode());
+		assertFalse(origin.exists());
 	}
 
 	@Test
-	public void testDeleteEmptyDirectoryExists() {
-		try {
-			File origin = folder.newFolder("originForDelete");
+	public void testDeleteNotExistsFile() {
+		File notExists = new File(PathUtils.PathResolver(folder.getRoot(), "notExists.txt"));
+		
+		IDeleteTool.delete(notExists);
+		
+		assertNotEquals(0, IDeleteTool.getStatusCode());
+	}
+	
+	@Test
+	public void testDeleteEmptyDirectory() throws IOException {
+		File origin = folder.newFolder();
 
-			assertTrue(origin.exists());
+		IDeleteTool.delete(origin);
 
-			IDeleteTool.delete(origin);
-
-			assertFalse(origin.exists());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertTrue(origin.exists());
 	}
 
 	@Test
-	public void testDeleteNotEmptyDirectoryExists() {
-		try {
-			File origin = folder.newFile("originFileDelete.txt");
+	public void testDeleteNotEmptyDirectoryExists() throws IOException {
+		folder.newFile();
 
-			assertTrue(folder.getRoot().exists());
+		IDeleteTool.delete(folder.getRoot());
 
-			IDeleteTool.delete(folder.getRoot());
-
-			assertTrue(folder.getRoot().exists());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertTrue(folder.getRoot().exists());
 	}
 
 }
