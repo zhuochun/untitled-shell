@@ -327,7 +327,7 @@ public class ArgList {
 			String t = result[i];
 			
 			// if it is odd number of \, merge next one
-			if (t.matches("^.*(?<!\\\\)((\\\\\\\\\\\\)+|\\\\)$")) {
+			if (t.matches("^.*(?<!\\\\)((\\\\\\\\)*\\\\)$")) {
 				i += 1;
 				t += " " + result[i];
 			}

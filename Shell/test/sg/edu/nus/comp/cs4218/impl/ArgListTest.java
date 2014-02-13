@@ -201,24 +201,26 @@ public class ArgListTest {
 	public void testSplitLineDashed() {
 		ArrayList<String> arguments = new ArrayList<String>();
 
-		// input: ls -a a\a\\a a\\\b a\\\\c
-		String line = "ls -a a\\a\\\\a b\\\\\\b c\\\\\\\\c";
+		// input: ls -a a\a\\a b\\\b c\\\\c d\\\\\d e\\\\\\e
+		String line = "ls -a a\\a\\\\a b\\\\\\b c\\\\\\\\c d\\\\\\\\\\d e\\\\\\\\\\\\e";
 		String cmd = ArgList.split(line, arguments);
 
 		assertEquals("ls", cmd);
-		assertArrayEquals(new String[] { "-a", "aa\\a", "b\\b", "c\\\\c" },  arguments.toArray(new String[0]));
+		assertArrayEquals(new String[] { "-a", "aa\\a", "b\\b", "c\\\\c", "d\\\\d", "e\\\\\\e" },
+				arguments.toArray(new String[0]));
 	}
 	
 	@Test
 	public void testSplitLineDashedSpace() {
 		ArrayList<String> arguments = new ArrayList<String>();
 
-		// input: ls -a a\ a b\\ c d\\\ d e\\\\ f
-		String line = "ls -a a\\ a b\\\\ c d\\\\\\ d e\\\\\\\\ f";
+		// input: ls -a a\ a b\\ c d\\\ d e\\\\ f g\\\\\ g
+		String line = "ls -a a\\ a b\\\\ c d\\\\\\ d e\\\\\\\\ f g\\\\\\\\\\ g";
 		String cmd = ArgList.split(line, arguments);
 
 		assertEquals("ls", cmd);
-		assertArrayEquals(new String[] { "-a", "a a", "b\\", "c", "d\\ d", "e\\\\", "f" },  arguments.toArray(new String[0]));
+		assertArrayEquals(new String[] { "-a", "a a", "b\\", "c", "d\\ d", "e\\\\", "f", "g\\\\ g" },
+				arguments.toArray(new String[0]));
 	}
 	
 	@Test
