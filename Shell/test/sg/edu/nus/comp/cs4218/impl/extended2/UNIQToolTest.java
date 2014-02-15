@@ -1,15 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.extended2.IUniqTool;
-import sg.edu.nus.comp.cs4218.helper.MessageHelper;
 
 public class UNIQToolTest {
 	private IUniqTool uniqTool;

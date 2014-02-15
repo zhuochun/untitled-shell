@@ -37,7 +37,6 @@ public class SORTToolTest {
 	@Before
 	public void before() throws IOException {
 		sortTool = new SORTTool(null);
-
 	}
 
 	@After
