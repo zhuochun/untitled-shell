@@ -4,24 +4,41 @@ import java.io.File;
 
 import sg.edu.nus.comp.cs4218.extended2.IPasteTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
+import sg.edu.nus.comp.cs4218.impl.ArgList;
 
 public class PASTETool extends ATool implements IPasteTool {
 
+	private ArgList argList = new ArgList();
+
+	
 	public PASTETool(String[] arguments) {
 		super(arguments);
-		// TODO Auto-generated constructor stub
+		argList.invalidOptionCheck = true;
 	}
 
 	@Override
 	public String pasteSerial(String[] input) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		StringBuilder sb = new StringBuilder();
+		for (String s : input){
+			sb.append(s);
+			sb.append(" ");
+		}
+		
+		sb.append("\n");
+		
+		return sb.toString();
 	}
 
 	@Override
 	public String pasteUseDelimiter(String delim, String[] input) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		StringBuilder sb = new StringBuilder();
+		for(String s : input){
+			sb.append(s);
+			sb.append(delim);
+		}
+	return sb.toString();
 	}
 
 	@Override
@@ -32,8 +49,12 @@ public class PASTETool extends ATool implements IPasteTool {
 
 	@Override
 	public String execute(File workingDir, String stdin) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if(args!=null && args.length>0){
+			
+		}
+		
+			return null;
 	}
 
 }
