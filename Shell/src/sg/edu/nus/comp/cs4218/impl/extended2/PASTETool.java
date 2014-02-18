@@ -50,8 +50,9 @@ public class PASTETool extends ATool implements IPasteTool {
 	@Override
 	public String execute(File workingDir, String stdin) {
 		
-		if(args!=null && args.length>0){
-			
+		if(args==null || args.length == 0){
+			setStatusCode(9);
+			return "Error, no input";
 		}
 		
 			return null;
