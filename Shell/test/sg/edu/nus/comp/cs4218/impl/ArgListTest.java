@@ -105,7 +105,7 @@ public class ArgListTest {
 		
 		args.registerAcceptableOption("T", ArgType.RAW, null);
 		args.registerAcceptableOption("N", ArgType.NUM, null);
-		args.registerAcceptableOption("S", ArgType.NUM, null);
+		args.registerAcceptableOption("S", ArgType.STRING, null);
 		args.parseArgs(arguments);
 		
 		assertEquals("12", args.getOptionValue("N"));
@@ -115,19 +115,36 @@ public class ArgListTest {
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testParseWithInvalidValueOptions() {
+	public void testParseWithInvalidNumValueOptions() {
 		String[] arguments = { "-N", "-T" };
 		
 		args.invalidOptionCheck = true;
 		args.registerAcceptableOption("N", ArgType.NUM, null);
 		args.parseArgs(arguments);
 	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithInvalidStringValueOptions() {
+		String[] arguments = { "-N", "'T" };
+		
+		args.invalidOptionCheck = true;
+		args.registerAcceptableOption("N", ArgType.STRING, null);
+		args.parseArgs(arguments);
+	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testParseWithIncompleteValueOptionsAtLast() {
+	public void testParseWithIncompleteNumValueOptionsAtLast() {
 		String[] arguments = { "-test" };
 
 		args.registerAcceptableOption("test", ArgType.NUM, null);
+		args.parseArgs(arguments);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithIncompleteStringValueOptionsAtLast() {
+		String[] arguments = { "-test" };
+
+		args.registerAcceptableOption("test", ArgType.STRING, null);
 		args.parseArgs(arguments);
 	}
 	

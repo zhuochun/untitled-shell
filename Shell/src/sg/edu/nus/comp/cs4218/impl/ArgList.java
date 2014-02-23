@@ -28,6 +28,16 @@ public class ArgList {
 			this.value = value;
 		}
 		
+		public boolean matchType(String value) {
+			if (type == ArgType.NUM) {
+				return value.matches("[0-9]+");
+			} else if (type == ArgType.STRING) {
+				return !(value.startsWith("\"") || value.startsWith("'"));
+			} else {
+				return true;
+			}
+		}
+		
 		@Override
 		public String toString() {
 			if (type == ArgType.RAW) {
@@ -245,7 +255,7 @@ public class ArgList {
 
 		addWithoutDuplicate(options, option);
 		
-		if (opt.type == ArgType.NUM) {
+		if (opt.type != ArgType.RAW) {
 			if (!iter.hasNext()) {
 				throw new IllegalArgumentException("Error: Invalid option -" + option);
 			}
@@ -254,12 +264,14 @@ public class ArgList {
 			
 			if (isAnOption(val)) {
 				throw new IllegalArgumentException("Error: Invalid option -" + option);
+			}	
+			
+			if (!opt.matchType(val)) {
+				throw new IllegalArgumentException("Error: Illegal value: " + val);
 			}
 
 			opt.setValue(val);
 			arguments.add(val);
-		} else {
-			// other types handled by default
 		}
 	}
 	
