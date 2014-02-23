@@ -1,8 +1,8 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import sg.edu.nus.comp.cs4218.ITool;
-import sg.edu.nus.comp.cs4218.impl.extended1.GREPTool;
-import sg.edu.nus.comp.cs4218.impl.extended1.PIPINGTool;
+import sg.edu.nus.comp.cs4218.impl.extended1.*;
+import sg.edu.nus.comp.cs4218.impl.extended2.*;
 import sg.edu.nus.comp.cs4218.impl.fileutils.*;
 
 public class CommandInterpreter {
@@ -28,6 +28,18 @@ public class CommandInterpreter {
 			return new GREPTool(args);
 		} else if (cmd.equals("pipe")) {
 			return new PIPINGTool(args);
+		} else if (cmd.equals("comm")) {
+			return new COMMTool(args);
+		} else if (cmd.equals("cut")) {
+			return new CUTTool(args);
+		} else if (cmd.equals("paste")) {
+			return new PASTETool(args);
+		} else if (cmd.equals("sort")) {
+			return new SORTTool(args);
+		} else if (cmd.equals("uniq")) {
+			return new UNIQTool(args);
+		} else if (cmd.equals("wc")) {
+			return new WCTool(args);
 		}
 
 		return null;
