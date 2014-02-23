@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FileUtils {
 	
@@ -34,6 +35,30 @@ public class FileUtils {
 		}
 
 		return _readFileContent(file);
+	}
+
+	private static String[] _readFileLines(File file) throws IOException {
+		ArrayList<String> lines = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		String line;
+		while ((line = br.readLine()) != null) {
+			lines.add(line);
+		}
+
+		br.close();
+
+		return lines.toArray(new String[0]);
+	}
+	
+	public static String[] readFileLines(File file) throws IOException, RuntimeException {
+		if (file == null || !file.exists()){
+			throw new RuntimeException("Error: No such file or directory");
+		} else if (file.isDirectory()) {
+			throw new RuntimeException("Error: " + file.getName() + " is a directory");
+		}
+
+		return _readFileLines(file);
 	}
 	
 	public static boolean diffTwoFiles(File origin, File copy) throws IOException {
