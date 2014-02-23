@@ -158,26 +158,22 @@ public class UNIQTool extends ATool implements IUniqTool {
 			return getHelp();
 		}
 		
+		// set input from stdin or file
+		String input = getInput(workingDir, stdin);
+		
+		if (getStatusCode() != 0) {
+			return input;
+		}
+
+		// other options
 		boolean checkCase = argList.hasOption("i");
 		int skipNum = argList.hasOption("f") ? Integer.parseInt(argList.getOptionValue("f")) : -1;
 
-		// set input from stdin or file
-		String input = stdin == null ? "" : stdin;
-
-		if (argList.hasParams() && !argList.getParam(0).equals("-")) {
-			try {
-				input = FileUtils.readFileContent(new File(PathUtils
-						.PathResolver(workingDir, argList.getParam(0))));
-			} catch (IOException e) {
-				setStatusCode(1);
-				return e.getMessage();
-			} catch (RuntimeException e) {
-				setStatusCode(2);
-				return e.getMessage();
-			}
-		}
-
 		// process inputs
+		return processInput(input, checkCase, skipNum);
+	}
+	
+	private String processInput(String input, boolean checkCase, int skipNum) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		StringBuilder result = new StringBuilder();
 
@@ -191,10 +187,27 @@ public class UNIQTool extends ATool implements IUniqTool {
 			br.close();
 		} catch (IOException e) {
 			setStatusCode(2);
-			result.append("Error: file reading exception.\n");
+			result.append("Error: File Reading Exception.\n");
 		}
 
 		return result.toString();
+	}
+
+	private String getInput(File workingDir, String stdin) {
+		if (argList.hasParams() && !argList.getParam(0).equals("-")) {
+			try {
+				return FileUtils.readFileContent(new File(
+						PathUtils.PathResolver(workingDir, argList.getParam(0))));
+			} catch (IOException e) {
+				setStatusCode(1);
+				return e.getMessage();
+			} catch (RuntimeException e) {
+				setStatusCode(2);
+				return e.getMessage();
+			}
+		} else {
+			return stdin == null ? "" : stdin;
+		}
 	}
 
 }
