@@ -14,6 +14,7 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.ArgList.ArgType;
 import sg.edu.nus.comp.cs4218.impl.ArgList.Option;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class GREPTool extends ATool implements IGrepTool {
 
@@ -318,23 +319,18 @@ public class GREPTool extends ATool implements IGrepTool {
 	}
 
 	private String executeOption(String option, String input) {
-		try {
-			if (option.equals("A")) {
-				return getMatchingLinesWithTrailingContext(
-						Integer.parseInt(argList.getOptionValue("A")),
-						argList.getParam(0), input);
-			} else if (option.equals("B")) {
-				return getMatchingLinesWithLeadingContext(
-						Integer.parseInt(argList.getOptionValue("B")),
-						argList.getParam(0), input);
-			} else if (option.equals("C")) {
-				return getMatchingLinesWithOutputContext(
-						Integer.parseInt(argList.getOptionValue("C")),
-						argList.getParam(0), input);
-			}
-		} catch (NumberFormatException e) {
-			setStatusCode(3);
-			return "Error: Invalid Number for Option -" + option;
+		if (option.equals("A")) {
+			return getMatchingLinesWithTrailingContext(
+					Integer.parseInt(argList.getOptionValue("A")),
+					argList.getParam(0), input);
+		} else if (option.equals("B")) {
+			return getMatchingLinesWithLeadingContext(
+					Integer.parseInt(argList.getOptionValue("B")),
+					argList.getParam(0), input);
+		} else if (option.equals("C")) {
+			return getMatchingLinesWithOutputContext(
+					Integer.parseInt(argList.getOptionValue("C")),
+					argList.getParam(0), input);
 		}
 
 		if (option.equals("c")) {
@@ -378,8 +374,8 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		if (argList.getParams().length > 1 && !argList.getParam(1).equals("-")) {
 			try {
-				input = FileUtils.readFileContent(new File(workingDir, argList
-						.getParam(1)));
+				input = FileUtils.readFileContent(new File(PathUtils
+						.PathResolver(workingDir, argList.getParam(1))));
 			} catch (IOException e) {
 				setStatusCode(1);
 				return e.getMessage();

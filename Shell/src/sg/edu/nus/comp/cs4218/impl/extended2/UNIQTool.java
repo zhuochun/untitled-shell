@@ -11,6 +11,7 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.ArgList.ArgType;
 import sg.edu.nus.comp.cs4218.impl.ArgList.Option;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 /*
  * uniq : Writes the unique lines in the given input.
@@ -165,7 +166,8 @@ public class UNIQTool extends ATool implements IUniqTool {
 
 		if (argList.hasParams() && !argList.getParam(0).equals("-")) {
 			try {
-				input = FileUtils.readFileContent(new File(workingDir, argList.getParam(0)));
+				input = FileUtils.readFileContent(new File(PathUtils
+						.PathResolver(workingDir, argList.getParam(0))));
 			} catch (IOException e) {
 				setStatusCode(1);
 				return e.getMessage();
