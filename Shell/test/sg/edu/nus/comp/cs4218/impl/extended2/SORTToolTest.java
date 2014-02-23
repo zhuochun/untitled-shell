@@ -59,30 +59,31 @@ public class SORTToolTest {
 	}
 	
 	//test sortFile method on sorted file
+	// input should be string 
 	@Test
 	public void sortFileTestForSortedFile() {
-		String result = sortTool.sortFile("sortFile.txt");
+		String result = sortTool.sortFile("aaa\r\nbbb\r\nccc\r\nddd\r\neee");
 		assertEquals(result, "aaa\nbbb\nccc\nddd\neee\n");
 	}
 
 	//test sortFile method on unsorted file
 	@Test
 	public void sortFileTestForUnsortedFile() {
-		String result = sortTool.sortFile("unSortFile.txt");
+		String result = sortTool.sortFile("zzz\r\nbbb\r\naaa\r\nggg\r\nfff");
 		assertEquals(result, "aaa\nbbb\nfff\nggg\nzzz\n");
 	}
 
 	//test checkIfSorted method on sorted file
 	@Test
 	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
-		String result = sortTool.checkIfSorted("unSortFile.txt");
+		String result = sortTool.checkIfSorted("zzz\r\nbbb\r\naaa\r\nggg\r\nfff");
 		assertEquals(result, "sort: sortFile.txt:2 disorder: bbb\n");
 	}
 
 	//test checkIfSorted method on unsorted file
 	@Test
 	public void checkIfSortedTestForSortedFile() {
-		String result = sortTool.checkIfSorted("sortFile.txt");
+		String result = sortTool.checkIfSorted("aaa\r\nbbb\r\nccc\r\nddd\r\neee");
 		assertEquals(result, "");
 	}
 
