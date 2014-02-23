@@ -21,22 +21,21 @@ public class PASTEToolTest {
 		pasteTool = null;
 	}
 	
-	
-	//Test pasteSerial method 
+	//Test pasteSerial method
+	//@Corrected
 	@Test
 	public void pasteSerialTest() {
 		String[] input = {"1","2","3","4","5","6"};
-		String output = "1 2 3 4 5 6 \n";
+		String output = "1\t2\t3\t4\t5\t6\t\n";
 		assertEquals(output, pasteTool.pasteSerial(input));
 	}
 	
-	
-	
-	//Test pasteUseDelimiter method 
+	//Test pasteUseDelimiter method
+	//@Corrected
 	@Test
 	public void pasteUseDelimiterTest(){
 		String[] input = {"1","2","3","4","5","6"};
-		String output = "1|2|3|4|5|6|";
+		String output = "1|2|3|4|5|6|\n";
 		assertEquals(output, pasteTool.pasteUseDelimiter("|",input));		
 	}
 	
