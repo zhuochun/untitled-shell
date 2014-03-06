@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.impl.RangeUtils.Range;
+
 public class RangeUtilTest {
 
 	@Before
@@ -17,6 +19,14 @@ public class RangeUtilTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+	
+	private void assertRangeListEqual(ArrayList<RangeUtils.Range> expected,
+			  ArrayList<RangeUtils.Range> actual) {
+		for (int i = 0; i < expected.size(); i ++) {
+			assertTrue(expected.get(i).left == actual.get(i).left);
+			assertTrue(expected.get(i).right == actual.get(i).right);
+		}
 	}
 
 	@Test
@@ -75,10 +85,7 @@ public class RangeUtilTest {
 		expected.add(new RangeUtils().new Range(3, 4));
 		expected.add(new RangeUtils().new Range(5, 7));
 		
-		for (int i = 0; i < expected.size(); i ++) {
-			assertTrue(range.get(i).left == expected.get(i).left);
-			assertTrue(range.get(i).right == expected.get(i).right);
-		}
+		assertRangeListEqual(expected, range);
 	}
 	
 	@Test
@@ -92,10 +99,7 @@ public class RangeUtilTest {
 		expected.add(new RangeUtils().new Range(3, 4));
 		expected.add(new RangeUtils().new Range(5, 7));
 		
-		for (int i = 0; i < expected.size(); i ++) {
-			assertTrue(range.get(i).left == expected.get(i).left);
-			assertTrue(range.get(i).right == expected.get(i).right);
-		}
+		assertRangeListEqual(expected, range);
 	}
 	
 	@Test
@@ -180,5 +184,179 @@ public class RangeUtilTest {
 		} catch (Exception ex) {
 			assertTrue(false);
 		}
+	}
+	
+	@Test
+	public void testMergeRangeWithDisjointRanges() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(1, 2);
+		RangeUtils.Range r2 = new RangeUtils().new Range(3, 4);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(r1);
+		expected.add(r2);
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithDisjointRangesOutOfOrder() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(3, 4);
+		RangeUtils.Range r2 = new RangeUtils().new Range(1, 2);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(r2);
+		expected.add(r1);
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRanges() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(1, 3);
+		RangeUtils.Range r2 = new RangeUtils().new Range(2, 4);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRangesOutOfOrder() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(2, 4);
+		RangeUtils.Range r2 = new RangeUtils().new Range(1, 3);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRangesWithBoundaryOverlap() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(1, 2);
+		RangeUtils.Range r2 = new RangeUtils().new Range(2, 4);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRangesWithBoundaryOverlapOutOfOrder() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(2, 4);
+		RangeUtils.Range r2 = new RangeUtils().new Range(1, 2);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRangesWithOverlappingRanges() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(1, 4);
+		RangeUtils.Range r2 = new RangeUtils().new Range(2, 3);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRangesWithOverlappingRangesOutOfOrder() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(2, 3);
+		RangeUtils.Range r2 = new RangeUtils().new Range(1, 4);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithIntersectingRangesWithIdenticalRanges() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(1, 4);
+		RangeUtils.Range r2 = new RangeUtils().new Range(1, 4);
+		
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, r2);
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		expected.add(new RangeUtils().new Range(1, 4));
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
+	}
+	
+	@Test
+	public void testMergeRangeWithNull() {
+		RangeUtils.Range r1 = new RangeUtils().new Range(1, 4);
+		ArrayList<RangeUtils.Range> range = RangeUtils.mergeRange(r1, null);
+		
+		assertEquals(range, null);
+		
+		range = RangeUtils.mergeRange(null, r1);
+		
+		assertEquals(range, null);
+		
+		range = RangeUtils.mergeRange(null, null);
+		
+		assertEquals(range, null);
+	}
+	
+	@Test
+	public void testMergeRangeList() {
+		ArrayList<RangeUtils.Range> range = new ArrayList<RangeUtils.Range>();
+		ArrayList<RangeUtils.Range> expected = new ArrayList<RangeUtils.Range>();
+		
+		range.add(new RangeUtils().new Range(2, 4));
+		range.add(new RangeUtils().new Range(1, 4));
+		range.add(new RangeUtils().new Range(3, 6));
+		range.add(new RangeUtils().new Range(7, 10));
+		range.add(new RangeUtils().new Range(4, 5));
+		
+		expected.add(new RangeUtils().new Range(1, 6));
+		expected.add(new RangeUtils().new Range(7, 10));
+		
+		range = RangeUtils.mergeRange(range);
+		
+		assertEquals(expected.size(), range.size());
+		
+		assertRangeListEqual(expected, range);
 	}
 }

@@ -91,12 +91,11 @@ public class RangeUtils {
 		}
 		
 		// b intersect with a
-		if (range.get(1).left <= range.get(0).right &&
-			range.get(1).right > range.get(0).right) {
-			range.get(0).right = range.get(1).right;
-		}
-		
-		if (range.get(0).right <= range.get(1).left) {
+		if (range.get(1).left <= range.get(0).right) {
+			if (range.get(1).right > range.get(0).right) {
+				range.get(0).right = range.get(1).right;
+			}
+			
 			range.remove(1);
 		}
 		
