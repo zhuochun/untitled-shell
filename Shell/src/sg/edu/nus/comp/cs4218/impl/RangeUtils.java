@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,9 +9,17 @@ public class RangeUtils {
 	public class Range{
 		public int left, right;
 		
+		public Range() {
+			left = right = 0;
+		}
+		
 		public Range(int a, int b) {
 			left = a;
 			right = b;
+			
+			if (right < left) {
+				throw new InvalidParameterException();
+			}
 		}
 		
 		public Range(Range a) {
@@ -25,6 +34,8 @@ public class RangeUtils {
 	 * integers and left hand side of '-' must less or equal to right hand side
 	 * of '-'.
 	 * 
+	 * Note: String parsed to here won't contain any spaces since all the
+	 * spaces will be eliminated during constructing the ArgList.
 	 * @param list
 	 * @return
 	 */
@@ -43,15 +54,13 @@ public class RangeUtils {
 					int left = Integer.parseInt(bounds[0]);
 					int right = Integer.parseInt(bounds[1]);
 					
-					if (right < left) {
-						throw new IllegalArgumentException("Invalid Range!");
-					}
-					
 					RangeUtils.Range r = new RangeUtils().new Range(left, right);
 					
 					rangeList.add(r);
 				} catch (NumberFormatException e) {
 					throw new IllegalArgumentException("Numbers in wrong format!");
+				} catch (InvalidParameterException e) {
+					throw new IllegalArgumentException("Invalid Range!");
 				}
 			}
 		}

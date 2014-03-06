@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import sg.edu.nus.comp.cs4218.extended2.ICommTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
@@ -35,15 +36,14 @@ public class COMMTool extends ATool implements ICommTool {
 
 	@Override
 	public String compareFiles(String input1, String input2) {
-		BufferedReader brA;
-		BufferedReader brB;
-		
 		try {
-			brA = new BufferedReader(new FileReader(input1));
-			brB = new BufferedReader(new FileReader(input2));
-
-			
-		} catch (FileNotFoundException e) {
+			String[] linesA = FileUtils.readFileLines(new File(input1));
+			String[] linesB = FileUtils.readFileLines(new File(input2));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -52,15 +52,14 @@ public class COMMTool extends ATool implements ICommTool {
 
 	@Override
 	public String compareFilesCheckSortStatus(String input1, String input2) {
-		BufferedReader brA;
-		BufferedReader brB;
-		
 		try {
-			brA = new BufferedReader(new FileReader(input1));
-			brB = new BufferedReader(new FileReader(input2));
-
-			
-		} catch (FileNotFoundException e) {
+			String[] linesA = FileUtils.readFileLines(new File(input1));
+			String[] linesB = FileUtils.readFileLines(new File(input2));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -69,15 +68,14 @@ public class COMMTool extends ATool implements ICommTool {
 
 	@Override
 	public String compareFilesDoNotCheckSortStatus(String input1, String input2) {
-		BufferedReader brA;
-		BufferedReader brB;
-		
 		try {
-			brA = new BufferedReader(new FileReader(input1));
-			brB = new BufferedReader(new FileReader(input2));
-
-			
-		} catch (FileNotFoundException e) {
+			String[] linesA = FileUtils.readFileLines(new File(input1));
+			String[] linesB = FileUtils.readFileLines(new File(input2));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
