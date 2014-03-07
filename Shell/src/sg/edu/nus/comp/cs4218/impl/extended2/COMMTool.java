@@ -30,20 +30,34 @@ public class COMMTool extends ATool implements ICommTool {
 	}
 	
 	private void flushRestOfFile(String[] lines, int curFile,
-								 int curLine, StringBuilder result) {
-		while (curLine < lines.length && isSorted(lines[curLine], curFile)) {
-			if (curFile == 1) {
-				result.append("\t");
+								 int curLine, boolean checkSorted,
+								 boolean continueAfterUnsorted,
+								 StringBuilder result) {
+		boolean sorted = true;
+		
+		while (curLine < lines.length) {
+			if (checkSorted) {
+				if (!sorted || !isSorted(lines[curLine], curFile)) {
+					if (sorted) {
+						result.append(String.format("comm: File %d is not in sorted order \n", 
+									  curFile + 1));
+						sorted = false;
+					}
+				}
 			}
 			
-			result.append(lines[curLine] + "\n");
-			
-			curLine ++;
-		}
-		
-		if (curLine < lines.length) {
-			result.append(String.format("comm: File %d is not in sorted order \n", 
-										curFile + 1));
+			if (sorted || continueAfterUnsorted) {
+				if (curFile == 1) {
+					result.append("\t");
+				}
+				
+				result.append(lines[curLine]);
+				result.append("\n");
+				
+				curLine ++;
+			} else {
+				break;
+			}
 		}
 	}
 	
@@ -67,7 +81,7 @@ public class COMMTool extends ATool implements ICommTool {
 		
 		while (i < linesA.length && j < linesB.length) {
 			// consecutive strings unique to file 1
-			while (sortedA && i < linesA.length && 
+			while (sortedA && i < linesA.length && j < linesB.length &&
 				   linesA[i].compareTo(linesB[j]) < 0) {
 				if (checkSorted) {
 					if (!sortedA || !isSorted(linesA[i], 0)) {
@@ -88,13 +102,13 @@ public class COMMTool extends ATool implements ICommTool {
 			
 			// if file A out of order, flush the rest of file B and break the
 			// routine
-			if (!sortedA && !continueAfterUnsorted) {
-				flushRestOfFile(linesB, 1, j, result);
+			if (checkSorted && !sortedA && !continueAfterUnsorted) {
+				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
 				break;
 			}
 			
 			// consecutive strings unique to file 2
-			while (sortedB && j < linesB.length &&
+			while (sortedB && i < linesA.length && j < linesB.length &&
 				   linesA[i].compareTo(linesB[j]) > 0) {
 				if (checkSorted) {
 					if (!sortedB || !isSorted(linesB[i], 1)) {
@@ -115,8 +129,8 @@ public class COMMTool extends ATool implements ICommTool {
 			
 			// if file B out of order, flush the rest of file A and break the
 			// routine
-			if (!sortedB && !continueAfterUnsorted) {
-				flushRestOfFile(linesA, 0, i, result);
+			if (checkSorted && !sortedB && !continueAfterUnsorted) {
+				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
 				
 				break;
 			}
@@ -158,12 +172,12 @@ public class COMMTool extends ATool implements ICommTool {
 			
 			// if we still have remaining lines in file A, flush them out
 			if (i < linesA.length) {
-				flushRestOfFile(linesA, 0, i, result);
+				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
 			}
 			
 			// if we still have remaining lines in file B, flush them out
 			if (j < linesB.length) {
-				flushRestOfFile(linesB, 0, j, result);
+				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
 			}
 		}
 		
