@@ -47,12 +47,19 @@ public class RangeUtils {
 		for (String range : subRange) {
 			String[] bounds = range.split("-");
 			
-			if (bounds.length != 2) {
+			// not a single value or a range
+			if (bounds.length != 2 && bounds.length != 1 ||
+				bounds.length == 1 && bounds[0].equals("")) {
 				throw new IllegalArgumentException("LIST in wrong format!");
 			} else {
 				try {
-					int left = Integer.parseInt(bounds[0]);
-					int right = Integer.parseInt(bounds[1]);
+					int left, right;
+					
+					left = right = Integer.parseInt(bounds[0]);
+					
+					if (bounds.length == 2) {
+						right = Integer.parseInt(bounds[1]);
+					}
 					
 					RangeUtils.Range r = new RangeUtils().new Range(left, right);
 					

@@ -76,6 +76,7 @@ public class PathUtils {
 	
 	public static Path GetRandomSubpath(Path path) {
 		int depth = path.getNameCount();
+		// TODO this will cause problem, check depth - 2 > 0 first !!!
 		int newDepth = 2 + (int)(Math.random() * 1000000) % (depth - 2);
 		
 		return Paths.get("/" + path.subpath(0, newDepth).toString());

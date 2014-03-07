@@ -14,6 +14,7 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.impl.ArgList.ArgType;
 import sg.edu.nus.comp.cs4218.impl.ArgList.Option;
 import sg.edu.nus.comp.cs4218.impl.RangeUtils;
+import sg.edu.nus.comp.cs4218.impl.RangeUtils.Range;
 
 public class CUTTool extends ATool implements ICutTool {
 	
@@ -36,16 +37,18 @@ public class CUTTool extends ATool implements ICutTool {
 	@Override
 	public String cutSpecfiedCharacters(String list, String input) {
 		StringBuilder finalString = new StringBuilder();
-		ArrayList<RangeUtils.Range> rangeList = RangeUtils.mergeRange(
+		ArrayList<Range> rangeList = RangeUtils.mergeRange(
 												RangeUtils.parseRange(list)); 
 		
-		for (RangeUtils.Range range : rangeList) {
-			finalString.append(list.subSequence(range.left, range.right));
-			finalString.append(' ');
+		for (Range range : rangeList) {	
+			finalString.append(input.substring(range.left - 1,
+											   Math.min(input.length(),
+												        range.right)));
+			
+			if (range.right > input.length()) {
+				break;
+			}
 		}
-		
-		finalString.deleteCharAt(finalString.length());
-		finalString.append('\n');
 		
 		return finalString.toString();
 	}
@@ -54,16 +57,23 @@ public class CUTTool extends ATool implements ICutTool {
 	public String cutSpecifiedCharactersUseDelimiter(String list, String delim,
 			String input) {
 		StringBuilder finalString = new StringBuilder();
-		ArrayList<RangeUtils.Range> rangeList = RangeUtils.mergeRange(
-												RangeUtils.parseRange(list)); 
+		ArrayList<Range> rangeList = RangeUtils.mergeRange(
+												RangeUtils.parseRange(list));
 		
-		for (RangeUtils.Range range : rangeList) {
-			finalString.append(list.subSequence(range.left, range.right));
-			finalString.append(delim);
+		String[] fields = input.split(delim);
+		
+		for (Range range : rangeList) {
+			for (int i = range.left - 1; i < Math.min(fields.length, range.right); i ++) {
+				finalString.append(fields[i]);
+				finalString.append(delim);
+			}
+			
+			if (range.right > input.length()) {
+				break;
+			}
 		}
 		
-		finalString.deleteCharAt(finalString.length());
-		finalString.append('\n');
+		finalString.deleteCharAt(finalString.length() - 1);
 		
 		return finalString.toString();
 	}
