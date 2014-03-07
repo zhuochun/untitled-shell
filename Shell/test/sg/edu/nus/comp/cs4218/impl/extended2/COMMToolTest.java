@@ -72,14 +72,14 @@ public class COMMToolTest {
 	@Test
 	public void compareFilesSortedFile() {
 		String result = commTool.compareFiles("testFile1.txt", "testFile2.txt");
-		assertEquals(result , "aaa\n\taaf\n\tabb\nbbb\n\t\tccc\nddd\n\tfff\n");
+		assertEquals("aaa\n\taaf\n\tabb\nbbb\n\t\tccc\nddd\n\tfff\n", result);
 	}
 
 	//test compareFiles method, without sorted file
 	@Test
 	public void compareFilesUnSortedFile() {
 		String result = commTool.compareFiles("testFile1.txt", "testFile3.txt");
-		assertEquals(result , "aaa\nbbb\nccc\nddd\n\tzzz\ncomm: File 2 is not in sorted order \n\tccc\n\taaa\n\tbbb\n");
+		assertEquals("aaa\nbbb\nccc\nddd\n\tzzz\ncomm: File 2 is not in sorted order \n\tccc\n\taaa\n\tbbb\n", result);
 	}
 	
 	//test compareFilesCheckSortStatus method, with sorted
@@ -87,7 +87,7 @@ public class COMMToolTest {
 	public void compareFilesCheckSortStatusSortedFile() throws IOException { 
 
 		String result = commTool.compareFilesCheckSortStatus("testFile1.txt", "testFile2.txt");
-		assertEquals(result , "aaa\n\taaf\n\tabb\nbbb\n\t\tccc\nddd\n\tfff\n");
+		assertEquals("aaa\n\taaf\n\tabb\nbbb\n\t\tccc\nddd\n\tfff\n", result);
 	}
 
 
@@ -95,7 +95,7 @@ public class COMMToolTest {
 	@Test
 	public void compareFilesCheckSortStatusNotSortedFile() throws IOException { 
 		String result = commTool.compareFilesCheckSortStatus("testFile1.txt", "testFile3.txt");
-		assertEquals(result , "aaa\nbbb\nccc\nddd\n\tzzz\ncomm: File 2 is not in sorted order \n");
+		assertEquals("aaa\nbbb\nccc\nddd\n\tzzz\ncomm: File 2 is not in sorted order \n", result);
 	}
 	
 	//test compareFilesDoNotCheckSortStatus method, with sorted
@@ -103,14 +103,14 @@ public class COMMToolTest {
 	public void compareFilesDoNotCheckSortStatusSortedFile() throws IOException { 
 
 		String result = commTool.compareFilesDoNotCheckSortStatus("testFile1.txt", "testFile2.txt");
-		assertEquals(result , "aaa\n\taaf\n\tabb\nbbb\n\t\tccc\nddd\n\tfff\n");
+		assertEquals("aaa\n\taaf\n\tabb\nbbb\n\t\tccc\nddd\n\tfff\n", result);
 	}
 	
 	//test compareFilesDoNotCheckSortStatus method, without sorted
 	@Test
 	public void compareFilesDoNotCheckSortStatusNotSortedFile() throws IOException { 
 		String result = commTool.compareFilesDoNotCheckSortStatus("testFile1.txt", "testFile3.txt");
-		assertEquals(result , "aaa\nbbb\nccc\nddd\n\tzzz\n\tccc\n\taaa\n\tbbb\n");
+		assertEquals("aaa\nbbb\nccc\nddd\n\tzzz\n\tccc\n\taaa\n\tbbb\n", result);
 
 	}
 
