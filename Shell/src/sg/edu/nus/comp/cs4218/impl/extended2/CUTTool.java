@@ -145,7 +145,7 @@ public class CUTTool extends ATool implements ICutTool {
 			while ((line = br.readLine()) != null) {
 				result.append(argList.hasOption("d") ? cutSpecfiedCharacters(list, line) : 
 									cutSpecifiedCharactersUseDelimiter(list, 
-											argList.getOptionValue("delim"), line));
+											argList.getOptionValue("d"), line));
 				result.append("\n");
 			}
 
