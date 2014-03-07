@@ -46,7 +46,7 @@ public class CUTToolTest {
 	public void cutSpecifiedCharactersUseDelimiterListWithInRangeTest(){
 		String list1 = "1,8-9,3-15";
 		String input1 = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17";
-		String output1 = "1 3 4 5 6 7 8 9 10 11 12 13 14 15";		
+		String output1 = "1 3 4 5 6 7 8 9 10 11 12 13 14 15";	
 		assertEquals(output1,cutTool.cutSpecifiedCharactersUseDelimiter(list1," ",input1));
 
 	}
