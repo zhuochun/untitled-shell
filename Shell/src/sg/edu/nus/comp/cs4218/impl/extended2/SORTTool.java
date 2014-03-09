@@ -40,18 +40,21 @@ public class SORTTool extends ATool implements ISortTool {
 		int disorderLineIndex = -1;  
 		String []stringToCheck = input.split("\r\n");
 		Vector <String> stringToCheckVect = new Vector<String>(Arrays.asList(stringToCheck));
-		for(int i = 1;i < stringToCheckVect.size(); i++){
-			if(stringToCheckVect.get(i-1).compareToIgnoreCase(stringToCheckVect.get(i))==1){
-				disorderLineIndex = i;
-				break;
+		//System.out.println(stringToCheckVect.size());
+		System.out.println(stringToCheckVect.get(0));
+
+		for(int i = 0;i < stringToCheckVect.size()-1; i++){
+			if(stringToCheckVect.get(i).compareToIgnoreCase(stringToCheckVect.get(i+1))>0 && 
+					disorderLineIndex < 0){
+				disorderLineIndex = i+1;
 			}
 		}
 
 		if(disorderLineIndex >= 0){
 			disorderInfo.append("sort: sortFile.txt:");
-			disorderInfo.append(""+(disorderLineIndex+1));
+			disorderInfo.append(""+(disorderLineIndex+1)+" ");
 			disorderInfo.append("disorder: ");
-			disorderInfo.append(""+stringToCheckVect.get(disorderLineIndex+1)+"\n");
+			disorderInfo.append(""+stringToCheckVect.get(disorderLineIndex)+"\n");
 			return new String(disorderInfo);
 		}
 		else{
