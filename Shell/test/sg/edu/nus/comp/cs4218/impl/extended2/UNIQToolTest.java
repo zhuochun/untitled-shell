@@ -10,6 +10,7 @@ import sg.edu.nus.comp.cs4218.extended2.IUniqTool;
 
 public class UNIQToolTest {
 	private IUniqTool uniqTool;
+
 	@Before
 	public void before() {
 		uniqTool = new UNIQTool(null);
@@ -61,7 +62,12 @@ public class UNIQToolTest {
 	}
 
 	@Test
-	public void testGetHelp() {
-		assertTrue(uniqTool.getHelp().matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
+	public void testExecuteGetHelp() {
+		uniqTool = new UNIQTool(new String[] { "-help" });
+
+		String stdout = uniqTool.execute(null, null);
+
+		assertEquals(0, uniqTool.getStatusCode());
+		assertTrue(stdout.matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
 	}
 }
