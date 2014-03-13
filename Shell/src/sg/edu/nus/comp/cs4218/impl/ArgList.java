@@ -329,9 +329,14 @@ public class ArgList {
 			String t = result[i];
 
 			// if it has odd number of \ before space, merge next word
-			while (REGEX_SPACESTR.matcher(t).matches() && i + 1 < result.length) {
-				i += 1;
-				t += " " + result[i];
+			while (REGEX_SPACESTR.matcher(t).matches()) {
+				if (i + 1 < result.length) {
+					i += 1;
+					t += " " + result[i];
+				} else {
+					t += " ";
+					break;
+				}
 			}
 
 			// if it has open quotation mark (even with even number of \), merge

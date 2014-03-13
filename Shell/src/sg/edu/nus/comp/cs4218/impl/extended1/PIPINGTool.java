@@ -61,19 +61,24 @@ public class PIPINGTool extends ATool implements IPipingTool {
 			ITool toTool = getITool();
 
 			stdout = pipe(fromTool, toTool);
+
+			if (getStatusCode() != 0) {
+				return stdout;
+			}
 		} catch (RuntimeException e) {
 			return e.getMessage();
-		}
-
-		if (getStatusCode() != 0) {
-			return stdout;
 		}
 		
 		// any more tools in pipe?
 		while (endIdx < args.length) {
 			try {
 				ITool nextTool = getITool();
+
 				stdout = pipe(stdout, nextTool);
+
+				if (getStatusCode() != 0) {
+					return stdout;
+				}
 			} catch (RuntimeException e) {
 				return e.getMessage();
 			}

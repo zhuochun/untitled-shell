@@ -31,7 +31,16 @@ public class PIPINGToolTest {
 		
 		assertNotEquals(0, pipe.getStatusCode());
 	}
-	
+
+	@Test
+	public void testExecutePipeWithNoExistsTool() {
+		PIPINGTool pipe = new PIPINGTool("omg |".split(" "));
+		
+		pipe.execute(null, null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
+
 	@Test
 	public void testExecutePipeTwoTools() throws IOException {
 		folder.newFolder("testFolder");
@@ -43,7 +52,7 @@ public class PIPINGToolTest {
 		assertEquals("testFolder", stdout);
 		assertEquals(0, pipe.getStatusCode());
 	}
-	
+
 	@Test
 	public void testExecutePipeTwoToolsWithArgs() throws IOException {
 		folder.newFolder("testFolder");
@@ -68,4 +77,36 @@ public class PIPINGToolTest {
 		assertEquals(0, pipe.getStatusCode());
 	}
 	
+	@Test
+	public void testExecutePipeFromToolsWithInvalidOptions() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls -D | cat -".split(" "));
+		
+		pipe.execute(folder.getRoot(), null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
+
+	@Test
+	public void testExecutePipeToToolWithInvalidOptions() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls | cat -G -".split(" "));
+		
+		pipe.execute(folder.getRoot(), null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
+	
+	@Test
+	public void testExecutePipe3rdToToolWithInvalidOptions() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls | cat - | cat -G".split(" "));
+		
+		pipe.execute(folder.getRoot(), null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
 }

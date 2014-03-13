@@ -311,9 +311,7 @@ public class GREPTool extends ATool implements IGrepTool {
 		}
 
 		// remove the last trailing \n
-		if (help.length() > 0) {
-			help.deleteCharAt(help.length() - 1);
-		}
+		help.deleteCharAt(help.length() - 1);
 
 		return help.toString();
 	}
@@ -409,10 +407,6 @@ public class GREPTool extends ATool implements IGrepTool {
 			}
 
 			lines.add(line);
-		}
-
-		public void clear() {
-			lines.clear();
 		}
 
 		public String popAllToString() {

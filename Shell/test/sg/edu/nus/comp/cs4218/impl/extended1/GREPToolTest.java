@@ -110,6 +110,11 @@ public class GREPToolTest {
 		String output = grep.getNonMatchingLines("test", input);
 		assertEquals(nonMatchOutput, output);
 	}
+	
+	@Test
+	public void testGetHelp() {
+		assertTrue(grep.getHelp().matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
+	}
 
 	@Test
 	public void testGetNonMatchingLinesWithNoMatching() {
@@ -120,6 +125,13 @@ public class GREPToolTest {
 	@Test
 	public void testExecuteWithInvalidArgs() {
 		grep = new GREPTool(new String[] { "-D" });
+		grep.execute(null, null);
+		assertNotEquals(0, grep.getStatusCode());
+	}
+
+	@Test
+	public void testExecuteWithoutPattern() {
+		grep = new GREPTool(new String[] {});
 		grep.execute(null, null);
 		assertNotEquals(0, grep.getStatusCode());
 	}

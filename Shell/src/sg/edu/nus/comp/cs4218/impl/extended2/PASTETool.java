@@ -87,9 +87,7 @@ public class PASTETool extends ATool implements IPasteTool {
 		}
 
 		// remove the last trailing \n
-		if (help.length() > 0) {
-			help.deleteCharAt(help.length() - 1);
-		}
+		help.deleteCharAt(help.length() - 1);
 
 		return help.toString();
 	}

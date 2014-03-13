@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,6 @@ public class UNIQToolTest {
 	public void after() {
 		uniqTool = null;
 	}
-	
 	
 	//test getUnique method
 	@Test
@@ -59,5 +58,10 @@ public class UNIQToolTest {
 	@Test
 	public void getUniqueSkipNumForNullTest(){
 		assertEquals("",uniqTool.getUniqueSkipNum(1,true, null));
+	}
+
+	@Test
+	public void testGetHelp() {
+		assertTrue(uniqTool.getHelp().matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
 	}
 }

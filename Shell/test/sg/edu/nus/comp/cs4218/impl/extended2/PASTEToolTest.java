@@ -29,6 +29,13 @@ public class PASTEToolTest {
 		String output = "1\t2\t3\t4\t5\t6\t\n";
 		assertEquals(output, pasteTool.pasteSerial(input));
 	}
+
+	@Test
+	public void pasteSerialNullTest() {
+		String[] input = {"1","2","3","4","5","6", null};
+		String output = "1\t2\t3\t4\t5\t6\t\n";
+		assertEquals(output, pasteTool.pasteSerial(input));
+	}
 	
 	//Test pasteUseDelimiter method
 	//@Corrected
@@ -39,5 +46,29 @@ public class PASTEToolTest {
 		assertEquals(output, pasteTool.pasteUseDelimiter("|",input));		
 	}
 	
+	@Test
+	public void pasteUseDelimiterNullTest(){
+		String[] input = {"1","2","3","4","5","6", null};
+		String output = "1|2|3|4|5|6|\n";
+		assertEquals(output, pasteTool.pasteUseDelimiter("|",input));		
+	}
 
+	@Test
+	public void testGetHelp() {
+		assertTrue(pasteTool.getHelp().matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
+	}
+
+	@Test
+	public void textExecuteInvalidOptions() {
+		pasteTool = new PASTETool(new String[] { "-i" });
+		pasteTool.execute(null, null);
+		assertNotEquals(0, pasteTool.getStatusCode());
+	}
+
+	@Test
+	public void testExecuteWithoutParams() {
+		pasteTool = new PASTETool(new String[] {});
+		pasteTool.execute(null, null);
+		assertNotEquals(0, pasteTool.getStatusCode());
+	}
 }
