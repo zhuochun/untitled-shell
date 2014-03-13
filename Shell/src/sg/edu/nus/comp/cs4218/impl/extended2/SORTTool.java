@@ -1,4 +1,15 @@
 // chen hao
+/*
+ * 
+ * sort : sort lines of text file
+ *
+ * Command Format - sort [OPTIONS] [FILE]
+ *	FILE - Name of the file
+ *	OPTIONS
+ *		-c : Check whether the given file is already sorted, if it is not all sorted, print a
+ *           diagnostic containing the first line that is out of order
+ *	    -help : Brief information about supported options
+ */
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
 import java.io.BufferedReader;
@@ -19,7 +30,15 @@ public class SORTTool extends ATool implements ISortTool {
 
 	public SORTTool(String[] arguments) {
 		super(arguments);
+		
 		argList.invalidOptionCheck=true;
+		
+		argList.registerAcceptableOption("c",
+				"Check whether the given file is already sorted, if it is not all sorted, " +
+				"print adiagnostic containing the first line that is out of order");
+		argList.registerAcceptableOption("help",
+				"Brief information about supported options");
+	
 	}
 
 	@Override
@@ -94,13 +113,6 @@ public class SORTTool extends ATool implements ISortTool {
 		}
 		
 		try {
-			argList.parseArgs(this.args);
-
-			if (argList.isEmpty() || argList.getParams().length < 1) {
-				setStatusCode(9);
-				return "Error: at least 1 parameters required";
-			}
-
 
 			File sortFile = new File(PathUtils.PathResolver(workingDir,
 					argList.getParam(0)));
@@ -114,7 +126,6 @@ public class SORTTool extends ATool implements ISortTool {
 				input= input.append(tmp);
 				tmp = br.readLine();
 			}
-
 			if(argList.hasOption("c")){
 				return checkIfSorted(new String(input));
 
