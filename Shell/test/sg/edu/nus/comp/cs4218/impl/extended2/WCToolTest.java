@@ -2,6 +2,8 @@ package sg.edu.nus.comp.cs4218.impl.extended2;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +43,12 @@ public class WCToolTest {
 		String input = "";// empty string
 		assertEquals("0", wcTool.getCharacterCount(input));
 	}
+	
+	@Test
+	public void getCharacterCountNullStringTest(){
+		String input = null;
+		assertEquals("0", wcTool.getCharacterCount(input));
+	}
 
 
 	//test getWordCountTest, String with newline
@@ -70,6 +78,34 @@ public class WCToolTest {
 	@Test
 	public void getNewLineCountForNullTest() {
 		String input = null;
-		assertEquals("0", wcTool.getWordCount(input));
+		assertEquals("0", wcTool.getNewLineCount(input));
+	}
+	
+	@Test
+	public void getHelpTest(){
+		StringBuilder helpInfo = new StringBuilder();
+		helpInfo = helpInfo.append("Command Format - wc [OPTIONS] [FILE]\n");
+		helpInfo = helpInfo.append(" FILE - Name of the file, when no file is present (denoted by -) use standard input\n");
+		helpInfo = helpInfo.append(" OPTIONS\n");
+		helpInfo = helpInfo.append("       -m : Print only the character counts\n" );
+		helpInfo = helpInfo.append("       -w : Print only the word counts\n");
+		helpInfo = helpInfo.append("       -l : Print only the newline counts\n");
+		helpInfo = helpInfo.append("       -help : Brief information about supported options");
+		assertEquals(new String(helpInfo), wcTool.getHelp());
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void executWithIllegalInputTest(){
+		wcTool.execute(null, "adasdsdaw");
+	}
+	
+	@Test
+	public void executeWithNoOption(){
+		String s = wcTool.execute(null, "wc helloworld");
+		assertEquals(s, wcTool.getHelp());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void executeWithTwoMoreOptions(){
+		wcTool.execute(null, "wc -m -w helloworld");
 	}
 }
