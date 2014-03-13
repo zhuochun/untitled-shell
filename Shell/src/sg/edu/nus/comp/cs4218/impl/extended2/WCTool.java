@@ -11,7 +11,7 @@ import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class WCTool extends ATool implements IWcTool {
-	
+
 	private ArgList argList = new ArgList();
 	public WCTool(String[] arguments) {
 		super(arguments);
@@ -72,37 +72,45 @@ public class WCTool extends ATool implements IWcTool {
 	public String execute(File workingDir, String stdin) {
 		try {
 			argList.parseArgs(this.args);
-
-			if (argList.isEmpty() || argList.getParams().length < 2) {
-				setStatusCode(9);
-				return "Error: at least 2 parameters required";
-			}
-
-			String input = new String(argList.getParam(0));
-			String option = new String(argList.getParam(1));
-
-
-			if(option.equals("m")){
-				return getCharacterCount(input);
-
-			}
-			else if(option.equals("w")){
-				return getWordCount(input);
-
-			}
-			else if(option.equals("l")){
-				return getNewLineCount(input);
-
-			}
-			else{
-				return getHelp();
-			}
-		}catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			setStatusCode(9);
 			return e.getMessage();
-		}catch(Exception e){
-			setStatusCode(9);
-			return e.getMessage();
+		}
+
+		// help option?
+		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
+			return getHelp();
+		}
+
+		// command does not have options and parameters
+		if (!argList.hasOptions() && !argList.hasParams()) {
+			return getHelp();
+		}
+
+		// if both -m -w -l appears, throw exception
+		if ((argList.hasOption("m") && argList.hasOption("w"))
+				||(argList.hasOption("m") && argList.hasOption("l")
+						||(argList.hasOption("w") && argList.hasOption("l")))) {
+			throw new IllegalArgumentException("Option error!");
+		}
+
+
+		String input = new String(argList.getParam(0));
+
+		if(argList.hasOption("m")){
+			return getCharacterCount(input);
+
+		}
+		else if(argList.hasOption("w")){
+			return getWordCount(input);
+
+		}
+		else if(argList.hasOption("l")){
+			return getNewLineCount(input);
+
+		}
+		else{
+			return getHelp();
 		}
 	}
 }

@@ -80,6 +80,21 @@ public class SORTTool extends ATool implements ISortTool {
 	public String execute(File workingDir, String stdin) {
 		try {
 			argList.parseArgs(this.args);
+		} catch (IllegalArgumentException e) {
+			setStatusCode(9);
+			return e.getMessage();
+		}
+		// help option?
+		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
+			return getHelp();
+		}
+		// command does not have options and parameters
+		if (!argList.hasOptions() && !argList.hasParams()) {
+			return getHelp();
+		}
+		
+		try {
+			argList.parseArgs(this.args);
 
 			if (argList.isEmpty() || argList.getParams().length < 1) {
 				setStatusCode(9);
@@ -87,7 +102,6 @@ public class SORTTool extends ATool implements ISortTool {
 			}
 
 
-			String option = new String();
 			File sortFile = new File(PathUtils.PathResolver(workingDir,
 					argList.getParam(0)));
 			FileReader fr = new FileReader (sortFile);
@@ -101,17 +115,8 @@ public class SORTTool extends ATool implements ISortTool {
 				tmp = br.readLine();
 			}
 
-			if(argList.getParams().length==2){
-				option = argList.getParam(1);
-			}
-
-
-			if(option.equals("c")){
+			if(argList.hasOption("c")){
 				return checkIfSorted(new String(input));
-
-			}
-			else if(option.equals("help")){
-				return getHelp();
 
 			}
 			else{
