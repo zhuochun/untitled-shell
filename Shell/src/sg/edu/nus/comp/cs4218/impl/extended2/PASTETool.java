@@ -167,9 +167,7 @@ public class PASTETool extends ATool implements IPasteTool {
 			String[] input = new String[0];
 
 			if (params[i].equals("-")) {
-				if (i == 0) {
-					input = getStringLines(stdin);
-				}
+				input = getStringLines(stdin);
 			} else {
 				input = FileUtils.readFileLines(new File(PathUtils
 						.PathResolver(workingDir, params[i])));

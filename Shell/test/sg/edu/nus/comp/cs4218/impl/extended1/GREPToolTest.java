@@ -113,7 +113,12 @@ public class GREPToolTest {
 	
 	@Test
 	public void testGetHelp() {
-		assertTrue(grep.getHelp().matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
+		grep = new GREPTool(new String[] { "-help" });
+
+		String stdout = grep.execute(null, null);
+
+		assertEquals(0, grep.getStatusCode());
+		assertTrue(stdout.matches("^Command Format -(.|\n)+OPTIONS(.|\n)+$"));
 	}
 
 	@Test

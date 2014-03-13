@@ -76,6 +76,17 @@ public class PIPINGToolTest {
 		assertEquals("testFolder", stdout);
 		assertEquals(0, pipe.getStatusCode());
 	}
+
+	@Test
+	public void testExecutePipeThreeToolsLastNotExists() throws IOException {
+		folder.newFolder("testFolder");
+		
+		PIPINGTool pipe = new PIPINGTool("ls | cat - | omg".split(" "));
+		
+		pipe.execute(folder.getRoot(), null);
+		
+		assertNotEquals(0, pipe.getStatusCode());
+	}
 	
 	@Test
 	public void testExecutePipeFromToolsWithInvalidOptions() throws IOException {
