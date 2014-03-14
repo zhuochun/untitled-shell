@@ -64,7 +64,7 @@ public class CDTool extends ATool implements ICdTool {
 			param = argList.getParam(0);
 		}
 		
-		File newDir = new File (PathUtils.PathResolver(workingDir, param));
+		File newDir = new File (PathUtils.pathResolver(workingDir, param));
 		
 		// if the new directory is null, the input file does not exist
 		if (!newDir.exists()) {
@@ -74,7 +74,7 @@ public class CDTool extends ATool implements ICdTool {
 			// now we should check if the path is essentially a file
 			if (newDir.isFile()) {
 				setStatusCode(9);
-				output = PathUtils.GetLastElementOfPath(newDir) + " is a file!";
+				output = PathUtils.getLastElementOfPath(newDir) + " is a file!";
 			} else {
 				// everything is fine, we can change shell's default directory
 				output = newDir.toString();

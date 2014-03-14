@@ -30,7 +30,7 @@ public class MOVEToolTest {
 		compareFile = new File("compare");
 		testParentNewFile = new File(Paths.get(System.getProperty("user.dir")).getParent() + "/baklsadfjklsa");
 		
-		randomSubpath = PathUtils.GetRandomSubpath(Paths.get(currentDir.toString())).toString();
+		randomSubpath = PathUtils.getRandomSubpath(Paths.get(currentDir.toString())).toString();
 		testRandomNewFile = new File(randomSubpath + "/baklsadfjklsa");
 	}
 

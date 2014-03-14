@@ -37,7 +37,7 @@ public class COPYToolTest {
 	@Test
 	public void testCopyFileNormal() throws IOException {
 		File origin = folder.newFile("originForCopy.txt");
-		File target = new File(PathUtils.PathResolver(folder.getRoot(),
+		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"test.txt"));
 
 		IcopyTool.copy(origin, target);
@@ -48,9 +48,9 @@ public class COPYToolTest {
 
 	@Test
 	public void testCopyOriginFileNotExists() {
-		File origin = new File(PathUtils.PathResolver(folder.getRoot(),
+		File origin = new File(PathUtils.pathResolver(folder.getRoot(),
 				"notExists.txt"));
-		File target = new File(PathUtils.PathResolver(folder.getRoot(),
+		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"hopeExists.txt"));
 
 		IcopyTool.copy(origin, target);
@@ -62,7 +62,7 @@ public class COPYToolTest {
 	@Test
 	public void testCopyOriginIsDirectory() throws IOException {
 		File origin = folder.newFolder();
-		File target = new File(PathUtils.PathResolver(folder.getRoot(),
+		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"hopeExists.txt"));
 
 		IcopyTool.copy(origin, target);
@@ -95,7 +95,7 @@ public class COPYToolTest {
 	public void testCopyTargetIsDirectory() throws IOException {
 		File origin = folder.newFile();
 		File target = folder.newFolder();
-		File realTarget = new File(PathUtils.PathResolver(target, origin.getName()));
+		File realTarget = new File(PathUtils.pathResolver(target, origin.getName()));
 
 		IcopyTool.copy(origin, target);
 
@@ -106,7 +106,7 @@ public class COPYToolTest {
 	@Test
 	public void testCopyTargetUnderNonExistsDirectory() throws IOException {
 		File origin = folder.newFile();
-		File target = new File(PathUtils.PathResolver(folder.getRoot(), "noDir/noFile.mp3"));
+		File target = new File(PathUtils.pathResolver(folder.getRoot(), "noDir/noFile.mp3"));
 
 		IcopyTool.copy(origin, target);
 
@@ -121,7 +121,7 @@ public class COPYToolTest {
 				"originForCopy.txt targetForCopy.txt".split(" "));
 		IcopyTool.execute(folder.getRoot(), null);
 
-		File target = new File(PathUtils.PathResolver(folder.getRoot(),
+		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"targetForCopy.txt"));
 
 		assertEquals(0, IcopyTool.getStatusCode());

@@ -195,7 +195,7 @@ public class UNIQTool extends ATool implements IUniqTool {
 		if (argList.hasParams() && !argList.getParam(0).equals("-")) {
 			try {
 				return FileUtils.readFileContent(new File(
-						PathUtils.PathResolver(workingDir, argList.getParam(0))));
+						PathUtils.pathResolver(workingDir, argList.getParam(0))));
 			} catch (IOException e) {
 				setStatusCode(1);
 				return e.getMessage();

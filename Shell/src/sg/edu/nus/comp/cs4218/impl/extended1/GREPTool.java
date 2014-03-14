@@ -373,7 +373,7 @@ public class GREPTool extends ATool implements IGrepTool {
 		if (argList.getParams().length > 1 && !argList.getParam(1).equals("-")) {
 			try {
 				input = FileUtils.readFileContent(new File(PathUtils
-						.PathResolver(workingDir, argList.getParam(1))));
+						.pathResolver(workingDir, argList.getParam(1))));
 			} catch (IOException e) {
 				setStatusCode(1);
 				return e.getMessage();

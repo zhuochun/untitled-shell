@@ -23,7 +23,7 @@ public class PathUtils {
 	 * @param newPath
 	 * @return
 	 */
-	public static String PathResolver(String currentPath, String newPath) {
+	public static String pathResolver(String currentPath, String newPath) {
 		String finalAbsolutePath;
 		
 		if (newPath.equals("~")) {
@@ -54,19 +54,19 @@ public class PathUtils {
 		return finalAbsolutePath;
 	}
 	
-	public static String PathResolver(File currentPath, String newPath) {
-		return PathResolver(currentPath.toString(), newPath);
+	public static String pathResolver(File currentPath, String newPath) {
+		return pathResolver(currentPath.toString(), newPath);
 	}
 
-	public static String GetLastElementOfPath(String path) {
+	public static String getLastElementOfPath(String path) {
 		return Paths.get(path).getFileName().toString();
 	}
 	
-	public static String GetLastElementOfPath(File path) {
-		return GetLastElementOfPath(path.toString());
+	public static String getLastElementOfPath(File path) {
+		return getLastElementOfPath(path.toString());
 	}
 	
-	public static Path GetRandomSubpath(Path path) {
+	public static Path getRandomSubpath(Path path) {
 		int depth = path.getNameCount();
 		int newDepth;
 

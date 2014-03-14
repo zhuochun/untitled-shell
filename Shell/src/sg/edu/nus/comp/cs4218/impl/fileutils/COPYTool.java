@@ -65,9 +65,9 @@ public class COPYTool extends ATool implements ICopyTool {
 			return "Error: at least 2 parameters required";
 		}
 
-		File from = new File(PathUtils.PathResolver(workingDir,
+		File from = new File(PathUtils.pathResolver(workingDir,
 				argList.getParam(0)));
-		File to = new File(PathUtils.PathResolver(workingDir,
+		File to = new File(PathUtils.pathResolver(workingDir,
 				argList.getParam(1)));
 
 		boolean success = copy(from, to);

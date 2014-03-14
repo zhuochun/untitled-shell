@@ -48,7 +48,7 @@ public class ShellStateTest {
 		runnable = new ToolRunnable(tool, "");
 		runnable.run();
 
-		assertEquals(PathUtils.PathResolver(currentPath, "~"), Directory.get() + "/");
+		assertEquals(PathUtils.pathResolver(currentPath, "~"), Directory.get() + "/");
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class ShellStateTest {
 		runnable = new ToolRunnable(tool, "");
 		runnable.run();
 
-		assertEquals(PathUtils.PathResolver(currentPath, ".."), Directory.get() + "/");
+		assertEquals(PathUtils.pathResolver(currentPath, ".."), Directory.get() + "/");
 	}
 
 	@Test
@@ -69,6 +69,6 @@ public class ShellStateTest {
 		runnable.run();
 
 		assertEquals("No such file or directory!\n", errContent.toString());
-		assertEquals(PathUtils.PathResolver(currentPath, "."), Directory.get() + "/");
+		assertEquals(PathUtils.pathResolver(currentPath, "."), Directory.get() + "/");
 	}
 }

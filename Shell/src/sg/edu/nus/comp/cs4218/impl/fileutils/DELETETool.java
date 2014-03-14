@@ -59,7 +59,7 @@ public class DELETETool extends ATool implements IDeleteTool {
 		}
 
 		if (argList.getParams().length >= 1) {
-			File toDelete = new File(PathUtils.PathResolver(workingDir,
+			File toDelete = new File(PathUtils.pathResolver(workingDir,
 					argList.getParam(0)));
 
 			boolean success = delete(toDelete);

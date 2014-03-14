@@ -163,7 +163,7 @@ public class CUTTool extends ATool implements ICutTool {
 					if (argList.getParam(0) != "-") {
 						try {
 							input = FileUtils.readFileContent(new File(PathUtils.
-									PathResolver(workingDir, argList.getParam(0))));
+									pathResolver(workingDir, argList.getParam(0))));
 						} catch (IOException e) {
 							setStatusCode(1);
 							return e.getMessage();
@@ -185,7 +185,7 @@ public class CUTTool extends ATool implements ICutTool {
 					if (argList.getParam(1) != "-") {
 						try {
 							input = FileUtils.readFileContent(new File(PathUtils.
-									PathResolver(workingDir, argList.getParam(1))));
+									pathResolver(workingDir, argList.getParam(1))));
 						} catch (IOException e) {
 							setStatusCode(1);
 							return e.getMessage();

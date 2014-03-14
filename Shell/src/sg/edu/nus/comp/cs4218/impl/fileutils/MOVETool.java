@@ -51,8 +51,8 @@ public class MOVETool extends ATool implements IMoveTool {
 		}
 		
 		if (argList.getParams().length >= 2) {
-			String originPath = PathUtils.PathResolver(currentDir, argList.getParam(0));
-			String copyPath = PathUtils.PathResolver(currentDir, argList.getParam(1));
+			String originPath = PathUtils.pathResolver(currentDir, argList.getParam(0));
+			String copyPath = PathUtils.pathResolver(currentDir, argList.getParam(1));
 			
 			File originFile = new File(originPath);
 			File copyFile = new File(copyPath);

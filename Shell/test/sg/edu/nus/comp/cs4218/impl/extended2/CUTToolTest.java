@@ -50,10 +50,10 @@ public class CUTToolTest {
 		
 		testFileRelativeFromHomeName = testFilePath.replaceFirst(System.getProperty("user.home"),
 																 "~") + "/" + testFileName;
-		testFileAbsoluteName = PathUtils.GetRandomSubpath(Paths.get(testFilePath)).toString() + "/" + testFileName;
+		testFileAbsoluteName = PathUtils.getRandomSubpath(Paths.get(testFilePath)).toString() + "/" + testFileName;
 		testAbsoluteRandomFile = new File(testFileAbsoluteName);
 		
-		testRelativeFile = new File(PathUtils.PathResolver(testFilePath, testFileRelativeName));
+		testRelativeFile = new File(PathUtils.pathResolver(testFilePath, testFileRelativeName));
 		
 		BufferedWriter output = new BufferedWriter(new FileWriter(testAbsoluteRandomFile));
 		

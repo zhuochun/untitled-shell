@@ -170,7 +170,7 @@ public class PASTETool extends ATool implements IPasteTool {
 				input = getStringLines(stdin);
 			} else {
 				input = FileUtils.readFileLines(new File(PathUtils
-						.PathResolver(workingDir, params[i])));
+						.pathResolver(workingDir, params[i])));
 			}
 
 			if (input.length > maxLen) {

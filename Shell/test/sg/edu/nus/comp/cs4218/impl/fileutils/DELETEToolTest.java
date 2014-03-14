@@ -46,7 +46,7 @@ public class DELETEToolTest {
 
 	@Test
 	public void testDeleteNotExistsFile() {
-		File notExists = new File(PathUtils.PathResolver(folder.getRoot(), "notExists.txt"));
+		File notExists = new File(PathUtils.pathResolver(folder.getRoot(), "notExists.txt"));
 		
 		IDeleteTool.delete(notExists);
 		

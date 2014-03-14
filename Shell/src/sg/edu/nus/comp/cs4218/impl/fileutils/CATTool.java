@@ -62,7 +62,7 @@ public class CATTool extends ATool implements ICatTool {
 				} else if (arg.equals("-")) {
 					continue;
 				} else {
-					File toRead = new File(PathUtils.PathResolver(workingDir, arg));
+					File toRead = new File(PathUtils.pathResolver(workingDir, arg));
 					output.append(getStringForFile(toRead));
 				}
 			}

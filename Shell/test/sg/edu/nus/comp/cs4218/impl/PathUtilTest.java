@@ -46,7 +46,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleDot() {
 		String path = ".";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir, newPath);
 	}
@@ -54,7 +54,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithDoubleDots() {
 		String path = "..";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParent() + "/", newPath);
 	}
@@ -62,7 +62,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithMultipleDots() {
 		String path = ".........";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir + path, newPath);
 	}
@@ -70,7 +70,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleDotAndOneForwardSlash() {
 		String path = "./";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir, newPath);
 	}
@@ -78,7 +78,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleDotAndMultipleForwardSlash() {
 		String path = "./////";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir, newPath);
 	}
@@ -86,7 +86,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithDoubleDotAndSingleForwardSlash() {
 		String path = "../";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParent() + "/", newPath);
 	}
@@ -94,7 +94,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithDoubleDotAndMultipleForwardSlash() {
 		String path = "..////////////";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParent() + "/", newPath);
 	}
@@ -102,7 +102,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleTudle() {
 		String path = "~";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(homeDir, newPath);
 	}
@@ -110,7 +110,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithMultipleTudle() {
 		String path = "~~~~~~~~~~";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir + path, newPath);
 	}
@@ -118,7 +118,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleTudleAndSingleForwardSlash() {
 		String path = "~/";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(homeDir, newPath);
 	}
@@ -126,7 +126,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleForwardSlashSingleTudleAnd() {
 		String path = "/~/";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals("/~/", newPath);
 	}
@@ -134,7 +134,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleTudleAndMultipleForwardSlash() {
 		String path = "~//////////////";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(homeDir, newPath);
 	}
@@ -142,7 +142,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleForwardSlash() {
 		String path = "/";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals("/", newPath);
 	}
@@ -150,7 +150,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithMultipleForwardSlash() {
 		String path = "////////////";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals("/", newPath);
 	}
@@ -158,7 +158,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithMultipeLayersOfSingleDots() {
 		String path = "./././././././";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir, newPath);
 	}
@@ -166,12 +166,12 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithMultipeLayersOfDoubleDots() {
 		String path = "../../..";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParentFile().getParentFile().getParent() + "/", newPath);
 		
 		path = "../../../";
-		newPath = PathUtils.PathResolver(currentDir, path);
+		newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParentFile().getParentFile().getParent() + "/", newPath);
 	}
@@ -179,7 +179,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleAndDoubleDots() {
 		String path = "./.././../././././../";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParentFile().getParentFile().getParent() + "/", newPath);
 	}
@@ -187,7 +187,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithSingleAndDoubleDotsAndMultipleSlashes() {
 		String path = "./..//./../////////./././/////.///..//";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParentFile().getParentFile().getParent() + "/", newPath);
 	}
@@ -195,19 +195,19 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithTudleAndForwardSlash() {
 		String path = "~/~/~/";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(homeDir + "~/~/", newPath);
 		
 		path = "~~///~/~";
-		newPath = PathUtils.PathResolver(currentDir, path);
+		newPath = PathUtils.pathResolver(currentDir, path);
 		assertEquals(currentDir + "~~/~/~", newPath);
 	}
 	
 	@Test
 	public void testPathWithTudleAndForwardSlashAndAlphabets() {
 		String path = "~/asdfsadf";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(homeDir + "asdfsadf", newPath);
 	}
@@ -215,7 +215,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithTudleAndAlphabets() {
 		String path = "~oiwejf";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir + "~oiwejf", newPath);
 	}
@@ -223,7 +223,7 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithAllThreeSpecialCharacters() {
 		String path = "../~/~";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParent() + "/~/~", newPath);
 	}
@@ -231,12 +231,12 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithAllThreeSpecialCharactersAndMultipleSlashes() {
 		String path = "..////////~/~";
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParent() + "/~/~", newPath);
 		
 		path = "../////~///~/~";
-		newPath = PathUtils.PathResolver(currentDir, path);
+		newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(new File(currentDir).getParent() + "/~/~/~", newPath);
 	}
@@ -245,7 +245,7 @@ public class PathUtilTest {
 	public void testPathWithValidRelativePath() {
 		String newFolderName = "aaaaaaaa";
 		
-		String newPath = PathUtils.PathResolver(currentDir, newFolderName);
+		String newPath = PathUtils.pathResolver(currentDir, newFolderName);
 		
 		assertEquals(currentDir + newFolderName, newPath);
 	}
@@ -253,12 +253,12 @@ public class PathUtilTest {
 	@Test
 	public void testPathWithInvalidRelativePath() {
 		String path = "aaaaaaaa";		
-		String newPath = PathUtils.PathResolver(currentDir, path);
+		String newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir + path, newPath);
 		
 		path = path + "/";
-		newPath = PathUtils.PathResolver(currentDir, path);
+		newPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(currentDir + path, newPath);
 	}
@@ -285,7 +285,7 @@ public class PathUtilTest {
 		
 		sb.append(folderName);
 		
-		String actualPath = PathUtils.PathResolver(currentDir, sb.toString());
+		String actualPath = PathUtils.pathResolver(currentDir, sb.toString());
 				
 		assertEquals("/" + newPath.toString() + "/" + folderName, actualPath);
 	}
@@ -304,35 +304,35 @@ public class PathUtilTest {
 		
 		String folderName = "test/";
 		String path = "/" + newPath.toString() + "/" + folderName;
-		String actualPath = PathUtils.PathResolver(currentDir, path);
+		String actualPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(path, actualPath);
 		
 		folderName = "test/asdj@@#%%@&*#*@Rflk";
 		
 		path = "/" + newPath.toString() + "/" + folderName;
-		actualPath = PathUtils.PathResolver(currentDir, path);
+		actualPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(path, actualPath);
 		
 		folderName = "test/asdj@@#%%@&*#*@Rflk/";
 		
 		path = "/" + newPath.toString() + "/" + folderName;
-		actualPath = PathUtils.PathResolver(currentDir, path);
+		actualPath = PathUtils.pathResolver(currentDir, path);
 		
 		assertEquals(path, actualPath);
 		
 		folderName = "test/asdj@@#%%@&*#*@Rflk/";
 		
 		path = "/" + newPath.toString() + "/" + folderName;
-		actualPath = PathUtils.PathResolver(currentDir, path + "/////");
+		actualPath = PathUtils.pathResolver(currentDir, path + "/////");
 		
 		assertEquals(path, actualPath);
 		
 		folderName = "test/asdj@@#%%@&*#*@Rflk/";
 		
 		path = "/" + newPath.toString() + "/" + folderName;
-		actualPath = PathUtils.PathResolver(currentDir, path + "~~////~~/");
+		actualPath = PathUtils.pathResolver(currentDir, path + "~~////~~/");
 		
 		assertEquals(path + "~~/~~/", actualPath);
 	}
@@ -340,8 +340,8 @@ public class PathUtilTest {
 	@Test
 	public void testGetRandomSubpath() {
 		Path p = Paths.get(currentDir);
-		Path newP = PathUtils.GetRandomSubpath(p);
+		Path newP = PathUtils.getRandomSubpath(p);
 		
-		assertEquals(newP.toString() + "/", PathUtils.PathResolver(currentDir, newP.toString()));
+		assertEquals(newP.toString() + "/", PathUtils.pathResolver(currentDir, newP.toString()));
 	}
 }

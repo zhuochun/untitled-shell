@@ -299,8 +299,8 @@ public class COMMTool extends ATool implements ICommTool {
 			throw new IllegalArgumentException("Parameters in wrong format!");
 		} else {
 			try {
-				fileAPath = PathUtils.PathResolver(workingDir, filePaths[0]);
-				fileBPath = PathUtils.PathResolver(workingDir, filePaths[1]);
+				fileAPath = PathUtils.pathResolver(workingDir, filePaths[0]);
+				fileBPath = PathUtils.pathResolver(workingDir, filePaths[1]);
 			} catch (RuntimeException e) {
 				setStatusCode(2);
 				return e.getMessage();

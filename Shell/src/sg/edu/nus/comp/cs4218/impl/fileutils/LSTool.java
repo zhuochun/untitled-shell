@@ -78,7 +78,7 @@ public class LSTool extends ATool implements ILsTool {
 		
 		// only take the first one for now
 		if (argList.hasParams()) {
-			lsDir = new File(PathUtils.PathResolver(workingDir, argList.getParam(0)));
+			lsDir = new File(PathUtils.pathResolver(workingDir, argList.getParam(0)));
 		}
 
 		return getStringForFiles(getFiles(lsDir));
