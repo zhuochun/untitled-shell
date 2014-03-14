@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +13,7 @@ import sg.edu.nus.comp.cs4218.impl.extended1.PIPINGTool;
 public class ShellTest {
 	
 	Shell shell;
+	CommandInterpreter interpreter = new CommandInterpreter();
 	ITool tool;
 
 	@Before
@@ -38,9 +39,9 @@ public class ShellTest {
 			assertEquals(Class.forName(prefix + cmd.toUpperCase() + "Tool"), tool.getClass());
 		}
 
-		// uppercase
+		// uppercase using interpreter
 		for (String cmd : cmds) {
-			tool = shell.parse(cmd.toUpperCase());
+			tool = CommandInterpreter.cmdToITool(cmd.toUpperCase(), null);
 			assertEquals(Class.forName(prefix + cmd.toUpperCase() + "Tool"), tool.getClass());
 		}
 	}
@@ -71,7 +72,7 @@ public class ShellTest {
 
 		// uppercase
 		for (String cmd : cmds) {
-			tool = shell.parse(cmd.toUpperCase());
+			tool = CommandInterpreter.cmdToITool(cmd.toUpperCase(), null);
 			assertEquals(Class.forName(prefix + cmd.toUpperCase() + "Tool"), tool.getClass());
 		}
 	}
@@ -86,5 +87,11 @@ public class ShellTest {
 		assertEquals(null, tool);
 		tool = shell.parse("sart");
 		assertEquals(null, tool);
+	}
+	
+	@Test
+	public void testExecute() {
+		assertEquals(ToolRunnable.class, shell.execute(new GREPTool(null)).getClass());
+		shell.stop(null);
 	}
 }

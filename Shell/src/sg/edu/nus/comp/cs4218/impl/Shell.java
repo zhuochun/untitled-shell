@@ -39,7 +39,7 @@ public class Shell implements IShell {
 	public Runnable execute(ITool tool) {
 		runnable = new ToolRunnable(tool, "");
 		runnable.start();
-
+		
 		return runnable;
 	}
 
