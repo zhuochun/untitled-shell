@@ -66,6 +66,22 @@ public class COMMToolTest {
 	public void after(){
 		commTool = null;
 	}
+	
+	public void getHelpTest() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Command Format - cut [OPTIONS] [FILE]\n");
+		sb.append("FILE - Name of the file, when no file is present (denoted by \"-\") use standard input\n");
+		sb.append("OPTIONS\n");
+		
+		sb.append("  -c : Check that the input is correctly sorted.\n");
+		sb.append("  -d : Do not check that the input is correctly sorted.\n");
+		sb.append("  -help : Brief information about supported options.\n");
+		
+		String actual = commTool.getHelp();
+		
+		assertEquals(sb.toString(), actual);
+	}
 
 
 	//test compareFiles method, with sorted file

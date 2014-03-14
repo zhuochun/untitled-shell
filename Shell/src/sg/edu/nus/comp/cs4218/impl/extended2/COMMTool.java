@@ -280,17 +280,20 @@ public class COMMTool extends ATool implements ICommTool {
 
 		// help option?
 		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
+			setStatusCode(0);
 			return getHelp();
 		}
 		
 		// command does not have options and parameters
 		if (!argList.hasOptions() && !argList.hasParams()) {
+			setStatusCode(9);
 			return getHelp();
 		}
 		
 		// if both -c -d appears, throw exception
 		if (argList.hasOption("c") && argList.hasOption("d")) {
-			throw new IllegalArgumentException("Option error!");
+			setStatusCode(9);
+			return "Option error!";
 		}
 		
 		String[] filePaths = argList.getParams();

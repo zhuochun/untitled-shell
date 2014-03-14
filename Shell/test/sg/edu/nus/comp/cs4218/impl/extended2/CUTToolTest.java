@@ -11,15 +11,36 @@ import sg.edu.nus.comp.cs4218.extended2.ICutTool;
 public class CUTToolTest {
 	
 	private ICutTool cutTool;
+	private String helpString;
 	
 	@Before
 	public void before() {
 		cutTool = new CUTTool(null);
+		
+		// set up get help string.
+		StringBuilder sb = new StringBuilder();;
+		
+		sb.append("Command Format - cut [OPTIONS] [FILE]\n");
+		sb.append("FILE - Name of the file, when no file is present (denoted by \"-\") use standard input\n");
+		sb.append("OPTIONS\n");
+		
+		sb.append("  -c STRING : Use LIST as the list of characters to cut out.\n");
+		sb.append("  -d STRING : Use DELIM as the field-separator character instead of the TAB character.\n");
+		sb.append("  -help : Brief information about supported options.\n");
+		
+		helpString = sb.toString();
 	}
 
 	@After
 	public void after() {
 		cutTool = null;
+	}
+	
+	@Test
+	public void getHelpTest() {
+		String actual = cutTool.getHelp();
+		
+		assertEquals(helpString, actual);
 	}
 
 	//Test cutSpecfiedCharacters method with valid range
@@ -58,5 +79,38 @@ public class CUTToolTest {
 		String input1 = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17";
 		String output1 = "1 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17";		
 		assertEquals(output1,cutTool.cutSpecifiedCharactersUseDelimiter(list1," ",input1));	
+	}
+	
+	// Test execute as well as exploiting range utility used in cut tool
+	
+	// Test get help option
+	@Test
+	public void executeHelpOptionTest() {
+		cutTool = new CUTTool(new String[] {"-help"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals(0, cutTool.getStatusCode());
+		assertEquals(helpString, actual);
+	}
+	
+	@Test
+	public void executeInvalidOptionTest() {
+		cutTool = new CUTTool(new String[] {"-asdf"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertNotEquals(0, cutTool.getStatusCode());
+		assertEquals(helpString, actual);
+	}
+	
+	@Test
+	public void executeOptionWithoutProperContent() {
+		cutTool = new CUTTool(new String[] {"-asdf"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertNotEquals(0, cutTool.getStatusCode());
+		assertEquals(helpString, actual);
 	}
 }

@@ -31,7 +31,7 @@ public class CUTTool extends ATool implements ICutTool {
 						"Use DELIM as the field-separator character"
 						+ " instead of the TAB character.");
 		argList.registerAcceptableOption("help",
-						"Brief information about supported options");
+						"Brief information about supported options.");
 	}
 
 	@Override
@@ -90,11 +90,6 @@ public class CUTTool extends ATool implements ICutTool {
 			help.append("  " + opt.toString() + "\n");
 		}
 
-		// remove the last trailing \n
-		if (help.length() > 0) {
-			help.deleteCharAt(help.length() - 1);
-		}
-
 		return help.toString();
 	}
 
@@ -110,11 +105,13 @@ public class CUTTool extends ATool implements ICutTool {
 
 		// help option?
 		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
+			setStatusCode(9);
 			return getHelp();
 		}
 		
 		// command does not have options and parameters
 		if (!argList.hasOptions() && !argList.hasParams()) {
+			setStatusCode(9);
 			return getHelp();
 		}
 		
@@ -158,6 +155,7 @@ public class CUTTool extends ATool implements ICutTool {
 			result.append(e.getMessage());
 		}
 		
+		setStatusCode(0);
 		return result.toString();
 	}
 }
