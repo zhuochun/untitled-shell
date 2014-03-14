@@ -33,6 +33,21 @@ public class CDToolTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	@Test
+	public void testChangeDirectory() {
+		tool = new CDTool(null);
+		
+		File dir = new File(workingDir);
+		assertEquals(dir, tool.changeDirectory(workingDir));
+	}
+	
+	@Test
+	public void testExecuteInvalidArg() {
+		tool = new CDTool(new String[] {"-c"});
+		
+		assertEquals("Error: Illegal option -c", tool.execute(workingDirFile, null));
+	}
 
 	@Test
 	public void testExecuteWithSingleDot() {
