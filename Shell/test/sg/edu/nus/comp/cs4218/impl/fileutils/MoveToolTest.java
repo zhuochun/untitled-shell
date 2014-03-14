@@ -35,7 +35,7 @@ public class MoveToolTest {
 
 	@Test
 	public void testMoveZeroParam() {
-		tool = new MoveTool(new String[] {""});
+		tool = new MOVETool(new String[] {""});
 		String output = tool.execute(currentDir, null);;
 		
 		assertEquals("Move Command need at least 2 params", output);
@@ -43,7 +43,7 @@ public class MoveToolTest {
 	
 	@Test
 	public void testMoveOneParam() {
-		tool = new MoveTool(new String[] {"aklsadfjklsa.txt"});
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt"});
 		String output = tool.execute(currentDir, null);;
 		
 		assertEquals("Move Command need at least 2 params", output);
@@ -51,7 +51,7 @@ public class MoveToolTest {
 	
 	@Test
 	public void testMoveFileDoesNotExist() {
-		tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "baklsadfjklsa.txt"});
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "baklsadfjklsa.txt"});
 		String output = tool.execute(currentDir, null);
 		
 		assertEquals("No such file or directory!", output);
@@ -64,7 +64,7 @@ public class MoveToolTest {
 		try {
 			testFile.createNewFile();
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("No such file or directory!", output);
@@ -78,7 +78,7 @@ public class MoveToolTest {
 	
 	@Test
 	public void testMoveADirectory() {
-		tool = new MoveTool(new String[] {System.getProperty("user.dir"), "dfjklsa"});
+		tool = new MOVETool(new String[] {System.getProperty("user.dir"), "dfjklsa"});
 		String output = tool.execute(currentDir, null);
 		
 		assertEquals("Origin is not a file!", output);
@@ -94,7 +94,7 @@ public class MoveToolTest {
 			FileUtils.createDummyFile(compareFile, 10);
 			FileUtils.createDummyFile(testFile, 10);
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "baklsadfjklsa.txt"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "baklsadfjklsa.txt"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("", output);
@@ -125,7 +125,7 @@ public class MoveToolTest {
 			FileUtils.createDummyFile(compareFile, 10);
 			FileUtils.createDummyFile(testFile, 10);
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "aklsadfjklsa.txt"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "aklsadfjklsa.txt"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("", output);
@@ -155,7 +155,7 @@ public class MoveToolTest {
 			FileUtils.createDummyFile(compareFile, 10);
 			FileUtils.createDummyFile(testFile, 10);
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "."});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "."});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("", output);
@@ -185,7 +185,7 @@ public class MoveToolTest {
 			FileUtils.createDummyFile(compareFile, 10);
 			FileUtils.createDummyFile(testFile, 10);
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "../baklsadfjklsa"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "../baklsadfjklsa"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("", output);
@@ -220,7 +220,7 @@ public class MoveToolTest {
 			FileUtils.createDummyFile(compareFile, 10);
 			FileUtils.createDummyFile(testFile, 10);
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "testFolder"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "testFolder"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("", output);
@@ -253,7 +253,7 @@ public class MoveToolTest {
 			FileUtils.createDummyFile(compareFile, 10);
 			FileUtils.createDummyFile(testFile, 10);
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", randomSubpath + "/baklsadfjklsa"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", randomSubpath + "/baklsadfjklsa"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("", output);
@@ -280,7 +280,7 @@ public class MoveToolTest {
 		try {
 			testFile.createNewFile();
 			
-			tool = new MoveTool(new String[] {"aklsadfjklsa.txt", "/"});
+			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "/"});
 			String output = tool.execute(currentDir, null);
 			
 			assertEquals("File cannot be moved!", output);

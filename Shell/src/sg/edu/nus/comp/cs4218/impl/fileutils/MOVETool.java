@@ -7,12 +7,12 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
 
-public class MoveTool extends ATool implements IMoveTool {
+public class MOVETool extends ATool implements IMoveTool {
 
 	private ArgList argList = new ArgList();
 	private String currentDir;
 
-	public MoveTool(String[] arguments) {
+	public MOVETool(String[] arguments) {
 		super(arguments);
 		
 		currentDir = System.getProperty("user.dir");
