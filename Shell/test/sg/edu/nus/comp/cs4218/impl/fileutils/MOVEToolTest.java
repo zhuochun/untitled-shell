@@ -16,7 +16,7 @@ import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
 
-public class MoveToolTest {
+public class MOVEToolTest {
 
 	private IMoveTool tool;
 	private File currentDir, testFile, testNewFile, compareFile,
