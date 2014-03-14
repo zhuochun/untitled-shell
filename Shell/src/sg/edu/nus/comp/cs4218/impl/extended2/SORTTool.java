@@ -1,4 +1,3 @@
-// chen hao
 /*
  * 
  * sort : sort lines of text file
@@ -108,34 +107,17 @@ public class SORTTool extends ATool implements ISortTool {
 			return getHelp();
 		}
 		// command does not have options and parameters
-		if (!argList.hasOptions() && !argList.hasParams()) {
-			return getHelp();
-		}
-		
 		try {
-
-			File sortFile = new File(PathUtils.PathResolver(workingDir,
-					argList.getParam(0)));
-			FileReader fr = new FileReader (sortFile);
-			BufferedReader br = new BufferedReader (fr);
-			StringBuilder input = new StringBuilder();
-			String tmp = new String();
-
-			tmp = br.readLine();
-			while(tmp != null){
-				input= input.append(tmp);
-				tmp = br.readLine();
-			}
+			
+			String input = argList.getParam(0);
+			
 			if(argList.hasOption("c")){
-				return checkIfSorted(new String(input));
+				return checkIfSorted(input);
 
 			}
 			else{
-				return sortFile(new String(input));
+				return sortFile(input);
 			}
-		}catch (IllegalArgumentException e) {
-			setStatusCode(9);
-			return e.getMessage();
 		}catch(Exception e){
 			setStatusCode(9);
 			return e.getMessage();
