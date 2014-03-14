@@ -194,7 +194,7 @@ public class COMMTool extends ATool implements ICommTool {
 		argList.registerAcceptableOption("d",
 						"Do not check that the input is correctly sorted.");
 		argList.registerAcceptableOption("help",
-						"Brief information about supported options");
+						"Brief information about supported options.");
 	}
 
 	@Override
@@ -258,11 +258,6 @@ public class COMMTool extends ATool implements ICommTool {
 
 		for (Option opt : argList.getAcceptableOptions()) {
 			help.append("  " + opt.toString() + "\n");
-		}
-
-		// remove the last trailing \n
-		if (help.length() > 0) {
-			help.deleteCharAt(help.length() - 1);
 		}
 
 		return help.toString();

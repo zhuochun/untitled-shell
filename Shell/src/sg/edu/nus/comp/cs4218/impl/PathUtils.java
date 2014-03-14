@@ -58,14 +58,6 @@ public class PathUtils {
 		return PathResolver(currentPath.toString(), newPath);
 	}
 
-	public static String PathResolver(File currentPath, File newPath) {
-		return PathResolver(currentPath, newPath.toString());
-	}
-
-	public static String PathResolver(String currentPath, File newPath) {
-		return PathResolver(currentPath, newPath.toString());
-	}
-
 	public static String GetLastElementOfPath(String path) {
 		return Paths.get(path).getFileName().toString();
 	}
@@ -76,9 +68,19 @@ public class PathUtils {
 	
 	public static Path GetRandomSubpath(Path path) {
 		int depth = path.getNameCount();
-		// TODO this will cause problem, check depth - 2 > 0 first !!!
-		int newDepth = 2 + (int)(Math.random() * 1000000) % (depth - 2);
+		int newDepth;
+
+		if (depth > 2) {
+			newDepth = 2 + (int)(Math.random() * 1000000) % (depth - 2);
+		} else {
+			newDepth = depth;
+		}
+			
 		
 		return Paths.get("/" + path.subpath(0, newDepth).toString());
+	}
+	
+	public static Path getCurrentPath() {
+		return Paths.get(System.getProperty("user.dir") + "/");
 	}
 }

@@ -15,6 +15,8 @@ import org.junit.Test;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 
 public class FileUtilsTest {
+	
+	FileUtils fileutils = new FileUtils();
 
 	@Before
 	public void setUp() throws Exception {

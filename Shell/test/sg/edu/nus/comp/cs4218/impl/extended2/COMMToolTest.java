@@ -67,6 +67,7 @@ public class COMMToolTest {
 		commTool = null;
 	}
 	
+	@Test
 	public void getHelpTest() {
 		StringBuilder sb = new StringBuilder();
 		

@@ -2,19 +2,33 @@ package sg.edu.nus.comp.cs4218.impl.extended2;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.extended2.ICutTool;
+import sg.edu.nus.comp.cs4218.impl.FileUtils;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class CUTToolTest {
 	
 	private ICutTool cutTool;
 	private String helpString;
+	private File testAbsoluteRandomFile;
+	private File testRelativeFile;
+	private File testCurrentFolderFile;
+	private String testFileName = "test.txt";
+	private String testFileAbsoluteName;
+	private String testFileRelativeName = ".././test.txt";
 	
 	@Before
-	public void before() {
+	public void before() throws Exception {
 		cutTool = new CUTTool(null);
 		
 		// set up get help string.
@@ -29,11 +43,49 @@ public class CUTToolTest {
 		sb.append("  -help : Brief information about supported options.\n");
 		
 		helpString = sb.toString();
+		
+		testCurrentFolderFile = new File(testFileName);
+		
+		String testFilePath = PathUtils.getCurrentPath().toString();
+		testFileAbsoluteName = PathUtils.GetRandomSubpath(Paths.get(testFilePath)).toString() + "/" + testFileName;
+		System.out.println(testFileAbsoluteName);
+		testAbsoluteRandomFile = new File(testFileAbsoluteName);
+		
+		testRelativeFile = new File(PathUtils.PathResolver(testFilePath, testFileRelativeName));
+		
+		BufferedWriter output = new BufferedWriter(new FileWriter(testAbsoluteRandomFile));
+		
+		output.write("123456789012345\n");
+		output.write("askldjfklasdjfasd\n");
+		output.write("1,2,3,4,5,6,7,8,9\n");
+		output.write("1, 2, 3, 4, 5, 6, 7, 8, 9\n");
+		
+		output.close();
+		
+		output = new BufferedWriter(new FileWriter(testCurrentFolderFile));
+		
+		output.write("123456789012345\n");
+		output.write("askldjfklasdjfasd\n");
+		output.write("1,2,3,4,5,6,7,8,9\n");
+		output.write("1, 2, 3, 4, 5, 6, 7, 8, 9\n");
+		
+		output.close();
+		
+		output = new BufferedWriter(new FileWriter(testRelativeFile));
+		
+		output.write("123456789012345\n");
+		output.write("askldjfklasdjfasd\n");
+		output.write("1,2,3,4,5,6,7,8,9\n");
+		output.write("1, 2, 3, 4, 5, 6, 7, 8, 9\n");
+		
+		output.close();
 	}
 
 	@After
 	public void after() {
 		cutTool = null;
+		testAbsoluteRandomFile.delete();
+		testRelativeFile.delete();
 	}
 	
 	@Test
@@ -90,8 +142,18 @@ public class CUTToolTest {
 		
 		String actual = cutTool.execute(null, null);
 		
-		assertEquals(0, cutTool.getStatusCode());
 		assertEquals(helpString, actual);
+		assertEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOption() {
+		cutTool = new CUTTool(new String[] {testFileName});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
 	}
 	
 	@Test
@@ -100,17 +162,64 @@ public class CUTToolTest {
 		
 		String actual = cutTool.execute(null, null);
 		
+		assertEquals("Error: Illegal option -asdf\n" + helpString, actual);
 		assertNotEquals(0, cutTool.getStatusCode());
-		assertEquals(helpString, actual);
 	}
 	
 	@Test
 	public void executeOptionWithoutProperContent() {
-		cutTool = new CUTTool(new String[] {"-asdf"});
+		cutTool = new CUTTool(new String[] {"-c"});
 		
 		String actual = cutTool.execute(null, null);
 		
+		assertEquals("Error: Invalid option -c\n" + helpString, actual);
 		assertNotEquals(0, cutTool.getStatusCode());
-		assertEquals(helpString, actual);
+	}
+	
+	@Test
+	public void executeTwoOptionsWithoutProperContent() {
+		cutTool = new CUTTool(new String[] {"-c", "-d"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals("Error: Invalid option -c\n" + helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeListOptionWithNoFileSpecified() {
+		cutTool = new CUTTool(new String[] {"-c",  "1,2,3"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals("", actual);
+		assertEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDelimOptionWithNoFileSpecified() {
+		cutTool = new CUTTool(new String[] {"-d", "1,2,3"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals("", actual);
+		assertEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCutWithCurrentFileAndSingleValueRange() {
+		cutTool = new CUTTool(new String[] {"-c", "1,2,3", testFileName});
+		
+		StringBuilder expected = new StringBuilder();
+		
+		expected.append("123\n");
+		expected.append("ask\n");
+		expected.append("1,2\n");
+		expected.append("1, \n");
+		
+		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected.toString(), actual);
+		assertEquals(0, cutTool.getStatusCode());
 	}
 }

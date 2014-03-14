@@ -20,6 +20,8 @@ public class PathUtilTest {
 	
 	File testFolder;
 	File testFile;
+	
+	PathUtils pathutils = new PathUtils();
 
 	@Before
 	public void setUp() throws Exception {
@@ -31,6 +33,14 @@ public class PathUtilTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+	
+	@Test
+	public void testGetCurrentPath() {
+		String expected = System.getProperty("user.dir");
+		String actual = PathUtils.getCurrentPath().toString();
+		
+		assertEquals(expected, actual);
 	}
 
 	@Test

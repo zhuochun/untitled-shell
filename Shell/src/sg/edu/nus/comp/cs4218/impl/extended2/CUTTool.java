@@ -100,17 +100,17 @@ public class CUTTool extends ATool implements ICutTool {
 			argList.parseArgs(this.args);
 		} catch (IllegalArgumentException e) {
 			setStatusCode(9);
-			return e.getMessage();
+			return e.getMessage() + "\n" + getHelp();
 		}
 
 		// help option?
 		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
-			setStatusCode(9);
+			setStatusCode(0);
 			return getHelp();
 		}
 		
-		// command does not have options and parameters
-		if (!argList.hasOptions() && !argList.hasParams()) {
+		// command does not have options
+		if (!argList.hasOptions()) {
 			setStatusCode(9);
 			return getHelp();
 		}
@@ -140,9 +140,9 @@ public class CUTTool extends ATool implements ICutTool {
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
-				result.append(argList.hasOption("d") ? cutSpecfiedCharacters(list, line) : 
-									cutSpecifiedCharactersUseDelimiter(list, 
-											argList.getOptionValue("d"), line));
+				result.append(argList.hasOption("d") ? cutSpecifiedCharactersUseDelimiter(list, 
+													   argList.getOptionValue("d"), line) :
+													   cutSpecfiedCharacters(list, line));
 				result.append("\n");
 			}
 
