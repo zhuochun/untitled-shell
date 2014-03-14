@@ -159,19 +159,21 @@ public class CUTTool extends ATool implements ICutTool {
 			if (argList.hasOption("c")) {
 				list = argList.getOptionValue("c");
 				
-				if (argList.hasParams() && argList.getParam(0) != "-") {
-					try {
-						input = FileUtils.readFileContent(new File(PathUtils.
-								PathResolver(workingDir, argList.getParam(0))));
-					} catch (IOException e) {
-						setStatusCode(1);
-						return e.getMessage();
-					} catch (RuntimeException e) {
-						setStatusCode(2);
-						return e.getMessage();
+				if (argList.hasParams() && argList.getParams().length == 1) {
+					if (argList.getParam(0) != "-") {
+						try {
+							input = FileUtils.readFileContent(new File(PathUtils.
+									PathResolver(workingDir, argList.getParam(0))));
+						} catch (IOException e) {
+							setStatusCode(1);
+							return e.getMessage();
+						} catch (RuntimeException e) {
+							setStatusCode(2);
+							return e.getMessage();
+						}
 					}
 				} else
-				if (!argList.hasParams()) {
+				if (!argList.hasParams() || argList.getParams().length != 1) {
 					setStatusCode(9);
 					return getHelp();
 				}
@@ -180,15 +182,17 @@ public class CUTTool extends ATool implements ICutTool {
 				if (argList.hasParams() && argList.getParams().length == 2) {
 					list = argList.getParam(0);
 					
-					try {
-						input = FileUtils.readFileContent(new File(PathUtils.
-								PathResolver(workingDir, argList.getParam(1))));
-					} catch (IOException e) {
-						setStatusCode(1);
-						return e.getMessage();
-					} catch (RuntimeException e) {
-						setStatusCode(2);
-						return e.getMessage();
+					if (argList.getParam(1) != "-") {
+						try {
+							input = FileUtils.readFileContent(new File(PathUtils.
+									PathResolver(workingDir, argList.getParam(1))));
+						} catch (IOException e) {
+							setStatusCode(1);
+							return e.getMessage();
+						} catch (RuntimeException e) {
+							setStatusCode(2);
+							return e.getMessage();
+						}
 					}
 				} else {
 					setStatusCode(9);

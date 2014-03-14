@@ -202,6 +202,16 @@ public class CUTToolTest {
 	}
 	
 	@Test
+	public void executeThreeOptionsWithProperContentAndDuplication() {
+		cutTool = new CUTTool(new String[] {"-c", "1,2,3", "-c", "2,3,4", "-d", "-"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals("Error: More than one option.\n" + helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
 	public void executeListOptionWithNoFileSpecified() {
 		cutTool = new CUTTool(new String[] {"-c",  "1,2,3"});
 		
@@ -214,6 +224,26 @@ public class CUTToolTest {
 	@Test
 	public void executeDelimOptionWithNoFileSpecified() {
 		cutTool = new CUTTool(new String[] {"-d", "1,2,3"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDelimOptionWithMoreThanNecessaryParam() {
+		cutTool = new CUTTool(new String[] {"-d", "-", "1,2,3", "alskdj", "asdfsadf"});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCutOptionWithMoreThanNecessaryParam() {
+		cutTool = new CUTTool(new String[] {"-c", "1,2,3", "alskdj", "asdas"});
 		
 		String actual = cutTool.execute(null, null);
 		
