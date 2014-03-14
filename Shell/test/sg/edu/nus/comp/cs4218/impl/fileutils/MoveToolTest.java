@@ -18,19 +18,31 @@ import sg.edu.nus.comp.cs4218.fileutils.IMoveTool;
 
 public class MoveToolTest {
 
-	@Rule
-	public TemporaryFolder folder = new TemporaryFolder();
-
 	private IMoveTool tool;
-	private File currentDir;
-
+	private File currentDir, testFile, testNewFile, compareFile,
+				 testParentNewFile, testRandomNewFile;
+	private String randomSubpath;
+	
 	@Before
 	public void setUp() throws Exception {
 		currentDir = new File(System.getProperty("user.dir"));
+		
+		testFile = new File("aklsadfjklsa.txt");
+		testNewFile = new File("baklsadfjklsa.txt");
+		compareFile = new File("compare");
+		testParentNewFile = new File(Paths.get(System.getProperty("user.dir")).getParent() + "/baklsadfjklsa");
+		
+		randomSubpath = PathUtils.GetRandomSubpath(Paths.get(currentDir.toString())).toString();
+		testRandomNewFile = new File(randomSubpath + "/baklsadfjklsa");
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		testFile.delete();
+		testNewFile.delete();
+		compareFile.delete();
+		testParentNewFile.delete();
+		testRandomNewFile.delete();
 	}
 
 	@Test
@@ -58,22 +70,13 @@ public class MoveToolTest {
 	}
 	
 	@Test
-	public void testMoveFileToNonExistFolder() {
-		File testFile = new File("aklsadfjklsa.txt");
+	public void testMoveFileToNonExistFolder() throws IOException {
+		testFile.createNewFile();
 		
-		try {
-			testFile.createNewFile();
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("No such file or directory!", output);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-		}
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "/baklsa/dfjklsa"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("No such file or directory!", output);
 	}
 	
 	@Test
@@ -85,210 +88,88 @@ public class MoveToolTest {
 	}
 	
 	@Test
-	public void testMoveFileToSameFolderWithDifferentName() {
-		File testFile = new File("aklsadfjklsa.txt");
-		File testNewFile = new File("baklsadfjklsa.txt");
-		File compareFile = new File("compare");
+	public void testMoveFileToSameFolderWithDifferentName() throws IOException, Exception {
+		FileUtils.createDummyFile(compareFile, 10);
+		FileUtils.createDummyFile(testFile, 10);
 		
-		try {
-			FileUtils.createDummyFile(compareFile, 10);
-			FileUtils.createDummyFile(testFile, 10);
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "baklsadfjklsa.txt"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("", output);
-			
-			assertFalse(testFile.exists());
-			assertTrue(testNewFile.exists());
-			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-			testNewFile.delete();
-			compareFile.delete();
-		}
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "baklsadfjklsa.txt"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("", output);
+		
+		assertFalse(testFile.exists());
+		assertTrue(testNewFile.exists());
+		assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
 	}
 	
 	@Test
-	public void testMoveFileToSameFolderWithSameName() {
+	public void testMoveFileToSameFolderWithSameName() throws IOException, Exception {
 		File testFile = new File("aklsadfjklsa.txt");
-		File testNewFile = new File("aklsadfjklsa.txt");
 		File compareFile = new File("compare");
 		
-		try {
-			FileUtils.createDummyFile(compareFile, 10);
-			FileUtils.createDummyFile(testFile, 10);
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "aklsadfjklsa.txt"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("", output);
-			
-			assertTrue(testNewFile.exists());
-			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-			testNewFile.delete();
-			compareFile.delete();
-		}
+		FileUtils.createDummyFile(compareFile, 10);
+		FileUtils.createDummyFile(testFile, 10);
+		
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "aklsadfjklsa.txt"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("", output);
+		
+		assertTrue(testFile.exists());
+		assertTrue(FileUtils.diffTwoFiles(testFile, compareFile));
 	}
 	
 	@Test
-	public void testMoveFileToSameFolderWithSameNameUsingDot() {
-		File testFile = new File("aklsadfjklsa.txt");
-		File testNewFile = new File("aklsadfjklsa.txt");
-		File compareFile = new File("compare");
+	public void testMoveFileToSameFolderWithSameNameUsingDot() throws IOException, Exception {
+		FileUtils.createDummyFile(compareFile, 10);
+		FileUtils.createDummyFile(testFile, 10);
 		
-		try {
-			FileUtils.createDummyFile(compareFile, 10);
-			FileUtils.createDummyFile(testFile, 10);
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "."});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("", output);
-			
-			assertTrue(testNewFile.exists());
-			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-			testNewFile.delete();
-			compareFile.delete();
-		}
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "."});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("", output);
+		
+		assertTrue(testFile.exists());
+		assertTrue(FileUtils.diffTwoFiles(testFile, compareFile));
 	}
 	
 	@Test
-	public void testMoveFileToParentFolder() {
-		File testFile = new File("aklsadfjklsa.txt");
-		File testNewFile = new File(Paths.get(System.getProperty("user.dir")).getParent() + "/baklsadfjklsa");
-		File compareFile = new File("compare");
+	public void testMoveFileToParentFolder() throws IOException, Exception {
+		FileUtils.createDummyFile(compareFile, 10);
+		FileUtils.createDummyFile(testFile, 10);
 		
-		try {
-			FileUtils.createDummyFile(compareFile, 10);
-			FileUtils.createDummyFile(testFile, 10);
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "../baklsadfjklsa"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("", output);
-			
-			assertFalse(testFile.exists());
-			assertTrue(testNewFile.exists());
-			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-			testNewFile.delete();
-			compareFile.delete();
-		}
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "../baklsadfjklsa"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("", output);
+		
+		assertFalse(testFile.exists());
+		assertTrue(testParentNewFile.exists());
+		assertTrue(FileUtils.diffTwoFiles(testParentNewFile, compareFile));
 	}
 	
 	@Test
-	public void testMoveFileToAFolder() {
-		File testFile = new File("aklsadfjklsa.txt");
-		File testFolder = new File("testFolder");
+	public void testMoveFileToOneOfFolderOnTheSubPath() throws IOException, Exception {
+		FileUtils.createDummyFile(compareFile, 10);
+		FileUtils.createDummyFile(testFile, 10);
 		
-		testFolder.mkdir();
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", randomSubpath + "/baklsadfjklsa"});
+		String output = tool.execute(currentDir, null);
 		
-		File testNewFile = new File(testFolder.getAbsolutePath() + "/aklsadfjklsa.txt");
-		File compareFile = new File("compare");
+		assertEquals("", output);
 		
-		try {
-			FileUtils.createDummyFile(compareFile, 10);
-			FileUtils.createDummyFile(testFile, 10);
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "testFolder"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("", output);
-			
-			assertFalse(testFile.exists());
-			assertTrue(testNewFile.exists());
-			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-			testFolder.delete();
-			testNewFile.delete();
-			compareFile.delete();
-		}
+		assertFalse(testFile.exists());
+		assertTrue(testRandomNewFile.exists());
+		assertTrue(FileUtils.diffTwoFiles(testRandomNewFile, compareFile));
 	}
 	
 	@Test
-	public void testMoveFileToOneOfFolderOnTheSubPath() {
-		File testFile = new File("aklsadfjklsa.txt");
-		String randomSubpath = PathUtils.GetRandomSubpath(Paths.get(currentDir.toString())).toString();
-		File testNewFile = new File(randomSubpath + "/baklsadfjklsa");
-		File compareFile = new File("compare");
+	public void testMoveToFolderCannotWrite() throws IOException {
+		testFile.createNewFile();
 		
-		try {
-			FileUtils.createDummyFile(compareFile, 10);
-			FileUtils.createDummyFile(testFile, 10);
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", randomSubpath + "/baklsadfjklsa"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("", output);
-			
-			assertFalse(testFile.exists());
-			assertTrue(testNewFile.exists());
-			assertTrue(FileUtils.diffTwoFiles(testNewFile, compareFile));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-			testNewFile.delete();
-			compareFile.delete();
-		}
-	}
-	
-	@Test
-	public void testMoveToFolderCannotWrite() {
-		File testFile = new File("aklsadfjklsa.txt");
-		try {
-			testFile.createNewFile();
-			
-			tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "/"});
-			String output = tool.execute(currentDir, null);
-			
-			assertEquals("File cannot be moved!", output);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			testFile.delete();
-		}
+		tool = new MOVETool(new String[] {"aklsadfjklsa.txt", "/"});
+		String output = tool.execute(currentDir, null);
+		
+		assertEquals("File cannot be moved!", output);
 	}
 }

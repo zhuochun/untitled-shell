@@ -68,16 +68,11 @@ public class CDToolTest {
 	}
 	
 	@Test
-	public void testExecuteIsFile() {
+	public void testExecuteIsFile() throws IOException {
 		tool = new CDTool(new String[] {"testFile"});
 		File testFile = new File("testFile");
-		
-		try {
-			testFile.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		testFile.createNewFile();
 		
 		String output = tool.execute(workingDirFile, null);
 		
@@ -277,7 +272,7 @@ public class CDToolTest {
 	}
 	
 	@Test
-	public void testExecutePathWithSpecialCharacterAndAlphabets() {
+	public void testExecutePathWithSpecialCharacterAndAlphabets() throws IOException {
 		Path p = Paths.get(workingDir);
 		int depth = p.getNameCount();
 		int newDepth = 2 + (int)(Math.random() * 1000000) % (depth - 2);
@@ -305,12 +300,7 @@ public class CDToolTest {
 		
 		testFolder.delete();
 		
-		try {
-			testFolder.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		testFolder.createNewFile();
 		
 		output = tool.execute(workingDirFile, null);
 		

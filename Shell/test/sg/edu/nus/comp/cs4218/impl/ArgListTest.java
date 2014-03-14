@@ -139,6 +139,7 @@ public class ArgListTest {
 		assertArrayEquals(new String[] { "N", "T", "S", "t" }, args.getOptions());
 	}
 	
+	@Test
 	public void testParseWithStringValueOptions() {
 		String[] arguments = { "-n", "\"abc", "-t", "'abc" };
 
