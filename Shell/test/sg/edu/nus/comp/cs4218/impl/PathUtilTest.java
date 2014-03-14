@@ -124,6 +124,14 @@ public class PathUtilTest {
 	}
 	
 	@Test
+	public void testPathWithSingleForwardSlashSingleTudleAnd() {
+		String path = "/~/";
+		String newPath = PathUtils.PathResolver(currentDir, path);
+		
+		assertEquals("/~/", newPath);
+	}
+	
+	@Test
 	public void testPathWithSingleTudleAndMultipleForwardSlash() {
 		String path = "~//////////////";
 		String newPath = PathUtils.PathResolver(currentDir, path);

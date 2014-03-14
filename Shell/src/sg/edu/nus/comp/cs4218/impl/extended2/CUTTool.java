@@ -19,6 +19,48 @@ import sg.edu.nus.comp.cs4218.impl.RangeUtils.Range;
 public class CUTTool extends ATool implements ICutTool {
 	
 	private ArgList argList = new ArgList();
+	private ArrayList<Range> rangeList;
+	private String prevList;
+	
+	private String cutSpecfiedCharacters(ArrayList<Range> list, String input) {
+		StringBuilder finalString = new StringBuilder();
+		ArrayList<Range> rangeList = RangeUtils.mergeRange(list); 
+		
+		for (Range range : rangeList) {
+			finalString.append(input.substring(Math.min(range.left, input.length()) - 1,
+											   Math.min(input.length(),
+												        range.right)));
+			
+			if (range.right > input.length()) {
+				break;
+			}
+		}
+		
+		return finalString.toString();
+	}
+	
+	private String cutSpecifiedCharactersUseDelimiter(ArrayList<Range> list, String delim,
+													  String input) {
+		StringBuilder finalString = new StringBuilder();
+		ArrayList<Range> rangeList = RangeUtils.mergeRange(list);
+		
+		String[] fields = input.split(delim);
+		
+		for (Range range : rangeList) {
+			for (int i = Math.min(range.left, input.length()) - 1; i < Math.min(fields.length, range.right); i ++) {
+				finalString.append(fields[i]);
+				finalString.append(delim);
+			}
+			
+			if (range.right > input.length()) {
+				break;
+			}
+		}
+		
+		finalString.deleteCharAt(finalString.length() - 1);
+		
+		return finalString.toString();
+	}
 
 	public CUTTool(String[] arguments) {
 		super(arguments);
@@ -36,46 +78,37 @@ public class CUTTool extends ATool implements ICutTool {
 
 	@Override
 	public String cutSpecfiedCharacters(String list, String input) {
-		StringBuilder finalString = new StringBuilder();
-		ArrayList<Range> rangeList = RangeUtils.mergeRange(
-												RangeUtils.parseRange(list)); 
-		
-		for (Range range : rangeList) {	
-			finalString.append(input.substring(range.left - 1,
-											   Math.min(input.length(),
-												        range.right)));
+		if (prevList == null || prevList != list) {
+			rangeList = RangeUtils.parseRange(list);
 			
-			if (range.right > input.length()) {
-				break;
+			// if the start of the range is smaller than 1
+			if (rangeList.get(0).left < 1) {
+				setStatusCode(9);
+				return "Values may not include zero.";
 			}
+			
+			prevList = list;
 		}
 		
-		return finalString.toString();
+		return cutSpecfiedCharacters(rangeList, input);
 	}
 
 	@Override
 	public String cutSpecifiedCharactersUseDelimiter(String list, String delim,
 			String input) {
-		StringBuilder finalString = new StringBuilder();
-		ArrayList<Range> rangeList = RangeUtils.mergeRange(
-												RangeUtils.parseRange(list));
-		
-		String[] fields = input.split(delim);
-		
-		for (Range range : rangeList) {
-			for (int i = range.left - 1; i < Math.min(fields.length, range.right); i ++) {
-				finalString.append(fields[i]);
-				finalString.append(delim);
+		if (prevList == null || prevList != list) {
+			rangeList = RangeUtils.parseRange(list);
+			
+			// if the start of the range is smaller than 1
+			if (rangeList.get(0).left < 1) {
+				setStatusCode(9);
+				return "Values may not include zero.";
 			}
 			
-			if (range.right > input.length()) {
-				break;
-			}
+			prevList = list;
 		}
 		
-		finalString.deleteCharAt(finalString.length() - 1);
-		
-		return finalString.toString();
+		return cutSpecifiedCharactersUseDelimiter(rangeList, delim, input);
 	}
 
 	@Override
@@ -95,6 +128,9 @@ public class CUTTool extends ATool implements ICutTool {
 
 	@Override
 	public String execute(File workingDir, String stdin) {
+		// by default we assume execution is successful
+		setStatusCode(0);
+		
 		// parse arguments
 		try {
 			argList.parseArgs(this.args);
@@ -102,48 +138,83 @@ public class CUTTool extends ATool implements ICutTool {
 			setStatusCode(9);
 			return e.getMessage() + "\n" + getHelp();
 		}
-
-		// help option?
-		if (argList.hasOptions() && argList.getOption(0).equals("help")) {
-			setStatusCode(0);
-			return getHelp();
-		}
+		
+		// determine where the input comes from
+		String input = (stdin == null? "" : stdin);
+		String list = "";
 		
 		// command does not have options
 		if (!argList.hasOptions()) {
 			setStatusCode(9);
 			return getHelp();
-		}
-		
-		// determine where the input comes from
-		String input = (stdin == null? "" : stdin);
-		
-		// if the input comes from a file
-		if (argList.hasParams() && argList.getParam(0) != "-") {
-			try {
-				input = FileUtils.readFileContent(new File(PathUtils.
-						PathResolver(workingDir, argList.getParam(0))));
-			} catch (IOException e) {
-				setStatusCode(1);
-				return e.getMessage();
-			} catch (RuntimeException e) {
-				setStatusCode(2);
-				return e.getMessage();
+		} else
+		// command has more than 1 option
+		if (argList.getOptions().length > 1) {
+			setStatusCode(9);
+			return "Error: More than one option.\n" + getHelp();
+		} else {
+			if (argList.hasOption("help")) {
+				return getHelp();
+			} else
+			if (argList.hasOption("c")) {
+				list = argList.getOptionValue("c");
+				
+				if (argList.hasParams() && argList.getParam(0) != "-") {
+					try {
+						input = FileUtils.readFileContent(new File(PathUtils.
+								PathResolver(workingDir, argList.getParam(0))));
+					} catch (IOException e) {
+						setStatusCode(1);
+						return e.getMessage();
+					} catch (RuntimeException e) {
+						setStatusCode(2);
+						return e.getMessage();
+					}
+				} else
+				if (!argList.hasParams()) {
+					setStatusCode(9);
+					return getHelp();
+				}
+			} else
+			if (argList.hasOption("d")) {
+				if (argList.hasParams() && argList.getParams().length == 2) {
+					list = argList.getParam(0);
+					
+					try {
+						input = FileUtils.readFileContent(new File(PathUtils.
+								PathResolver(workingDir, argList.getParam(1))));
+					} catch (IOException e) {
+						setStatusCode(1);
+						return e.getMessage();
+					} catch (RuntimeException e) {
+						setStatusCode(2);
+						return e.getMessage();
+					}
+				} else {
+					setStatusCode(9);
+					return getHelp();
+				}
 			}
 		}
-		
+
 		// process input
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		StringBuilder result = new StringBuilder();
-		String list = argList.getOptionValue("c");
 
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
-				result.append(argList.hasOption("d") ? cutSpecifiedCharactersUseDelimiter(list, 
-													   argList.getOptionValue("d"), line) :
-													   cutSpecfiedCharacters(list, line));
+				String lineResult = argList.hasOption("d") ? cutSpecifiedCharactersUseDelimiter(list, 
+								    argList.getOptionValue("d"), line) :
+								    cutSpecfiedCharacters(list, line);
+				
+				result.append(lineResult);
 				result.append("\n");
+				
+				// if something wrong when cutting the line
+				if (getStatusCode() != 0) {
+					break;
+				}
 			}
 
 			br.close();
@@ -155,7 +226,6 @@ public class CUTTool extends ATool implements ICutTool {
 			result.append(e.getMessage());
 		}
 		
-		setStatusCode(0);
 		return result.toString();
 	}
 }

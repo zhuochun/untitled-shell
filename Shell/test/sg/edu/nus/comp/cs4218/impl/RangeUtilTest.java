@@ -24,8 +24,8 @@ public class RangeUtilTest {
 	private void assertRangeListEqual(ArrayList<Range> expected,
 			  ArrayList<Range> actual) {
 		for (int i = 0; i < expected.size(); i ++) {
-			assertTrue(expected.get(i).left == actual.get(i).left);
-			assertTrue(expected.get(i).right == actual.get(i).right);
+			assertEquals(expected.get(i).left, actual.get(i).left);
+			assertEquals(expected.get(i).right, actual.get(i).right);
 		}
 	}
 
