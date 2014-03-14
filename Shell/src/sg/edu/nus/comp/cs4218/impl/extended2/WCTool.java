@@ -1,4 +1,3 @@
-//chen hao
 /*
  * 
  * wc : Prints the number of bytes, words, and lines in given file
@@ -106,12 +105,6 @@ public class WCTool extends ATool implements IWcTool {
 			return getHelp();
 		}
 
-		// if both -m -w -l appears, throw exception
-		if ((argList.hasOption("m") && argList.hasOption("w"))
-				||(argList.hasOption("m") && argList.hasOption("l")
-						||(argList.hasOption("w") && argList.hasOption("l")))) {
-			throw new IllegalArgumentException("Option error!");
-		}
 
 
 		String input = new String(argList.getParam(0));
@@ -128,8 +121,6 @@ public class WCTool extends ATool implements IWcTool {
 			return getNewLineCount(input);
 
 		}
-		else{
-			return getHelp();
-		}
+		return null;
 	}
 }
