@@ -164,7 +164,7 @@ public class UNIQTool extends ATool implements IUniqTool {
 		}
 
 		// other options
-		boolean checkCase = argList.hasOption("i");
+		boolean checkCase = argList.hasOption("i") ? false : true;
 		int skipNum = argList.hasOption("f") ? Integer.parseInt(argList.getOptionValue("f")) : -1;
 
 		// process inputs
