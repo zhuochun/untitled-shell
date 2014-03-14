@@ -6,12 +6,18 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.extended2.IWcTool;
 
 public class WCToolTest {
 	private IWcTool wcTool;
+	
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+
 
 	@Before
 	public void before() {
@@ -93,19 +99,48 @@ public class WCToolTest {
 		helpInfo = helpInfo.append("       -help : Brief information about supported options");
 		assertEquals(new String(helpInfo), wcTool.getHelp());
 	}
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void executWithIllegalInputTest(){
-		wcTool.execute(null, "adasdsdaw");
+		IWcTool newWCTool = new WCTool(new String[]{"-i"});
+		newWCTool.execute(null, null);
+		assertEquals(9, newWCTool.getStatusCode());
 	}
 	
 	@Test
 	public void executeWithNoOption(){
-		String s = wcTool.execute(null, "wc helloworld");
-		assertEquals(s, wcTool.getHelp());
+		
+		IWcTool newWCTool = new WCTool(new String[]{});
+		String result = newWCTool.execute(null, null);
+		assertEquals(result, wcTool.getHelp());
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void executeWithTwoMoreOptions(){
-		wcTool.execute(null, "wc -m -w helloworld");
+	@Test
+	public void executeWithHelpOption(){
+		IWcTool newWCTool = new WCTool(new String[]{"-help"});
+		String result = newWCTool.execute(null, null);
+		assertEquals(result, wcTool.getHelp());
+	}
+	
+
+	
+	@Test
+	public void executeWithMOption(){
+		IWcTool newWCTool = new WCTool(new String[]{"-m", "hello world"});
+		String result = newWCTool.execute(null, null);
+		assertEquals(result, wcTool.getCharacterCount("hello world"));
+	}
+	
+	@Test
+	public void executeWithWOption(){
+		IWcTool newWCTool = new WCTool(new String[]{"-w", "hello world"});
+		String result = newWCTool.execute(null, null);
+		assertEquals(result, wcTool.getWordCount("hello world"));
+	}
+	
+	@Test
+	public void executeWithIOption(){
+		IWcTool newWCTool = new WCTool(new String[]{"-l", "hello world"});
+		String result = newWCTool.execute(null, null);
+		assertEquals(result, wcTool.getNewLineCount("hello world"));
 	}
 }

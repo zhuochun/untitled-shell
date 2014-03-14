@@ -87,6 +87,33 @@ public class SORTToolTest {
 		assertEquals(result, "");
 	}
 
+	@Test
+	public void executeWithIllegalOption(){
+		ISortTool newSortTool = new SORTTool(new String[]{"-i"});
+		newSortTool.execute(null, null);
+		assertEquals(9,newSortTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeWithNoOption(){
+		ISortTool newSortTool = new SORTTool(new String[]{"aaa bbb"});
+		String result = newSortTool.execute(null, null);
+		assertEquals(result, newSortTool.sortFile("aaa bbb"));
+	}
+	
+	@Test
+	public void executeWithHelpOption(){
+		ISortTool newSortTool = new SORTTool(new String[]{"-help"});
+		String result = newSortTool.execute(null, null);
+		assertEquals(result,newSortTool.getHelp());
+	}
+	
+	@Test
+	public void executeWithCOption(){
+		ISortTool newSortTool = new SORTTool(new String[]{"-c", "aaa bbb"});
+		String result = newSortTool.execute(null, null);
+		assertEquals(result,newSortTool.checkIfSorted("aaa bbb"));
+	}
 	
 	public static void writeFile(String fileName, String s) throws IOException {
 		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
