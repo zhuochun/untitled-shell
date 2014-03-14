@@ -8,6 +8,8 @@ import sg.edu.nus.comp.cs4218.impl.fileutils.*;
 public class CommandInterpreter {
 
 	public static ITool cmdToITool(String cmd, String[] args) {
+		cmd = cmd.toLowerCase();
+
 		if (cmd.equals("cat")) {
 			return new CATTool(args);
 		} else if (cmd.equals("cd")) {
@@ -21,7 +23,7 @@ public class CommandInterpreter {
 		} else if (cmd.equals("ls")) {
 			return new LSTool(args);
 		} else if (cmd.equals("move")) {
-			return new MoveTool(args);
+			return new MOVETool(args);
 		} else if (cmd.equals("pwd")) {
 			return new PWDTool();
 		} else if (cmd.equals("grep")) {
@@ -40,9 +42,9 @@ public class CommandInterpreter {
 			return new UNIQTool(args);
 		} else if (cmd.equals("wc")) {
 			return new WCTool(args);
+		} else {
+			return null;
 		}
-
-		return null;
 	}
 
 }

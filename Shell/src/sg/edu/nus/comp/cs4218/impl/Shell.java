@@ -37,12 +37,16 @@ public class Shell implements IShell {
 
 	@Override
 	public Runnable execute(ITool tool) {
-		return null;
+		runnable = new ToolRunnable(tool, "");
+		runnable.start();
+
+		return runnable;
 	}
 
 	@Override
 	public void stop(Runnable toolExecution) {
-		return ;
+		runnable.stop();
+		runnable = null;
 	}
 	
 	/**
@@ -77,20 +81,17 @@ public class Shell implements IShell {
 					ITool tool = shell.parse(commandLine);
 
 					if (tool != null) {
-						runnable = new ToolRunnable(tool, "");
-						runnable.start();
+						shell.execute(tool);
 					} else {
 						System.out.print("[" + Directory.get().toString() + "] $ ");
 					}
 				} else {
 					if (commandLine.equalsIgnoreCase("Ctrl-Z")) {
-						runnable.stop();
-						runnable = null;
+						shell.stop(null);
 						System.out.print("[" + Directory.get().toString() + "] $ ");
 					}
 				}
 			}
-
 		}
 	}
 }
