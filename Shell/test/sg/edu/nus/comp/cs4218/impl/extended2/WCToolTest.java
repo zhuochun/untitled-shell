@@ -2,8 +2,6 @@ package sg.edu.nus.comp.cs4218.impl.extended2;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

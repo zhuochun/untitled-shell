@@ -8,9 +8,7 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;

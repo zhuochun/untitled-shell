@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.junit.After;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.extended2.ICutTool;
-import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class CUTToolTest {
