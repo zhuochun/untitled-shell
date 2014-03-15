@@ -19,6 +19,7 @@ public class COMMToolTest {
 
 	private static ICommTool commTool; 
 	private String helpString;
+	private String testFileName = "test.txt";
 
 	public static void writeFile(String fileName, String s) throws IOException {
 		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
@@ -144,6 +145,46 @@ public class COMMToolTest {
 	public void compareFilesDoNotCheckSortStatusNotSortedFile() throws IOException { 
 		String result = commTool.compareFilesDoNotCheckSortStatus("testFile1.txt", "testFile3.txt");
 		assertEquals("aaa\nbbb\nccc\nddd\n\tzzz\n\tccc\n\taaa\n\tbbb\n", result);
+	}
+	
+	@Test
+	public void executeHelpOption() {
+		commTool = new COMMTool(new String[] {"-help"});
+		
+		String actual = commTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionNoParamEmptyString() {
+		commTool = new COMMTool(new String[] {""});
+		
+		String actual = commTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionNoParamNullString() {
+		commTool = new COMMTool(null);
+		
+		String actual = commTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeInvalidOption() {
+		commTool = new COMMTool(new String[] {"-asdf"});
+		
+		String actual = commTool.execute(null, null);
+		
+		assertEquals("Error: Illegal option -asdf\n" + helpString, actual);
+		assertNotEquals(0, commTool.getStatusCode());
 	}
 
 	@Test

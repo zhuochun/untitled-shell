@@ -273,7 +273,7 @@ public class COMMTool extends ATool implements ICommTool {
 			argList.parseArgs(this.args);
 		} catch (IllegalArgumentException e) {
 			setStatusCode(9);
-			return e.getMessage();
+			return e.getMessage() + "\n" + getHelp();
 		}
 
 		// help option?

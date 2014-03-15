@@ -150,6 +150,26 @@ public class CUTToolTest {
 	}
 	
 	@Test
+	public void executeNoOptionNoParamEmptyString() {
+		cutTool = new CUTTool(new String[] {""});
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionNoParamNullString() {
+		cutTool = new CUTTool(null);
+		
+		String actual = cutTool.execute(null, null);
+		
+		assertEquals(helpString, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
 	public void executeNoOption() {
 		cutTool = new CUTTool(new String[] {testFileName});
 		
