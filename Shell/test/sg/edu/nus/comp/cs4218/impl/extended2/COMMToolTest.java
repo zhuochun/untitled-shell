@@ -45,12 +45,12 @@ public class COMMToolTest {
 		// another sorted file
 		File sortedFile = new File("sortedFile.txt");
 		sortedFile.createNewFile();
-		writeFile("sortedFile.text", "aaa\ncaa\nccc\ndda\nddx\neee\n");
+		writeFile("sortedFile.txt", "aaa\ncaa\nccc\ndda\nddx\neee\n");
 
 		// another unsorted file
 		File unSortedFile = new File("unSortedFile.txt");
 		unSortedFile.createNewFile();
-		writeFile("sortedFile.text", "aaa\ncaa\ndda\nccc\nddx\neee\n");
+		writeFile("unSortedFile.txt", "aaa\ncaa\ndda\nccc\nddx\neee\n");
 	}
 
 	@AfterClass 
@@ -65,10 +65,10 @@ public class COMMToolTest {
 		File myFile3 = new File("testFile3.txt");
 		myFile3.delete();
 		
-		File sortedFile = new File("testFile1.txt");
+		File sortedFile = new File("sortedFile.txt");
 		sortedFile.delete();
 
-		File unSortedFile = new File("testFile2.txt");
+		File unSortedFile = new File("unSortedFile.txt");
 		unSortedFile.delete();			
 	}
 
