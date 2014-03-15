@@ -18,6 +18,7 @@ import sg.edu.nus.comp.cs4218.extended2.ICommTool;
 public class COMMToolTest {
 
 	private static ICommTool commTool; 
+	private String helpString;
 
 	public static void writeFile(String fileName, String s) throws IOException {
 		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
@@ -40,7 +41,16 @@ public class COMMToolTest {
 		File myFile3 = new File("testFile3.txt");
 		myFile3.createNewFile();
 		writeFile("testFile3.txt", "zzz\r\nccc\r\naaa\r\nbbb");
+		
+		// another sorted file
+		File sortedFile = new File("sortedFile.txt");
+		sortedFile.createNewFile();
+		writeFile("sortedFile.text", "aaa\ncaa\nccc\ndda\nddx\neee\n");
 
+		// another unsorted file
+		File unSortedFile = new File("unSortedFile.txt");
+		unSortedFile.createNewFile();
+		writeFile("sortedFile.text", "aaa\ncaa\ndda\nccc\nddx\neee\n");
 	}
 
 	@AfterClass 
@@ -54,22 +64,19 @@ public class COMMToolTest {
 
 		File myFile3 = new File("testFile3.txt");
 		myFile3.delete();
-			
+		
+		File sortedFile = new File("testFile1.txt");
+		sortedFile.delete();
+
+		File unSortedFile = new File("testFile2.txt");
+		unSortedFile.delete();			
 	}
 
 	@Before
 	public void before() throws IOException{
 		commTool = new COMMTool(null);
-	}
-
-	@After
-	public void after(){
-		commTool = null;
-	}
-	
-	@Test
-	public void getHelpTest() {
-		StringBuilder sb = new StringBuilder();
+		// set up get help string.
+		StringBuilder sb = new StringBuilder();;
 		
 		sb.append("Command Format - cut [OPTIONS] [FILE]\n");
 		sb.append("FILE - Name of the file, when no file is present (denoted by \"-\") use standard input\n");
@@ -79,9 +86,18 @@ public class COMMToolTest {
 		sb.append("  -d : Do not check that the input is correctly sorted.\n");
 		sb.append("  -help : Brief information about supported options.\n");
 		
+		helpString = sb.toString();
+	}
+
+	@After
+	public void after(){
+		commTool = null;
+	}
+	
+	@Test
+	public void getHelpTest() {
 		String actual = commTool.getHelp();
-		
-		assertEquals(sb.toString(), actual);
+		assertEquals(helpString, actual);
 	}
 
 
@@ -128,8 +144,25 @@ public class COMMToolTest {
 	public void compareFilesDoNotCheckSortStatusNotSortedFile() throws IOException { 
 		String result = commTool.compareFilesDoNotCheckSortStatus("testFile1.txt", "testFile3.txt");
 		assertEquals("aaa\nbbb\nccc\nddd\n\tzzz\n\tccc\n\taaa\n\tbbb\n", result);
-
 	}
 
-
+	@Test
+	public void executeOptionWithoutProperContent() {
+		commTool = new COMMTool(new String[] {"-c"});
+		
+		String actual = commTool.execute(null, null);
+		
+		assertEquals("Error: No file is specified!\n" + helpString, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeTwoOptionsWithoutProperContent() {
+		commTool = new COMMTool(new String[] {"-c", "-d"});
+		
+		String actual = commTool.execute(null, null);
+		
+		assertEquals("Error: More than one option.\n" + helpString, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
 }

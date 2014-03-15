@@ -265,6 +265,9 @@ public class COMMTool extends ATool implements ICommTool {
 
 	@Override
 	public String execute(File workingDir, String stdin) {
+		// by default we assume the routine executed successfully
+		setStatusCode(0);
+		
 		// parse arguments
 		try {
 			argList.parseArgs(this.args);
@@ -288,7 +291,7 @@ public class COMMTool extends ATool implements ICommTool {
 		// if both -c -d appears, throw exception
 		if (argList.hasOption("c") && argList.hasOption("d")) {
 			setStatusCode(9);
-			return "Option error!";
+			return "Error: More than one option.\n" + getHelp();
 		}
 		
 		String[] filePaths = argList.getParams();
@@ -296,7 +299,8 @@ public class COMMTool extends ATool implements ICommTool {
 		String result;
 		
 		if (filePaths.length != 2) {
-			throw new IllegalArgumentException("Parameters in wrong format!");
+			result = "Error: No file is specified!\n" + getHelp();
+			setStatusCode(9);
 		} else {
 			try {
 				fileAPath = PathUtils.pathResolver(workingDir, filePaths[0]);
