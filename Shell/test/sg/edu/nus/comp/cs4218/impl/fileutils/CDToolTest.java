@@ -248,21 +248,6 @@ public class CDToolTest {
 	}
 	
 	@Test
-	public void testExecutePathWithTudleAndAlphabets() {
-		tool = new CDTool(new String[] {"~oiwejf"});
-		
-		String output = tool.execute(workingDirFile, null);
-		
-		assertEquals("No such file or directory!", output);
-		
-		File testFolder = new File("~oiwejf");
-		testFolder.mkdir();
-		output = tool.execute(workingDirFile, null);
-		assertEquals(workingDir + "/~oiwejf", output);
-		testFolder.delete();
-	}
-	
-	@Test
 	public void testExecutePathWithAllThreeSpecialCharacters() {
 		tool = new CDTool(new String[] {"../~/~"});
 		

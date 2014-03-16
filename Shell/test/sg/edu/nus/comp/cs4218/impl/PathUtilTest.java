@@ -213,14 +213,6 @@ public class PathUtilTest {
 	}
 	
 	@Test
-	public void testPathWithTudleAndAlphabets() {
-		String path = "~oiwejf";
-		String newPath = PathUtils.pathResolver(currentDir, path);
-		
-		assertEquals(currentDir + "~oiwejf", newPath);
-	}
-	
-	@Test
 	public void testPathWithAllThreeSpecialCharacters() {
 		String path = "../~/~";
 		String newPath = PathUtils.pathResolver(currentDir, path);
