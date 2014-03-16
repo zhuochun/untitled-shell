@@ -76,16 +76,17 @@ public class ArgListTest {
 		args.parseArgs(arguments.split(" "));
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testParseWithOptionAfterParamsNoCheck() {
 		String arguments = "test.txt -c";
 
 		args.optionsFirstCheck = false;
+		args.invalidOptionCheck = false;
 		args.parseArgs(arguments.split(" "));
 
 		assertFalse(args.hasOptions());
 		assertArrayEquals(arguments.split(" "), args.getArguments());
-		assertArrayEquals("-c".split(" "), args.getInvalidOptions());
+		assertArrayEquals("c".split(" "), args.getInvalidOptions());
 	}
 	
 	@Test
@@ -309,6 +310,12 @@ public class ArgListTest {
 
 		assertEquals("test", cmd);
 		assertArrayEquals(new String[] { "-a", "\\|", "test2" },  arguments.toArray(new String[0]));
+	}
+	
+	@Test
+	public void testArgTypes() {
+		assertEquals(ArgType.RAW, ArgType.valueOf("RAW"));
+		assertEquals(3, ArgType.values().length);
 	}
 	
 }
