@@ -24,7 +24,7 @@ public class ECHOTool extends ATool implements IEchoTool{
 
 	@Override
 	public String echo(String toEcho) {
-		return toEcho + "\n";
+		return toEcho.replaceAll("\\\\(.)", "$1") + "\n";
 	}
 
 	@Override
@@ -40,8 +40,6 @@ public class ECHOTool extends ATool implements IEchoTool{
 			stdout.deleteCharAt(stdout.length() - 1); // remove last space
 		}
 		
-		stdout.append("\n");
-		
-		return stdout.toString();
+		return echo(stdout.toString());
 	}
 }
