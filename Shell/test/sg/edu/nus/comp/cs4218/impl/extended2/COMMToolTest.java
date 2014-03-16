@@ -23,6 +23,7 @@ public class COMMToolTest {
 	private static String testFile1 = "testFile1.txt";
 	private static String testFile2 = "testFile2.txt";
 	private static String testFile3 = "testFile3.txt";
+	private static String testFile4 = "testFile4.txt";
 	private static String sortedFileName = "sortedFile.txt";
 	private static String unSortedFileName = "unSortedFile.txt";
 	private static String nonExistFile = "askldjflksdfj.txt";
@@ -49,6 +50,11 @@ public class COMMToolTest {
 		myFile3.createNewFile();
 		writeFile("testFile3.txt", "zzz\r\nccc\r\naaa\r\nbbb");
 		
+		//testFile 3 will be the file in unsorted order 
+		File myFile4 = new File(testFile4);
+		myFile4.createNewFile();
+		writeFile("testFile4.txt", "aaa\r\nbba\r\nccc\r\nddd");
+
 		// another sorted file
 		File sortedFile = new File(sortedFileName);
 		sortedFile.createNewFile();
@@ -71,6 +77,9 @@ public class COMMToolTest {
 
 		File myFile3 = new File(testFile3);
 		myFile3.delete();
+		
+		File myFile4 = new File(testFile4);
+		myFile4.delete();
 		
 		File sortedFile = new File(sortedFileName);
 		sortedFile.delete();
@@ -292,6 +301,21 @@ public class COMMToolTest {
 		sb.append("\taaa\n\tcaa\n\tdda\n");
 		sb.append("comm: File 2 is not in sorted order \n\tccc\n\tddx\n\teee\nzzz\n");
 		sb.append("comm: File 1 is not in sorted order \nccc\naaa\nbbb\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithSortedAndSortedFile() {
+		commTool = new COMMTool(new String[] {testFile1, testFile4});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\t\taaa\n\tbba\nbbb\n\t\tccc\n\t\tddd\n");
 		
 		String expected = sb.toString();
 		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
