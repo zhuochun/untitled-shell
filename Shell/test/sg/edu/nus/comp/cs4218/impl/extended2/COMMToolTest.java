@@ -376,6 +376,22 @@ public class COMMToolTest {
 	}
 	
 	@Test
+	public void executeCompareWithUnsortedAndUnSortedFileDifferentOrder() {
+		commTool = new COMMTool(new String[] {"-c", unSortedFileName, testFile3});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("aaa\ncaa\ndda\n");
+		sb.append("comm: File 1 is not in sorted order \n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
 	public void executeCompareWithFileAndNonExistFile() {
 		commTool = new COMMTool(new String[] {"-c", testFile1, nonExistFile});
 		

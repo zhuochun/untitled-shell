@@ -76,6 +76,7 @@ public class ArgListTest {
 		args.parseArgs(arguments.split(" "));
 	}
 
+	@Test(expected=IllegalArgumentException.class)
 	public void testParseWithOptionAfterParamsNoCheck() {
 		String arguments = "test.txt -c";
 
