@@ -16,7 +16,7 @@ import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.ITool;
 
-public class ShellComboToolTest {
+public class IntegrationToolsTest {
 
 	Shell shell;
 	ITool tool;
