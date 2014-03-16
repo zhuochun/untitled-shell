@@ -103,9 +103,9 @@ public class COMMTool extends ATool implements ICommTool {
 			}
 			
 			// if file A out of order and we don't want to continue,
-			// flush the rest of file B and break the routine
+			// (flush the rest of file B -> this is not required) and break the routine
 			if (checkSorted && !sortedA && !continueAfterUnsorted) {
-				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
+//				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
 				break;
 			}
 			
@@ -132,10 +132,9 @@ public class COMMTool extends ATool implements ICommTool {
 			}
 			
 			// if file B out of order and we don't want to continue, flush
-			//the rest of file A and break the routine
+			// (the rest of file A-> this is not required) and break the routine
 			if (checkSorted && !sortedB && !continueAfterUnsorted) {
-				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
-				
+//				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
 				break;
 			}
 			

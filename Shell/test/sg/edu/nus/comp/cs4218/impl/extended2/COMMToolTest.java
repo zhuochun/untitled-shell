@@ -328,6 +328,52 @@ public class COMMToolTest {
 		assertEquals(expected, actual);
 		assertEquals(0, commTool.getStatusCode());
 	}
+
+	@Test
+	public void executeCompareWithSortedAndUnsortedFile() {
+		commTool = new COMMTool(new String[] {"-c", testFile1, testFile3});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("aaa\nbbb\nccc\nddd\n\tzzz\n");
+		sb.append("comm: File 2 is not in sorted order \n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCompareWithUnsortedAndSortedFile() {
+		commTool = new COMMTool(new String[] {"-c", testFile3, testFile1});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\taaa\n\tbbb\n\tccc\n\tddd\nzzz\n");
+		sb.append("comm: File 1 is not in sorted order \n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCompareWithUnsortedAndUnSortedFile() {
+		commTool = new COMMTool(new String[] {"-c", testFile3, unSortedFileName});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\taaa\n\tcaa\n\tdda\n");
+		sb.append("comm: File 2 is not in sorted order \n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
 	
 	@Test
 	public void executeCompareWithFileAndNonExistFile() {
@@ -361,6 +407,53 @@ public class COMMToolTest {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t\taaa\nbbb\n\tcaa\n\t\tccc\n\tdda\nddd\n\tddx\n\teee\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDontCheckWithSortedAndUnsortedFile() {
+		commTool = new COMMTool(new String[] {"-d", testFile1, testFile3});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("aaa\nbbb\nccc\nddd\n\tzzz\n");
+		sb.append("\tccc\n\taaa\n\tbbb\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDontCheckWithUnsortedAndSortedFile() {
+		commTool = new COMMTool(new String[] {"-d", testFile3, testFile1});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\taaa\n\tbbb\n\tccc\n\tddd\nzzz\n");
+		sb.append("ccc\naaa\nbbb\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDontCheckWithUnsortedAndUnSortedFile() {
+		commTool = new COMMTool(new String[] {"-d", testFile3, unSortedFileName});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\taaa\n\tcaa\n\tdda\n");
+		sb.append("\tccc\n\tddx\n\teee\nzzz\n");
+		sb.append("ccc\naaa\nbbb\n");
 		
 		String expected = sb.toString();
 		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
