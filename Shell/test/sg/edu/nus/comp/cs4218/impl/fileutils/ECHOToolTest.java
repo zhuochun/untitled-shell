@@ -41,6 +41,12 @@ public class ECHOToolTest {
 		
 		assertEquals("-\n", stdout);
 	}
+	@Test
+	public void testEcho(){
+		ECHOTool echo = new ECHOTool(null);
+		String input = "hello";
+		assertEquals("hello\n", echo.echo(input));
+	}
 }
 
 
