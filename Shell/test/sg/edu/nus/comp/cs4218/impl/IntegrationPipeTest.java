@@ -1,11 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 
 import org.junit.After;
@@ -16,7 +14,7 @@ import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.ITool;
 
-public class IntegrationToolsTest {
+public class IntegrationPipeTest {
 
 	Shell shell;
 	ITool tool;
@@ -50,28 +48,18 @@ public class IntegrationToolsTest {
 	}
 	
 	@Test
-	public void testBasicCombo() throws ClassNotFoundException, IOException {
-		runCommand("pwd");
-		assertEquals(currentPath.toString() + "\n", outContent.toString());
-
-		clearStdoutAndStderr();
-
-		runCommand("cd");
-		runCommand("pwd");
-		assertNotEquals(currentPath.toString() + "\n", outContent.toString());
-
-		// change to temp folder for testing
-		Directory.set(folder.getRoot());
-
-		folder.newFile("file1.txt");
-		folder.newFolder("testDir");
-		folder.newFile("file2.java");
+	public void testPipeIncompleteCommand() {
+		runCommand("ls |");
 		
-		// ls
-		clearStdoutAndStderr();
+		assertTrue(outContent.size() == 0);
+		assertTrue(errContent.toString().contains("Error"));
 
-		runCommand("ls");
-		assertEquals("file1.txt\nfile2.java\ntestDir\n", outContent.toString());
+		clearStdoutAndStderr();
+	}
+	
+	@Test
+	public void testEchoWithGrepCommand() {
+		runCommand("echo hello world | grep world");
 	}
 	
 	private void runCommand(String cmd) {
@@ -85,5 +73,4 @@ public class IntegrationToolsTest {
 		outContent.reset();
 		errContent.reset();
 	}
-
 }
