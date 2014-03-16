@@ -270,6 +270,29 @@ public class CUTToolTest {
 	}
 	
 	@Test
+	public void executeCutWithStdinAndSingleValueRange() {
+		cutTool = new CUTTool(new String[] {"-c", "1,2,3", "-"});
+		
+		StringBuilder expected = new StringBuilder();
+		StringBuilder stdin = new StringBuilder();
+		
+		expected.append("123\n");
+		expected.append("ask\n");
+		expected.append("1,2\n");
+		expected.append("1, \n");
+		
+		stdin.append("123456789012345\n");
+		stdin.append("askldjfklasdjfasd\n");
+		stdin.append("1,2,3,4,5,6,7,8,9\n");
+		stdin.append("1, 2, 3, 4, 5, 6, 7, 8, 9\n");
+		
+		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), stdin.toString());
+		
+		assertEquals(expected.toString(), actual);
+		assertEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
 	public void executeCutWithCurrentFileAndSingleValueRange() {
 		cutTool = new CUTTool(new String[] {"-c", "1,2,3", testFileName});
 		
@@ -582,6 +605,40 @@ public class CUTToolTest {
 		
 		assertEquals(expected, actual);
 		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDelimWithNonExistingFileAndSingleValueRange() {
+		cutTool = new CUTTool(new String[] {"-d", ",", "1,2,3", testFileNotExistName});
+		
+		String expected = "Error: No such file or directory";
+		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertNotEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDelimWithStdinAndSingleValueRange() {
+		cutTool = new CUTTool(new String[] {"-d", ",", "1,2,3", "-"});
+		
+		StringBuilder expected = new StringBuilder();
+		StringBuilder stdin = new StringBuilder();
+		
+		expected.append("123456789012345\n");
+		expected.append("askldjfklasdjfasd\n");
+		expected.append("1,2,3\n");
+		expected.append("1, 2, 3\n");
+		
+		stdin.append("123456789012345\n");
+		stdin.append("askldjfklasdjfasd\n");
+		stdin.append("1,2,3,4,5,6,7,8,9\n");
+		stdin.append("1, 2, 3, 4, 5, 6, 7, 8, 9\n");
+		
+		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), stdin.toString());
+		
+		assertEquals(expected.toString(), actual);
+		assertEquals(0, cutTool.getStatusCode());
 	}
 	
 	@Test
