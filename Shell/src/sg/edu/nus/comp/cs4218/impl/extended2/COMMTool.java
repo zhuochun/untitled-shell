@@ -54,6 +54,7 @@ public class COMMTool extends ATool implements ICommTool {
 				result.append(lines[curLine]);
 				result.append("\n");
 				
+				prevLine[curFile] = lines[curLine];
 				curLine ++;
 			} else {
 				break;
@@ -79,11 +80,12 @@ public class COMMTool extends ATool implements ICommTool {
 		i = j = 0;
 		
 		while (i < linesA.length && j < linesB.length) {
-			// consecutive strings unique to file 1
-			while (sortedA && i < linesA.length && j < linesB.length &&
-				   linesA[i].compareTo(linesB[j]) < 0) {
+			// while we still can do comparing, output consecutive strings unique to file 1
+			while ((sortedA && sortedB || continueAfterUnsorted) && 
+					i < linesA.length && j < linesB.length &&
+				    linesA[i].compareTo(linesB[j]) < 0) {
 				if (checkSorted) {
-					if (!sortedA || !isSorted(linesA[i], 0)) {
+					if (!isSorted(linesA[i], 0)) {
 						if (sortedA) {
 							result.append("comm: File 1 is not in sorted order \n");
 							sortedA = false;
@@ -95,22 +97,24 @@ public class COMMTool extends ATool implements ICommTool {
 					result.append(linesA[i]);
 					result.append("\n");
 					
+					prevLine[0] = linesA[i];
 					i ++;
 				}
 			}
 			
-			// if file A out of order, flush the rest of file B and break the
-			// routine
+			// if file A out of order and we don't want to continue,
+			// flush the rest of file B and break the routine
 			if (checkSorted && !sortedA && !continueAfterUnsorted) {
 				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
 				break;
 			}
 			
-			// consecutive strings unique to file 2
-			while (sortedB && i < linesA.length && j < linesB.length &&
-				   linesA[i].compareTo(linesB[j]) > 0) {
+			// while we still can do comparing, output consecutive strings unique to file 2
+			while ((sortedA && sortedB || continueAfterUnsorted) &&
+					i < linesA.length && j < linesB.length &&
+				    linesA[i].compareTo(linesB[j]) > 0) {
 				if (checkSorted) {
-					if (!sortedB || !isSorted(linesB[i], 1)) {
+					if (!isSorted(linesB[j], 1)) {
 						if (sortedB) {
 							result.append("comm: File 2 is not in sorted order \n");
 							sortedB = false;
@@ -122,12 +126,13 @@ public class COMMTool extends ATool implements ICommTool {
 					result.append("\t" + linesB[j]);
 					result.append("\n");
 					
+					prevLine[1] = linesB[j];
 					j ++;
 				}
 			}
 			
-			// if file B out of order, flush the rest of file A and break the
-			// routine
+			// if file B out of order and we don't want to continue, flush
+			//the rest of file A and break the routine
 			if (checkSorted && !sortedB && !continueAfterUnsorted) {
 				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
 				
@@ -135,17 +140,18 @@ public class COMMTool extends ATool implements ICommTool {
 			}
 			
 			// consecutive strings common to both files
-			while (i < linesA.length && j < linesB.length &&
-				   linesA[i].compareTo(linesB[j]) == 0) {
+			while ((sortedA && sortedB || continueAfterUnsorted) &&
+					i < linesA.length && j < linesB.length &&
+					linesA[i].compareTo(linesB[j]) == 0) {
 				if (checkSorted) {
-					if (!sortedA || !isSorted(linesA[i], 0)) {
+					if (!isSorted(linesA[i], 0)) {
 						if (sortedA) {
 							result.append("comm: File 1 is not in sorted order \n");
 							sortedA = false;
 						}
 					}
 					
-					if (!sortedB || !isSorted(linesB[i], 1)) {
+					if (!isSorted(linesB[j], 1)) {
 						if (sortedB) {
 							result.append("comm: File 2 is not in sorted order \n");
 							sortedB = false;
@@ -157,6 +163,8 @@ public class COMMTool extends ATool implements ICommTool {
 					result.append("\t\t" + linesA[i]);
 					result.append("\n");
 					
+					prevLine[0] = linesA[i];
+					prevLine[1] = linesB[j];
 					i ++;
 					j ++;
 				}
@@ -166,7 +174,7 @@ public class COMMTool extends ATool implements ICommTool {
 		// if both of the files are still sorted, we run out of at least one
 		// of the file. We need to flush out the rest of the other file if we
 		// still have remainings of the other file.
-		if (sortedA && sortedB) {
+		if (sortedA && sortedB || continueAfterUnsorted) {
 			// NOTE: two conditions below will not satisfy together
 			
 			// if we still have remaining lines in file A, flush them out
