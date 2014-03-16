@@ -2,9 +2,16 @@ package sg.edu.nus.comp.cs4218.impl.extended1;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import sg.edu.nus.comp.cs4218.impl.FileUtils;
 
 public class GREPToolTest {
 	
@@ -22,6 +29,9 @@ public class GREPToolTest {
 			"123\n789\n0123\nhello\nhello test\nyahoo\nk09lk";
 	private String partMatchOutput= "test\ntest\ntest\ntest";
 	private String nonMatchOutput = "123\n789\n0123\nhello\nyahoo\nk09lk";
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
 	@Before
 	public void setUp() throws Exception {
@@ -161,5 +171,34 @@ public class GREPToolTest {
 		String stdout = grep.execute(null, input);
 		assertEquals(matchOutput, stdout);
 	}
+	
+	@Test
+	public void testExecuteWithNoOptions() throws IOException {
+		File test = folder.newFile("test.txt");
+		FileUtils.createDummyFile(test, input);
 
+		grep = new GREPTool("test test.txt".split(" "));
+		String stdout = grep.execute(folder.getRoot(), null);
+		assertEquals(matchOutput, stdout);
+	}
+
+	@Test
+	public void testExecuteWithOptionA() throws IOException {
+		File test = folder.newFile("test.txt");
+		FileUtils.createDummyFile(test, input);
+
+		grep = new GREPTool("-A 30 test test.txt".split(" "));
+		String stdout = grep.execute(folder.getRoot(), null);
+		assertEquals(input, stdout);
+	}
+
+	@Test
+	public void testExecuteWithOptionC() throws IOException {
+		File test = folder.newFile("test.txt");
+		FileUtils.createDummyFile(test, input);
+
+		grep = new GREPTool("-c test test.txt".split(" "));
+		String stdout = grep.execute(folder.getRoot(), null);
+		assertEquals("3", stdout);
+	}
 }

@@ -95,12 +95,10 @@ public class FileUtils {
 		return compareResult;
 	}
 	
-	public static void createDummyFile(File file, int length) throws Exception, IOException {
-		if (file.exists()) {
-			throw new Exception("File exists!");
+	public static void createDummyFile(File file, int length) throws IOException {
+		if (!file.exists()) {
+			file.createNewFile();
 		}
-		
-		file.createNewFile();
 		
 		BufferedWriter output = new BufferedWriter(new FileWriter(file));
 		
@@ -108,6 +106,16 @@ public class FileUtils {
 			output.write(48);
 		}
 		
+		output.close();
+	}
+
+	public static void createDummyFile(File file, String content) throws IOException {
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		
+		BufferedWriter output = new BufferedWriter(new FileWriter(file));
+		output.write(content);
 		output.close();
 	}
 }

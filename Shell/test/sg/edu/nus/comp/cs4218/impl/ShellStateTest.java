@@ -18,6 +18,7 @@ public class ShellStateTest {
 	ITool tool;
 	File currentPath;
 	ToolRunnable runnable;
+	Directory dir = new Directory();
 	// to capture stdin/stdout
 	ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -50,7 +51,7 @@ public class ShellStateTest {
 
 		assertEquals(PathUtils.pathResolver(currentPath, "~"), Directory.get() + "/");
 	}
-
+	
 	@Test
 	public void testCdUp() throws ClassNotFoundException {
 		tool = shell.parse("cd ..");
@@ -59,6 +60,17 @@ public class ShellStateTest {
 		runnable.run();
 
 		assertEquals(PathUtils.pathResolver(currentPath, ".."), Directory.get() + "/");
+	}
+
+	@Test
+	public void testCdUpAtRoot() {
+		Directory.set(PathUtils.pathResolver(currentPath, "/")); // set to root
+		tool = shell.parse("cd ../..");
+
+		runnable = new ToolRunnable(tool, "");
+		runnable.run();
+
+		assertEquals("/", Directory.get().toString());
 	}
 
 	@Test

@@ -83,4 +83,12 @@ public class FileUtilsTest {
 		
 		assertFalse(FileUtils.diffTwoFiles(testFile1, testFile3));
 	}
+	
+	@Test
+	public void testWriteAndRead() throws Exception {
+		String content = "abcdefg\nabcdefg";
+		FileUtils.createDummyFile(testFile1, content);
+
+		assertEquals(content, FileUtils.readFileContent(testFile1));
+	}
 }
