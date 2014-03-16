@@ -60,7 +60,6 @@ public class SORTTool extends ATool implements ISortTool {
 		int disorderLineIndex = -1;  
 		String []stringToCheck = input.split("\r\n");
 		Vector <String> stringToCheckVect = new Vector<String>(Arrays.asList(stringToCheck));
-		System.out.println(stringToCheckVect.get(0));
 
 		for(int i = 0;i < stringToCheckVect.size()-1; i++){
 			if(stringToCheckVect.get(i).compareToIgnoreCase(stringToCheckVect.get(i+1))>0 && 
@@ -108,11 +107,9 @@ public class SORTTool extends ATool implements ISortTool {
 		}
 		// command does not have options and parameters
 		try {
-			System.out.println("execute here");
 			String file = argList.getParam(0);
 			String filePath = PathUtils.pathResolver(workingDir, file);
 			String content = FileUtils.readFileContent(new File(filePath));
-			System.out.println(content + "execute here");
 			
 			if(argList.hasOption("c")){
 				return checkIfSorted(content);

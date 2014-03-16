@@ -92,7 +92,6 @@ public class SORTToolTest {
 	public void executeWithNoOption(){
 		ISortTool newSortTool = new SORTTool(new String[]{"sortFile.txt"});
 		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
-		System.out.println(result);
 		assertEquals(result, newSortTool.sortFile("aaa\r\nbbb\r\nccc\r\nddd\r\neee"));
 
 
@@ -101,7 +100,6 @@ public class SORTToolTest {
 	public void executeWithCOption(){
 		ISortTool newSortTool = new SORTTool(new String[]{"-c", "sortFile.txt"});
 		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
-		System.out.println(result);
 		assertEquals(result,newSortTool.checkIfSorted("aaa\r\nbbb\r\nccc\r\nddd\r\neee"));
 
 	}
