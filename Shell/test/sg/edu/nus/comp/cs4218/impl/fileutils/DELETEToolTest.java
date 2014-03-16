@@ -72,5 +72,38 @@ public class DELETEToolTest {
 		assertNotEquals(0, IDeleteTool.getStatusCode());
 		assertTrue(folder.getRoot().exists());
 	}
+	@Test
+	public void testDeleteWithNullArgs(){
+		IDeleteTool.execute(null, null);
+		assertNotEquals(0,IDeleteTool.getStatusCode());
+	}
+	@Test
+	public void CopyExecuteWithLessArgs() {
+		IDeleteTool = new DELETETool("".split(" "));
+		IDeleteTool.execute(null,null);
 
+		assertNotEquals(0, IDeleteTool.getStatusCode());
+	}
+
+	@Test
+	public void CopyExecuteWithNonExistsArgs() {
+		IDeleteTool = new DELETETool("a.txt b.txt".split(" "));
+		IDeleteTool.execute(folder.getRoot(), null);
+
+		assertNotEquals(0, IDeleteTool.getStatusCode());
+	}
+	@Test
+	public void testExecuteNormalCommand() throws IOException {
+		folder.newFile("toDelete.txt");
+
+		IDeleteTool = new DELETETool(
+				"toDelete.txt".split(" "));
+		IDeleteTool.execute(folder.getRoot(), null);
+
+		File toDelete = new File(PathUtils.pathResolver(folder.getRoot(),
+				"toDelete.txt"));
+
+		assertEquals(0, IDeleteTool.getStatusCode());
+		assertFalse(toDelete.exists());
+	}
 }
