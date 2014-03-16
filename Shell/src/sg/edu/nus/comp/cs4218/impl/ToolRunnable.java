@@ -51,12 +51,7 @@ public class ToolRunnable implements Runnable {
 		thread.stop();
 	}
 	
-	public boolean isAlive() {
-		return thread.isAlive();
-	}
-	
 	public boolean isFinished() {
 		return finished;
 	}
-
 }
