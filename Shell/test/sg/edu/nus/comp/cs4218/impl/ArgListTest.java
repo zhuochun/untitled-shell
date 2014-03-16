@@ -101,6 +101,7 @@ public class ArgListTest {
 		assertTrue(args.hasArgument("-test"));
 		assertTrue(args.hasOptions());
 		assertTrue(args.hasOption("test"));
+		assertTrue(args.hasInvalidOptions());
 		assertEquals("test", args.getOption(0));
 
 		assertArrayEquals(new String[] { "-test", "-1", "--", "h we", ">", "|", "-", "test" }, args.getArguments());
@@ -131,6 +132,7 @@ public class ArgListTest {
 		args.registerAcceptableOption("t", null, null);
 		args.parseArgs(arguments);
 		
+		assertTrue(args.hasParam("-"));
 		assertFalse(args.hasInvalidOptions());
 		assertEquals("12", args.getOptionValue("N"));
 		assertEquals(null, args.getOptionValue("T"));
@@ -139,18 +141,6 @@ public class ArgListTest {
 		assertArrayEquals(new String[] { "N", "T", "S", "t" }, args.getOptions());
 	}
 	
-	@Test
-	public void testParseWithStringValueOptions() {
-		String[] arguments = { "-n", "\"abc", "-t", "'abc" };
-
-		args.invalidOptionCheck = false;
-		args.registerAcceptableOption("n", ArgType.STRING, null);
-		args.registerAcceptableOption("t", ArgType.STRING, null);
-		args.parseArgs(arguments);
-
-		assertArrayEquals(new String[] { "n", "t" }, args.getInvalidOptions());
-	}
-
 	@Test(expected=IllegalArgumentException.class)
 	public void testParseWithInvalidNumValueOptions() {
 		String[] arguments = { "-N", "-T" };
@@ -163,6 +153,15 @@ public class ArgListTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testParseWithInvalidStringValueOptions() {
 		String[] arguments = { "-N", "'T" };
+		
+		args.invalidOptionCheck = true;
+		args.registerAcceptableOption("N", ArgType.STRING, null);
+		args.parseArgs(arguments);
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testParseWithInvalidStringValueOptions2() {
+		String[] arguments = { "-N", "\"T\"" };
 		
 		args.invalidOptionCheck = true;
 		args.registerAcceptableOption("N", ArgType.STRING, null);
