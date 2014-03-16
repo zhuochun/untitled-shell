@@ -62,33 +62,46 @@ public class SORTToolTest {
 	// input should be string 
 	@Test
 	public void sortFileTestForSortedFile() {
+		//executeThisBeforeClass
 		String result = sortTool.sortFile("aaa\r\nbbb\r\nccc\r\nddd\r\neee");
+		//String result = sortTool.sortFile("sortFile.txt");
 		assertEquals(result, "aaa\nbbb\nccc\nddd\neee\n");
+		//executeThisAfterClass
 	}
 
 	//test sortFile method on unsorted file
 	@Test
 	public void sortFileTestForUnsortedFile() {
+		//executeThisBeforeClass
 		String result = sortTool.sortFile("zzz\r\nbbb\r\naaa\r\nggg\r\nfff");
+		//String result = sortTool.sortFile("unSortFile.txt");
 		assertEquals(result, "aaa\nbbb\nfff\nggg\nzzz\n");
+		//executeThisAfterClass
 	}
 
 	//test checkIfSorted method on sorted file
 	@Test
 	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
+		//executeThisBeforeClass
 		String result = sortTool.checkIfSorted("zzz\r\nbbb\r\naaa\r\nggg\r\nfff");
+		//String result = sortTool.checkIfSorted("unSortFile.txt");
 		assertEquals(result, "sort: sortFile.txt:2 disorder: bbb\n");
+		//executeThisAfterClass
 	}
 
 	//test checkIfSorted method on unsorted file
 	@Test
 	public void checkIfSortedTestForSortedFile() {
+		//executeThisBeforeClass
 		String result = sortTool.checkIfSorted("aaa\r\nbbb\r\nccc\r\nddd\r\neee");
+		//String result = sortTool.checkIfSorted("sortFile.txt");
 		assertEquals(result, "");
+		//executeThisAfterClass
 	}
 
 	@Test
 	public void executeWithIllegalOption(){
+		
 		ISortTool newSortTool = new SORTTool(new String[]{"-i"});
 		newSortTool.execute(null, null);
 		assertEquals(9,newSortTool.getStatusCode());
@@ -96,9 +109,14 @@ public class SORTToolTest {
 	
 	@Test
 	public void executeWithNoOption(){
+		//executeThisBeforeClass
 		ISortTool newSortTool = new SORTTool(new String[]{"aaa bbb"});
+		//ISortTool newSortTool = new SORTTool(new String[]{"sortFile.txt"});
 		String result = newSortTool.execute(null, null);
 		assertEquals(result, newSortTool.sortFile("aaa bbb"));
+		//assertEquals(result, newSortTool.sortFile("sortFile.txt"));
+		//executeThisAfterClass
+		
 	}
 	
 	@Test
@@ -110,9 +128,13 @@ public class SORTToolTest {
 	
 	@Test
 	public void executeWithCOption(){
+		//executeThisBeforeClass
 		ISortTool newSortTool = new SORTTool(new String[]{"-c", "aaa bbb"});
+		//ISortTool newSortTool = new SORTTool(new String[]{"-c", "sortFile.txt"});
 		String result = newSortTool.execute(null, null);
 		assertEquals(result,newSortTool.checkIfSorted("aaa bbb"));
+		//assertEquals(result, newSortTool.checkIfSorted("sortFile.txt"));
+		//executeThisAfterClass
 	}
 	
 	public static void writeFile(String fileName, String s) throws IOException {
