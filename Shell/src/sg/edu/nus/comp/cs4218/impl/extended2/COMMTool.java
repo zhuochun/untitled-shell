@@ -65,10 +65,9 @@ public class COMMTool extends ATool implements ICommTool {
 									 String input2,
 									 boolean checkSorted,
 									 boolean continueAfterUnsorted) throws IOException, RuntimeException {
+		StringBuilder result = new StringBuilder();
 		String[] linesA = FileUtils.readFileLines(new File(input1));
 		String[] linesB = FileUtils.readFileLines(new File(input2));
-		
-		StringBuilder result = new StringBuilder();
 		
 		// see if current file is sorted, used to judge 
 		boolean sortedA, sortedB;
@@ -204,11 +203,11 @@ public class COMMTool extends ATool implements ICommTool {
 		try {
 			result = compareFilesGeneric(input1, input2, true, true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setStatusCode(9);
+			result = e.getMessage() + "\n";
 		} catch (RuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setStatusCode(9);
+			result = e.getMessage() + "\n";
 		}
 		
 		return result;
@@ -221,11 +220,11 @@ public class COMMTool extends ATool implements ICommTool {
 		try {
 			result = compareFilesGeneric(input1, input2, true, false);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setStatusCode(9);
+			result = e.getMessage() + "\n";
 		} catch (RuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setStatusCode(9);
+			result = e.getMessage() + "\n";
 		}
 		
 		return result;
@@ -238,11 +237,11 @@ public class COMMTool extends ATool implements ICommTool {
 		try {
 			result = compareFilesGeneric(input1, input2, false, true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setStatusCode(9);
+			result = e.getMessage() + "\n";
 		} catch (RuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setStatusCode(9);
+			result = e.getMessage() + "\n";
 		}
 		
 		return result;
@@ -302,13 +301,8 @@ public class COMMTool extends ATool implements ICommTool {
 			result = "Error: No file is specified!\n" + getHelp();
 			setStatusCode(9);
 		} else {
-			try {
-				fileAPath = PathUtils.pathResolver(workingDir, filePaths[0]);
-				fileBPath = PathUtils.pathResolver(workingDir, filePaths[1]);
-			} catch (RuntimeException e) {
-				setStatusCode(2);
-				return e.getMessage();
-			}
+			fileAPath = PathUtils.pathResolver(workingDir, filePaths[0]);
+			fileBPath = PathUtils.pathResolver(workingDir, filePaths[1]);
 			
 			// process input
 			if (argList.hasOption("c")) {

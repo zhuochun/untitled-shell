@@ -18,6 +18,12 @@ import sg.edu.nus.comp.cs4218.extended2.ISortTool;
 public class SORTToolTest {
 
 	private static ISortTool sortTool;
+	
+	public static void writeFile(String fileName, String s) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+		out.write(s);
+		out.close();
+	}
 
 	@BeforeClass
 	public static void executeThisBeforeClass() throws IOException {
@@ -135,11 +141,5 @@ public class SORTToolTest {
 		assertEquals(result,newSortTool.checkIfSorted("aaa bbb"));
 		//assertEquals(result, newSortTool.checkIfSorted("sortFile.txt"));
 		//executeThisAfterClass
-	}
-	
-	public static void writeFile(String fileName, String s) throws IOException {
-		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-		out.write(s);
-		out.close();
 	}
 }

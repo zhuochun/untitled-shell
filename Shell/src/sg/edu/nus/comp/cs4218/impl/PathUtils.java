@@ -19,13 +19,18 @@ public class PathUtils {
 	 * directory, "aa/bb/" will be returned. Further more, "/" is not allowed
 	 * in a file/folder name.
 	 * 
+	 * Special cases:
+	 * 		1. Starting with '~/' will be considered as starting from home dir
+	 * 		2. Starting with '/' will be considered as starting from root dir
+	 * 		3. All '*' fuzzy search expression are not supported currently  
+	 * 
 	 * @param currentPath
 	 * @param newPath
 	 * @return
 	 */
 	public static String pathResolver(String currentPath, String newPath) {
 		String finalAbsolutePath;
-		
+		// special cases
 		if (newPath.equals("~")) {
 			newPath = System.getProperty("user.home") + "/";
 		} else

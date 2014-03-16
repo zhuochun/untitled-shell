@@ -14,12 +14,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.extended2.ICommTool;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class COMMToolTest {
 
 	private static ICommTool commTool; 
 	private String helpString;
-	private String testFileName = "test.txt";
+	private static String testFile1 = "testFile1.txt";
+	private static String testFile2 = "testFile2.txt";
+	private static String testFile3 = "testFile3.txt";
+	private static String sortedFileName = "sortedFile.txt";
+	private static String unSortedFileName = "unSortedFile.txt";
+	private static String nonExistFile = "askldjflksdfj.txt";
 
 	public static void writeFile(String fileName, String s) throws IOException {
 		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
@@ -30,26 +36,26 @@ public class COMMToolTest {
 	@BeforeClass 
 	public static void executeThisBeforeClass() throws IOException{
 
-		File myFile1 = new File("testFile1.txt");
+		File myFile1 = new File(testFile1);
 		myFile1.createNewFile();
 		writeFile("testFile1.txt", "aaa\r\nbbb\r\nccc\r\nddd");
 
-		File myFile2 = new File("testFile2.txt");
+		File myFile2 = new File(testFile2);
 		myFile2.createNewFile();
 		writeFile("testFile2.txt", "aaf\r\nabb\r\nccc\r\nfff");
 
 		//testFile 3 will be the file in unsorted order 
-		File myFile3 = new File("testFile3.txt");
+		File myFile3 = new File(testFile3);
 		myFile3.createNewFile();
 		writeFile("testFile3.txt", "zzz\r\nccc\r\naaa\r\nbbb");
 		
 		// another sorted file
-		File sortedFile = new File("sortedFile.txt");
+		File sortedFile = new File(sortedFileName);
 		sortedFile.createNewFile();
 		writeFile("sortedFile.txt", "aaa\ncaa\nccc\ndda\nddx\neee\n");
 
 		// another unsorted file
-		File unSortedFile = new File("unSortedFile.txt");
+		File unSortedFile = new File(unSortedFileName);
 		unSortedFile.createNewFile();
 		writeFile("unSortedFile.txt", "aaa\ncaa\ndda\nccc\nddx\neee\n");
 	}
@@ -57,19 +63,19 @@ public class COMMToolTest {
 	@AfterClass 
 	public static void executeThisAfterClass(){
 
-		File myFile1 = new File("testFile1.txt");
+		File myFile1 = new File(testFile1);
 		myFile1.delete();
 
-		File myFile2 = new File("testFile2.txt");
+		File myFile2 = new File(testFile2);
 		myFile2.delete();
 
-		File myFile3 = new File("testFile3.txt");
+		File myFile3 = new File(testFile3);
 		myFile3.delete();
 		
-		File sortedFile = new File("sortedFile.txt");
+		File sortedFile = new File(sortedFileName);
 		sortedFile.delete();
 
-		File unSortedFile = new File("unSortedFile.txt");
+		File unSortedFile = new File(unSortedFileName);
 		unSortedFile.delete();			
 	}
 
@@ -204,6 +210,126 @@ public class COMMToolTest {
 		String actual = commTool.execute(null, null);
 		
 		assertEquals("Error: More than one option.\n" + helpString, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithIdenticalFile() {
+		commTool = new COMMTool(new String[] {testFile1, testFile1});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\t\taaa\n\t\tbbb\n\t\tccc\n\t\tddd\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithFileAndNonExistFile() {
+		commTool = new COMMTool(new String[] {testFile1, nonExistFile});
+		
+		String expected = "Error: No such file or directory\n";
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithTwoSortedFile() {
+		commTool = new COMMTool(new String[] {testFile1, sortedFileName});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t\taaa\nbbb\n\tcaa\n\t\tccc\n\tdda\nddd\n\tddx\n\teee\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCompareWithIdenticalFile() {
+		commTool = new COMMTool(new String[] {"-c", testFile1, testFile1});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\t\taaa\n\t\tbbb\n\t\tccc\n\t\tddd\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCompareWithTwoSortedFile() {
+		commTool = new COMMTool(new String[] {"-c", testFile1, sortedFileName});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t\taaa\nbbb\n\tcaa\n\t\tccc\n\tdda\nddd\n\tddx\n\teee\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCompareWithFileAndNonExistFile() {
+		commTool = new COMMTool(new String[] {"-c", testFile1, nonExistFile});
+		
+		String expected = "Error: No such file or directory\n";
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDontCheckSortWithIdenticalFile() {
+		commTool = new COMMTool(new String[] {"-d", testFile1, testFile1});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\t\taaa\n\t\tbbb\n\t\tccc\n\t\tddd\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDontCheckSortWithTwoSortedFile() {
+		commTool = new COMMTool(new String[] {"-d", testFile1, sortedFileName});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t\taaa\nbbb\n\tcaa\n\t\tccc\n\tdda\nddd\n\tddx\n\teee\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeDontCheckSortWithFileAndNonExistFile() {
+		commTool = new COMMTool(new String[] {"-d", testFile1, nonExistFile});
+		
+		String expected = "Error: No such file or directory\n";
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
 		assertNotEquals(0, commTool.getStatusCode());
 	}
 }
