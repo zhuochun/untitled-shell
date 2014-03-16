@@ -2,6 +2,9 @@ package sg.edu.nus.comp.cs4218.impl;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,14 +19,24 @@ public class ShellTest {
 	CommandInterpreter interpreter = new CommandInterpreter();
 	ITool tool;
 
+	// to capture stdin/stdout
+	ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
 	@Before
 	public void setUp() throws Exception {
 		shell = new Shell();
+
+	    System.setOut(new PrintStream(outContent));
+	    System.setErr(new PrintStream(errContent));
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		shell = null;
+
+	    System.setOut(null);
+	    System.setErr(null);
 	}
 
 	@Test
