@@ -63,6 +63,39 @@ public class COMMTool extends ATool implements ICommTool {
 		}
 	}
 	
+	private boolean updateSortedStatus(boolean checkSorted, boolean isSorted,
+									   String line, int fileIndex,
+									   StringBuilder result) {
+		boolean updatedSortedStatus = true;
+		
+		if (checkSorted) {
+			if (!isSorted(line, fileIndex)) {
+				if (isSorted) {
+					result.append(String.format("comm: File %d is not in sorted order \n", fileIndex + 1));
+					updatedSortedStatus = false;
+				}
+			}
+		}
+		
+		return updatedSortedStatus;
+	}
+	
+	private boolean continueToNexPos(boolean isSorted, boolean continueAfterUnsorted,
+									 String preced, String line,
+									 StringBuilder result, int fileIndex) {
+		if (isSorted || continueAfterUnsorted) {
+			result.append(preced + line);
+			result.append("\n");
+			
+			prevLine[fileIndex & 1] = line;
+			prevLine[(fileIndex >> 1) | (fileIndex & 1)] = line;
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private String compareFilesGeneric(String input1,
 									 String input2,
 									 boolean checkSorted,
@@ -71,102 +104,62 @@ public class COMMTool extends ATool implements ICommTool {
 		String[] linesA = FileUtils.readFileLines(new File(input1));
 		String[] linesB = FileUtils.readFileLines(new File(input2));
 		
-		// see if current file is sorted, used to judge 
-		boolean sortedA, sortedB;
-		int i, j;
-		
 		prevLine = new String[2];
 		
-		sortedA = sortedB = true;
-		i = j = 0;
+		boolean sortedA, sortedB;
+		int curPosA, curPosB;
 		
-		while (i < linesA.length && j < linesB.length) {
+		sortedA = sortedB = true;
+		curPosA = curPosB = 0;
+		
+		while (curPosA < linesA.length && curPosB < linesB.length) {
 			// while we still can do comparing, output consecutive strings unique to file 1
 			while ((sortedA && sortedB || continueAfterUnsorted) && 
-					i < linesA.length && j < linesB.length &&
-				    linesA[i].compareTo(linesB[j]) < 0) {
-				if (checkSorted) {
-					if (!isSorted(linesA[i], 0)) {
-						if (sortedA) {
-							result.append("comm: File 1 is not in sorted order \n");
-							sortedA = false;
-						}
-					}
-				}
+					curPosA < linesA.length && curPosB < linesB.length &&
+				    linesA[curPosA].compareTo(linesB[curPosB]) < 0) {
 				
-				if (sortedA || continueAfterUnsorted) {
-					result.append(linesA[i]);
-					result.append("\n");
-					
-					prevLine[0] = linesA[i];
-					i ++;
+				sortedA = updateSortedStatus(checkSorted, sortedA, linesA[curPosA], 0, result);
+				
+				if (continueToNexPos(sortedA, continueAfterUnsorted, "", linesA[curPosA], result, 0)) {
+					curPosA ++;
 				}
 			}
 			
 			// if file A out of order and we don't want to continue,
 			// (flush the rest of file B -> this is not required) and break the routine
 			if (checkSorted && !sortedA && !continueAfterUnsorted) {
-//				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
 				break;
 			}
 			
 			// while we still can do comparing, output consecutive strings unique to file 2
 			while ((sortedA && sortedB || continueAfterUnsorted) &&
-					i < linesA.length && j < linesB.length &&
-				    linesA[i].compareTo(linesB[j]) > 0) {
-				if (checkSorted) {
-					if (!isSorted(linesB[j], 1)) {
-						if (sortedB) {
-							result.append("comm: File 2 is not in sorted order \n");
-							sortedB = false;
-						}
-					}
-				}
+					curPosA < linesA.length && curPosB < linesB.length &&
+				    linesA[curPosA].compareTo(linesB[curPosB]) > 0) {
 				
-				if (sortedB || continueAfterUnsorted) {
-					result.append("\t" + linesB[j]);
-					result.append("\n");
-					
-					prevLine[1] = linesB[j];
-					j ++;
+				sortedB = updateSortedStatus(checkSorted, sortedB, linesB[curPosB], 1, result);
+				
+				if (continueToNexPos(sortedB, continueAfterUnsorted, "\t", linesB[curPosB], result, 1)) {
+					curPosB ++;
 				}
 			}
 			
 			// if file B out of order and we don't want to continue, flush
 			// (the rest of file A-> this is not required) and break the routine
 			if (checkSorted && !sortedB && !continueAfterUnsorted) {
-//				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
 				break;
 			}
 			
 			// consecutive strings common to both files
 			while ((sortedA && sortedB || continueAfterUnsorted) &&
-					i < linesA.length && j < linesB.length &&
-					linesA[i].compareTo(linesB[j]) == 0) {
-				if (checkSorted) {
-					if (!isSorted(linesA[i], 0)) {
-						if (sortedA) {
-							result.append("comm: File 1 is not in sorted order \n");
-							sortedA = false;
-						}
-					}
-					
-					if (!isSorted(linesB[j], 1)) {
-						if (sortedB) {
-							result.append("comm: File 2 is not in sorted order \n");
-							sortedB = false;
-						}
-					}
-				}
+					curPosA < linesA.length && curPosB < linesB.length &&
+					linesA[curPosA].compareTo(linesB[curPosB]) == 0) {
 				
-				if (sortedA && sortedB || continueAfterUnsorted) { 
-					result.append("\t\t" + linesA[i]);
-					result.append("\n");
-					
-					prevLine[0] = linesA[i];
-					prevLine[1] = linesB[j];
-					i ++;
-					j ++;
+				sortedA = updateSortedStatus(checkSorted, sortedA, linesA[curPosA], 0, result);
+				sortedB = updateSortedStatus(checkSorted, sortedB, linesB[curPosB], 1, result);
+				
+				if (continueToNexPos(sortedA && sortedB, continueAfterUnsorted, "\t\t", linesA[curPosA], result, 2)) {
+					curPosA ++;
+					curPosB ++;
 				}
 			}
 		}
@@ -178,13 +171,13 @@ public class COMMTool extends ATool implements ICommTool {
 			// NOTE: two conditions below will not satisfy together
 			
 			// if we still have remaining lines in file A, flush them out
-			if (i < linesA.length) {
-				flushRestOfFile(linesA, 0, i, checkSorted, continueAfterUnsorted, result);
+			if (curPosA < linesA.length) {
+				flushRestOfFile(linesA, 0, curPosA, checkSorted, continueAfterUnsorted, result);
 			}
 			
 			// if we still have remaining lines in file B, flush them out
-			if (j < linesB.length) {
-				flushRestOfFile(linesB, 1, j, checkSorted, continueAfterUnsorted, result);
+			if (curPosB < linesB.length) {
+				flushRestOfFile(linesB, 1, curPosB, checkSorted, continueAfterUnsorted, result);
 			}
 		}
 		
