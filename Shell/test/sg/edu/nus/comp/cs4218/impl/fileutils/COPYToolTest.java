@@ -19,19 +19,19 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class COPYToolTest {
 
-	ICopyTool IcopyTool;
+	ICopyTool iCopyTool;
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Before
 	public void setUp() throws Exception {
-		IcopyTool = new COPYTool(null);
+		iCopyTool = new COPYTool(null);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		IcopyTool = null;
+		iCopyTool = null;
 	}
 
 	@Test
@@ -40,9 +40,9 @@ public class COPYToolTest {
 		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"test.txt"));
 
-		IcopyTool.copy(origin, target);
+		iCopyTool.copy(origin, target);
 
-		assertEquals(0, IcopyTool.getStatusCode());
+		assertEquals(0, iCopyTool.getStatusCode());
 		assertTrue(target.exists());
 	}
 
@@ -53,9 +53,9 @@ public class COPYToolTest {
 		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"hopeExists.txt"));
 
-		IcopyTool.copy(origin, target);
+		iCopyTool.copy(origin, target);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 		assertFalse(target.exists());
 	}
 
@@ -65,9 +65,9 @@ public class COPYToolTest {
 		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"hopeExists.txt"));
 
-		IcopyTool.copy(origin, target);
+		iCopyTool.copy(origin, target);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 		assertFalse(target.exists());
 	}
 
@@ -75,9 +75,9 @@ public class COPYToolTest {
 	public void testCopyOriginToItself() throws IOException {
 		File origin = folder.newFile("originForCopy.txt");
 
-		IcopyTool.copy(origin, origin);
+		iCopyTool.copy(origin, origin);
 
-		assertEquals(0, IcopyTool.getStatusCode());
+		assertEquals(0, iCopyTool.getStatusCode());
 		assertTrue(origin.exists());
 	}
 
@@ -86,9 +86,9 @@ public class COPYToolTest {
 		File origin = folder.newFile("originForCopy.txt");
 		File target = folder.newFile("targetForCopy.txt");
 
-		IcopyTool.copy(origin, target);
+		iCopyTool.copy(origin, target);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
 
 	@Test
@@ -97,9 +97,9 @@ public class COPYToolTest {
 		File target = folder.newFolder();
 		File realTarget = new File(PathUtils.pathResolver(target, origin.getName()));
 
-		IcopyTool.copy(origin, target);
+		iCopyTool.copy(origin, target);
 
-		assertEquals(0, IcopyTool.getStatusCode());
+		assertEquals(0, iCopyTool.getStatusCode());
 		assertTrue(realTarget.exists());
 	}
 
@@ -108,46 +108,46 @@ public class COPYToolTest {
 		File origin = folder.newFile();
 		File target = new File(PathUtils.pathResolver(folder.getRoot(), "noDir/noFile.mp3"));
 
-		IcopyTool.copy(origin, target);
+		iCopyTool.copy(origin, target);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
 
 	@Test
 	public void testExecuteNormalCommand() throws IOException {
 		folder.newFile("originForCopy.txt");
 
-		IcopyTool = new COPYTool(
+		iCopyTool = new COPYTool(
 				"originForCopy.txt targetForCopy.txt".split(" "));
-		IcopyTool.execute(folder.getRoot(), null);
+		iCopyTool.execute(folder.getRoot(), null);
 
 		File target = new File(PathUtils.pathResolver(folder.getRoot(),
 				"targetForCopy.txt"));
 
-		assertEquals(0, IcopyTool.getStatusCode());
+		assertEquals(0, iCopyTool.getStatusCode());
 		assertTrue(target.exists());
 	}
 
 	@Test
-	public void CopyExecuteWithNullArgs() {
-		IcopyTool.execute(null, null);
-		assertNotEquals(0, IcopyTool.getStatusCode());
+	public void testCopyExecuteWithNullArgs() {
+		iCopyTool.execute(null, null);
+		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
 
 	@Test
-	public void CopyExecuteWithLessArgs() {
-		IcopyTool = new COPYTool("a".split(" "));
-		IcopyTool.execute(null, null);
+	public void testCopyExecuteWithLessArgs() {
+		iCopyTool = new COPYTool("a".split(" "));
+		iCopyTool.execute(null, null);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
 
 	@Test
-	public void CopyExecuteWithNonExistsArgs() {
-		IcopyTool = new COPYTool("a.txt b.txt".split(" "));
-		IcopyTool.execute(folder.getRoot(), null);
+	public void testCopyExecuteWithNonExistsArgs() {
+		iCopyTool = new COPYTool("a.txt b.txt".split(" "));
+		iCopyTool.execute(folder.getRoot(), null);
 
-		assertNotEquals(0, IcopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
 
 }

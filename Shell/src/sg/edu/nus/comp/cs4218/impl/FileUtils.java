@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class FileUtils {
 	
-	private static String _readFileContent(File file) throws IOException {
+	private static String readFileContentHelper(File file) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -34,10 +34,10 @@ public class FileUtils {
 			throw new RuntimeException("Error: " + file.getName() + " is a directory");
 		}
 
-		return _readFileContent(file);
+		return readFileContentHelper(file);
 	}
 
-	private static String[] _readFileLines(File file) throws IOException {
+	private static String[] readFileLinesHelper(File file) throws IOException {
 		ArrayList<String> lines = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -58,7 +58,7 @@ public class FileUtils {
 			throw new RuntimeException("Error: " + file.getName() + " is a directory");
 		}
 
-		return _readFileLines(file);
+		return readFileLinesHelper(file);
 	}
 	
 	public static boolean diffTwoFiles(File origin, File copy) throws IOException {

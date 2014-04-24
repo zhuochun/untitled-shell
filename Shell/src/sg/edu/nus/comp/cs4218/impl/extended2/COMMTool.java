@@ -30,10 +30,11 @@ public class COMMTool extends ATool implements ICommTool {
 	}
 	
 	private void flushRestOfFile(String[] lines, int curFile,
-								 int curLine, boolean checkSorted,
+								 int curLineParam, boolean checkSorted,
 								 boolean continueAfterUnsorted,
 								 StringBuilder result) {
 		boolean sorted = true;
+		int curLine = curLineParam;
 		
 		while (curLine < lines.length) {
 			if (checkSorted) {

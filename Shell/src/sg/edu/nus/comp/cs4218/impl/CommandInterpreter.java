@@ -8,39 +8,39 @@ import sg.edu.nus.comp.cs4218.impl.fileutils.*;
 public class CommandInterpreter {
 
 	public static ITool cmdToITool(String cmd, String[] args) {
-		cmd = cmd.toLowerCase();
+		String regulatedCmd = cmd.toLowerCase();
 
-		if (cmd.equals("cat")) {
+		if (regulatedCmd.equals("cat")) {
 			return new CATTool(args);
-		} else if (cmd.equals("cd")) {
+		} else if (regulatedCmd.equals("cd")) {
 			return new CDTool(args);
-		} else if (cmd.equals("copy")) {
+		} else if (regulatedCmd.equals("copy")) {
 			return new COPYTool(args);
-		} else if (cmd.equals("delete")) {
+		} else if (regulatedCmd.equals("delete")) {
 			return new DELETETool(args);
-		} else if (cmd.equals("echo")) {
+		} else if (regulatedCmd.equals("echo")) {
 			return new ECHOTool(args);
-		} else if (cmd.equals("ls")) {
+		} else if (regulatedCmd.equals("ls")) {
 			return new LSTool(args);
-		} else if (cmd.equals("move")) {
+		} else if (regulatedCmd.equals("move")) {
 			return new MOVETool(args);
-		} else if (cmd.equals("pwd")) {
+		} else if (regulatedCmd.equals("pwd")) {
 			return new PWDTool();
-		} else if (cmd.equals("grep")) {
+		} else if (regulatedCmd.equals("grep")) {
 			return new GREPTool(args);
-		} else if (cmd.equals("pipe")) {
+		} else if (regulatedCmd.equals("pipe")) {
 			return new PIPINGTool(args);
-		} else if (cmd.equals("comm")) {
+		} else if (regulatedCmd.equals("comm")) {
 			return new COMMTool(args);
-		} else if (cmd.equals("cut")) {
+		} else if (regulatedCmd.equals("cut")) {
 			return new CUTTool(args);
-		} else if (cmd.equals("paste")) {
+		} else if (regulatedCmd.equals("paste")) {
 			return new PASTETool(args);
-		} else if (cmd.equals("sort")) {
+		} else if (regulatedCmd.equals("sort")) {
 			return new SORTTool(args);
-		} else if (cmd.equals("uniq")) {
+		} else if (regulatedCmd.equals("uniq")) {
 			return new UNIQTool(args);
-		} else if (cmd.equals("wc")) {
+		} else if (regulatedCmd.equals("wc")) {
 			return new WCTool(args);
 		} else {
 			return null;

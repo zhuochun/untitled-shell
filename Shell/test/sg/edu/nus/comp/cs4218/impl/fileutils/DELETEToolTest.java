@@ -19,28 +19,28 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class DELETEToolTest {
 
-	IDeleteTool IDeleteTool;
+	IDeleteTool iDeleteTool;
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Before
 	public void setUp() throws Exception {
-		IDeleteTool = new DELETETool(null);
+		iDeleteTool = new DELETETool(null);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		IDeleteTool = null;
+		iDeleteTool = null;
 	}
 
 	@Test
 	public void testDeleteExistsFile() throws IOException {
 		File origin = folder.newFile();
 
-		IDeleteTool.delete(origin);
+		iDeleteTool.delete(origin);
 
-		assertEquals(0, IDeleteTool.getStatusCode());
+		assertEquals(0, iDeleteTool.getStatusCode());
 		assertFalse(origin.exists());
 	}
 
@@ -48,18 +48,18 @@ public class DELETEToolTest {
 	public void testDeleteNotExistsFile() {
 		File notExists = new File(PathUtils.pathResolver(folder.getRoot(), "notExists.txt"));
 		
-		IDeleteTool.delete(notExists);
+		iDeleteTool.delete(notExists);
 		
-		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertNotEquals(0, iDeleteTool.getStatusCode());
 	}
 	
 	@Test
 	public void testDeleteEmptyDirectory() throws IOException {
 		File origin = folder.newFolder();
 
-		IDeleteTool.delete(origin);
+		iDeleteTool.delete(origin);
 
-		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertNotEquals(0, iDeleteTool.getStatusCode());
 		assertTrue(origin.exists());
 	}
 
@@ -67,43 +67,43 @@ public class DELETEToolTest {
 	public void testDeleteNotEmptyDirectoryExists() throws IOException {
 		folder.newFile();
 
-		IDeleteTool.delete(folder.getRoot());
+		iDeleteTool.delete(folder.getRoot());
 
-		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertNotEquals(0, iDeleteTool.getStatusCode());
 		assertTrue(folder.getRoot().exists());
 	}
 	@Test
 	public void testDeleteWithNullArgs(){
-		IDeleteTool.execute(null, null);
-		assertNotEquals(0,IDeleteTool.getStatusCode());
+		iDeleteTool.execute(null, null);
+		assertNotEquals(0,iDeleteTool.getStatusCode());
 	}
 	@Test
-	public void CopyExecuteWithLessArgs() {
-		IDeleteTool = new DELETETool("".split(" "));
-		IDeleteTool.execute(null,null);
+	public void testCopyExecuteWithLessArgs() {
+		iDeleteTool = new DELETETool("".split(" "));
+		iDeleteTool.execute(null,null);
 
-		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertNotEquals(0, iDeleteTool.getStatusCode());
 	}
 
 	@Test
-	public void CopyExecuteWithNonExistsArgs() {
-		IDeleteTool = new DELETETool("a.txt b.txt".split(" "));
-		IDeleteTool.execute(folder.getRoot(), null);
+	public void testCopyExecuteWithNonExistsArgs() {
+		iDeleteTool = new DELETETool("a.txt b.txt".split(" "));
+		iDeleteTool.execute(folder.getRoot(), null);
 
-		assertNotEquals(0, IDeleteTool.getStatusCode());
+		assertNotEquals(0, iDeleteTool.getStatusCode());
 	}
 	@Test
 	public void testExecuteNormalCommand() throws IOException {
 		folder.newFile("toDelete.txt");
 
-		IDeleteTool = new DELETETool(
+		iDeleteTool = new DELETETool(
 				"toDelete.txt".split(" "));
-		IDeleteTool.execute(folder.getRoot(), null);
+		iDeleteTool.execute(folder.getRoot(), null);
 
 		File toDelete = new File(PathUtils.pathResolver(folder.getRoot(),
 				"toDelete.txt"));
 
-		assertEquals(0, IDeleteTool.getStatusCode());
+		assertEquals(0, iDeleteTool.getStatusCode());
 		assertFalse(toDelete.exists());
 	}
 }

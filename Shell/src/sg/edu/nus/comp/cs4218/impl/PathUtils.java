@@ -30,16 +30,18 @@ public class PathUtils {
 	 */
 	public static String pathResolver(String currentPath, String newPath) {
 		String finalAbsolutePath;
+		String regulatedNewPath = newPath;
+		
 		// special cases
-		if (newPath.equals("~")) {
-			newPath = System.getProperty("user.home") + "/";
+		if (regulatedNewPath.equals("~")) {
+			regulatedNewPath = System.getProperty("user.home") + "/";
 		} else
-		if (newPath.startsWith("~/")) {
-			newPath = System.getProperty("user.home").
-							 concat('/' + newPath.substring(2));
+		if (regulatedNewPath.startsWith("~/")) {
+			regulatedNewPath = System.getProperty("user.home").
+							 concat('/' + regulatedNewPath.substring(2));
 		}
 		
-		Path curPath = Paths.get(currentPath).resolve(newPath).normalize();
+		Path curPath = Paths.get(currentPath).resolve(regulatedNewPath).normalize();
 		
 		finalAbsolutePath = curPath.toString();
 		
@@ -52,7 +54,7 @@ public class PathUtils {
 		
 		// if new path does not exist but should be a directory, put a "/"
 		// behind
-		if (newPath.endsWith("/") && !finalAbsolutePath.endsWith("/")) {
+		if (regulatedNewPath.endsWith("/") && !finalAbsolutePath.endsWith("/")) {
 			finalAbsolutePath = finalAbsolutePath + "/";
 		}
 		

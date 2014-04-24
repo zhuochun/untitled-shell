@@ -48,13 +48,14 @@ public class CATTool extends ATool implements ICatTool {
 		}
 
 		StringBuilder output = new StringBuilder();
+		String regulatedStdin = stdin;
 		
 		// make sure stdin exists
-		if (stdin == null) { stdin = ""; }
+		if (regulatedStdin == null) { regulatedStdin = ""; }
 
 		// process arguments
 		if (argList.isEmpty() || argList.getParam(0).equals("-")) {
-			output.append(stdin);
+			output.append(regulatedStdin);
 		} else {
 			for (String arg : argList.getParams()) {
 				if (arg.equals(">")) {

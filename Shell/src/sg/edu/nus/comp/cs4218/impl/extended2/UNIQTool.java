@@ -69,13 +69,13 @@ public class UNIQTool extends ATool implements IUniqTool {
 	}
 
 	@Override
-	public String getUniqueSkipNum(int NUM, boolean checkCase, String input) {
+	public String getUniqueSkipNum(int num, boolean checkCase, String input) {
 		if (input == null) {
 			lastLine = null;
 			return "";
 		}
 
-		String inputCache = sliceByWhiteSpace(stripWhiteSpace(input), NUM);
+		String inputCache = sliceByWhiteSpace(stripWhiteSpace(input), num);
 		
 		if (lastLine == null) {
 			lastLine = inputCache;

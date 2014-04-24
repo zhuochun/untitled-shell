@@ -21,11 +21,13 @@ public class CUTToolTest {
 	private File testAbsoluteRandomFile;
 	private File testRelativeFile;
 	private File testCurrentFolderFile;
+	private File unusualTestFile;
 	private String testFileName = "test.txt";
 	private String testFileNotExistName = "asdlfj.txt";
 	private String testFileAbsoluteName;
 	private String testFileRelativeName = ".././test.txt";
 	private String testFileRelativeFromHomeName;
+	private String unusualTestFileName = "a.txt";
 	
 	@Before
 	public void before() throws Exception {
@@ -45,6 +47,8 @@ public class CUTToolTest {
 		helpString = sb.toString();
 		
 		testCurrentFolderFile = new File(testFileName);
+		
+		unusualTestFile = new File(unusualTestFileName);
 		
 		String testFilePath = PathUtils.getCurrentPath().toString();
 		
@@ -81,6 +85,14 @@ public class CUTToolTest {
 		output.write("1, 2, 3, 4, 5, 6, 7, 8, 9\n");
 		
 		output.close();
+		
+		output = new BufferedWriter(new FileWriter(unusualTestFile));
+		
+		output.write("a/b/c/d/e/f/g\n");
+		output.write("a b c d e f g\n");
+		output.write("aabcdefabcd\n");
+		
+		output.close();
 	}
 
 	@After
@@ -89,6 +101,7 @@ public class CUTToolTest {
 		testAbsoluteRandomFile.delete();
 		testRelativeFile.delete();
 		testCurrentFolderFile.delete();
+		unusualTestFile.delete();
 	}
 	
 	@Test
@@ -730,6 +743,38 @@ public class CUTToolTest {
 		expected.append("askldjfklasdjfasd\n");
 		expected.append("1,2,3,4,5,6,7,9\n");
 		expected.append("1, 2, 3, 4, 5, 6, 7, 9\n");
+		
+		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected.toString(), actual);
+		assertEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeValidDelimWithFileWithSpecialDesignedContent() {
+		cutTool = new CUTTool(new String[] {"-d", "/", "1,2,5", unusualTestFileName});
+		
+		StringBuilder expected = new StringBuilder();
+		
+		expected.append("a/b/e\n");
+		expected.append("a b c d e f g\n");
+		expected.append("aabcdefabcd\n");
+		
+		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected.toString(), actual);
+		assertEquals(0, cutTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeValidStringDelimWithFileWithSpecialDesignedContent() {
+		cutTool = new CUTTool(new String[] {"-d", "\\", "1,2,5", unusualTestFileName});
+		
+		StringBuilder expected = new StringBuilder();
+
+		expected.append("a/b/c/d/e/f/g\n");
+		expected.append("a b c d e f g\n");
+		expected.append("aabcdefabcd\n");
 		
 		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
 		

@@ -39,9 +39,10 @@ public class CDTool extends ATool implements ICdTool {
 	@Override
 	public String execute(File workingDir, String stdin) {
 		String output;
+		String regulatedStdin = stdin;
 		
 		// make sure stdin exists
-		if (stdin == null) { stdin = ""; }
+		if (regulatedStdin == null) { regulatedStdin = ""; }
 		
 		//TODO: at this moment we assume no stdin. confirm with others
 		// how to parse stdin!!!
