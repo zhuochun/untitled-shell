@@ -70,15 +70,14 @@ public class SORTToolTest {
 	//test checkIfSorted method on unsorted file
 	@Test
 	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
-		//System.out.println(PathUtils.getCurrentPath()+ "\\" + "unSortFile.txt");
-		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "\\" + "unSortFile.txt");
+		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "unSortFile.txt");
 		assertEquals(result, "sort: unSortFile.txt:2 disorder: bbb\n");
 	}
 
 	//test checkIfSorted method on sorted file
 	@Test
 	public void checkIfSortedTestForSortedFile() {
-		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "\\"+"sortFile.txt");
+		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/"+"sortFile.txt");
 		assertEquals(result, "");
 	}
 
@@ -101,7 +100,7 @@ public class SORTToolTest {
 	public void executeWithCOption(){
 		ISortTool newSortTool = new SORTTool(new String[]{"-c", "sortFile.txt"});
 		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
-		assertEquals(result,newSortTool.checkIfSorted(PathUtils.getCurrentPath()+ "\\" + "sortFile.txt"));
+		assertEquals(result,newSortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "sortFile.txt"));
 
 	}
 
