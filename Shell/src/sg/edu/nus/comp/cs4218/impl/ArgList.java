@@ -30,10 +30,16 @@ public class ArgList {
 		}
 	};
 
+	/**
+	 * enumerate of supported argument option types
+	 */
 	public enum ArgType {
 		RAW, NUM, STRING
 	}
 
+	/**
+	 * an argument option with name, description, type and value
+	 */
 	public class Option {
 		public String name;
 		public String value;
@@ -51,6 +57,13 @@ public class ArgList {
 			this.value = value;
 		}
 
+		/**
+		 * determine whether the value satisfies the option's type specified
+		 * 
+		 * @param value
+		 * 
+		 * @return true if satisfactory
+		 */
 		public boolean matchType(String value) {
 			if (type == ArgType.NUM) {
 				return value.matches("[0-9]+");
@@ -61,6 +74,11 @@ public class ArgList {
 			}
 		}
 
+		/**
+		 * to a printable format
+		 * 
+		 * @return a string of printable format
+		 */
 		@Override
 		public String toString() {
 			if (type == ArgType.RAW) {
@@ -81,6 +99,9 @@ public class ArgList {
 	public boolean optionsFirstCheck = true;
 	public boolean invalidOptionCheck = true;
 
+	/**
+	 * initialize argument list
+	 */
 	public ArgList() {
 		acceptableOptions = new TreeMap<String, Option>(compare);
 		arguments = new ArrayList<String>();
@@ -110,6 +131,11 @@ public class ArgList {
 		acceptableOptions.put(name, new Option(name, type, desc));
 	}
 
+	/**
+	 * get the acceptable options in array
+	 * 
+	 * @return acceptable options
+	 */
 	public Option[] getAcceptableOptions() {
 		return acceptableOptions.values().toArray(new Option[0]);
 	}
@@ -127,16 +153,29 @@ public class ArgList {
 	 * check whether an argument exists in list
 	 * 
 	 * @param arg
+	 * 
 	 * @return boolean
 	 */
 	public boolean hasArgument(String arg) {
 		return arguments.contains(arg);
 	}
 
+	/**
+	 * get the arguments in list
+	 * 
+	 * @return String[]
+	 */
 	public String[] getArguments() {
 		return arguments.toArray(new String[0]);
 	}
 
+	/**
+	 * get the argument at index
+	 * 
+	 * @param idx
+	 * 
+	 * @return String
+	 */
 	public String getArgument(final int idx) {
 		return arguments.get(idx);
 	}
@@ -154,20 +193,40 @@ public class ArgList {
 	 * check whether an option exists
 	 * 
 	 * @param option
+	 * 
 	 * @return boolean
 	 */
 	public boolean hasOption(String option) {
 		return options.contains(option);
 	}
 
+	/**
+	 * get the option's name at index
+	 * 
+	 * @param idx
+	 * 
+	 * @return String
+	 */
 	public String getOption(final int idx) {
 		return options.get(idx);
 	}
 
+	/**
+	 * get the option's value by option's name
+	 * 
+	 * @param option name
+	 * 
+	 * @return String
+	 */
 	public String getOptionValue(String option) {
 		return acceptableOptions.get(option).value;
 	}
 
+	/**
+	 * get options in a list
+	 * 
+	 * @return String[]
+	 */
 	public String[] getOptions() {
 		return options.toArray(new String[0]);
 	}
@@ -191,10 +250,22 @@ public class ArgList {
 		return params.contains(param);
 	}
 
+	/**
+	 * get the params in a list
+	 * 
+	 * @return String[]
+	 */
 	public String[] getParams() {
 		return params.toArray(new String[0]);
 	}
 
+	/**
+	 * get the param at an index
+	 * 
+	 * @param idx
+	 * 
+	 * @return String
+	 */
 	public String getParam(int idx) {
 		return params.get(idx);
 	}
@@ -208,6 +279,11 @@ public class ArgList {
 		return !this.invalidOptions.isEmpty();
 	}
 
+	/**
+	 * get the invalid options in a list
+	 * 
+	 * @return String[]
+	 */
 	public String[] getInvalidOptions() {
 		return invalidOptions.toArray(new String[0]);
 	}
@@ -242,6 +318,12 @@ public class ArgList {
 		}
 	}
 
+	/**
+	 * parse the option type input
+	 * 
+	 * @param option
+	 * @param iter
+	 */
 	private void parseOptionStr(String option, Iterator<String> iter) {
 		if (!params.isEmpty() && optionsFirstCheck) {
 			throw new IllegalArgumentException("Error: Option -" + option + " should appear in front");
@@ -283,6 +365,12 @@ public class ArgList {
 		}
 	}
 
+	/**
+	 * parse the quoted string
+	 * 
+	 * @param arg
+	 * @param argIter
+	 */
 	private void parseQuotedStr(String arg, Iterator<String> argIter) {
 		if (!isQuoteMatcherCompleted(REGEX_QUOTE.matcher(arg))) {
 			throw new IllegalArgumentException("Error: Incomplete quotation");
@@ -294,18 +382,45 @@ public class ArgList {
 		arguments.add(cleanArg);
 	}
 
+	/**
+	 * determine whether it is an options (start with -)
+	 * 
+	 * @param arg
+	 * 
+	 * @return true if it is an option
+	 */
 	private boolean isAnOption(String arg) {
 		return arg.matches("^-(?<!(\\\\)+\\\\)[0-9a-zA-Z]+$");
 	}
 
+	/**
+	 * remove the backslashes in a string
+	 * 
+	 * @param arg
+	 * 
+	 * @return String
+	 */
 	private String removeBackslash(String arg) {
 		return arg.replaceAll("\\\\(.)", "$1");
 	}
 
+	/**
+	 * remove the quotation marks ' or " in a string
+	 * 
+	 * @param arg
+	 * 
+	 * @return String
+	 */
 	private String removeQuoteMarks(String arg) {
 		return arg.replaceAll("\"|'", "");
 	}
 
+	/**
+	 * add val to list only if it does not in the list
+	 * 
+	 * @param list
+	 * @param val
+	 */
 	private void addWithoutDuplicate(List<String> list, String val) {
 		if (!list.contains(val)) {
 			list.add(val);
@@ -339,8 +454,8 @@ public class ArgList {
 				}
 			}
 
-			// if it has open quotation mark (even with even number of \), merge
-			// to close mark
+			// if it has open quotation mark (even with even number of \),
+			// merge to close mark
 			if (REGEX_QUOTESTR.matcher(t).matches()) {
 				while (i + 1 < result.length) {
 					if (isQuoteMatcherCompleted(REGEX_QUOTE.matcher(t))) {
@@ -364,6 +479,13 @@ public class ArgList {
 		}
 	}
 
+	/**
+	 * determine there are even number of quotation marks in matcher
+	 * 
+	 * @param matcher
+	 * 
+	 * @return true if yes
+	 */
 	private static boolean isQuoteMatcherCompleted(Matcher matcher) {
 		// get start mark
 		matcher.find();
