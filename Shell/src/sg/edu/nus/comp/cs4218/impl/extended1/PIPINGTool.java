@@ -8,16 +8,40 @@ import sg.edu.nus.comp.cs4218.extended1.IPipingTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.CommandInterpreter;
 
+/**
+ * The pipe tools allows the output of one program to 
+ * be sent to the input of another program. With the 
+ * help of pipe tool multiple small (and simple) programs
+ * can be connected to accomplish large number of tasks.
+ * 
+ * Command Format - PROGRAM-1-STANDARD_OUTPUT | PROGRAM-2-STANDARD_INPUT
+ * Where "|" is the pipe operator and PROGRAM-1-STANDARD_OUTPUT is the standard output of
+ * program 1 and PROGRAM-2-STANDARD_INPUT is the standard input of program 2.
+ *
+ */
 public class PIPINGTool extends ATool implements IPipingTool {
 	
 	private File workingDir;
 	private int startIdx;
 	private int endIdx;
 	
+	/**
+	 * Initialize pipe tool
+	 * 
+	 * @param arguments
+	 */
 	public PIPINGTool(String[] arguments) {
 		super(arguments);
 	}
 
+	/**
+	 * Pipe the stdout of from to stdin of to
+	 * 
+	 * @param from ITool
+	 * @param to ITool
+	 * 
+	 * @return The stdout of to
+	 */
 	@Override
 	public String pipe(ITool from, ITool to) {
 		String stdout = from.execute(workingDir, "");
@@ -37,6 +61,14 @@ public class PIPINGTool extends ATool implements IPipingTool {
 		return stdout;
 	}
 
+	/**
+	 * Pipe the stdout as stdin to to
+	 * 
+	 * @param stdout String
+	 * @param to ITool
+	 * 
+	 * @return The stdout of to
+	 */
 	@Override
 	public String pipe(String stdout, ITool to) {
 		String newStdout = to.execute(workingDir, stdout);
@@ -48,6 +80,14 @@ public class PIPINGTool extends ATool implements IPipingTool {
 		return newStdout;
 	}
 
+	/**
+	 * Execute pipe tool
+	 * 
+	 * @param workingDir File
+	 * @param stdin String
+	 * 
+	 * @return stdout from pipe tool
+	 */
 	@Override
 	public String execute(File workingDir, String stdin) {
 		this.workingDir = workingDir;
@@ -83,6 +123,11 @@ public class PIPINGTool extends ATool implements IPipingTool {
 		}
 	}
 	
+	/**
+	 * Find the next ITool from the list of arguments
+	 * 
+	 * @return ITool
+	 */
 	private ITool getITool() {
 		startIdx = endIdx + 1;
 		endIdx = readToPipeOrEnd(startIdx);
@@ -102,6 +147,13 @@ public class PIPINGTool extends ATool implements IPipingTool {
 		return tool;
 	}
 	
+	/**
+	 * Find the index of next pipe "|" in arguments from startIdx
+	 * 
+	 * @param startIdx int
+	 * 
+	 * @return the index of "|" or startIdx
+	 */
 	private int readToPipeOrEnd(int startIdx) {
 		int i = startIdx;
 

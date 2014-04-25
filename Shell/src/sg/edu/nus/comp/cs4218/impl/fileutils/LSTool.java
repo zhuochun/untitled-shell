@@ -20,12 +20,24 @@ public class LSTool extends ATool implements ILsTool {
 	
 	private ArgList argList = new ArgList();
 
+	/**
+	 * initialize ls tool
+	 * 
+	 * @param arguments
+	 */
 	public LSTool(String[] arguments) {
 		super(arguments);
 
 		argList.invalidOptionCheck = true;
 	}
 
+	/**
+	 * get a list of files from a directory
+	 * 
+	 * @param directory
+	 * 
+	 * @return a list of files
+	 */
 	@Override
 	public List<File> getFiles(File directory) {
 		List<File> files = new ArrayList<File>();
@@ -45,6 +57,13 @@ public class LSTool extends ATool implements ILsTool {
 		return files;
 	}
 
+	/**
+	 * join the files into a string
+	 * 
+	 * @param files
+	 * 
+	 * @return a string contains the filenames
+	 */
 	@Override
 	public String getStringForFiles(List<File> files) {
 		if (files == null || files.isEmpty()) {
@@ -63,6 +82,14 @@ public class LSTool extends ATool implements ILsTool {
 		return ls.toString();
 	}
 
+	/**
+	 * execute ls tool
+	 * 
+	 * @param workingDir
+	 * @param stdin
+	 * 
+	 * @return stdout of ls tool
+	 */
 	@Override
 	public String execute(File workingDir, String stdin) {
 		// parse arguments

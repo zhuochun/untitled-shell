@@ -16,10 +16,32 @@ import sg.edu.nus.comp.cs4218.impl.ArgList.Option;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
+/**
+ * The grep command searches one or more input files 
+ * for lines containing a match to a specified pattern. 
+ * The grep tool must work on all characters in UTF-8 encoding. 
+ * 
+ * Command Format - grep [OPTIONS] PATTERN [FILE]
+ * PATTERN - This specifies a regular expression pattern that describes a set of strings
+ * FILE - Name of the file, when no file is present (denoted by "-") use standard input
+ * OPTIONS
+ *   -A NUM : Print NUM lines of trailing context after matching lines
+ *   -B NUM : Print NUM lines of leading context before matching lines
+ *   -C NUM : Print NUM lines of output context
+ *   -c : Suppress normal output. Instead print a count of matching lines for each input file
+ *   -o : Show only the part of a matching line that matches PATTERN
+ *   -v : Select non-matching (instead of matching) lines
+ *   -help : Brief information about supported options
+ */
 public class GREPTool extends ATool implements IGrepTool {
 
 	private ArgList argList = new ArgList();
 
+	/**
+	 * Initialize Grep tool
+	 * 
+	 * @param arguments
+	 */
 	public GREPTool(String[] arguments) {
 		super(arguments);
 
@@ -41,6 +63,14 @@ public class GREPTool extends ATool implements IGrepTool {
 				"Brief information about supported options");
 	}
 
+	/**
+	 * get count of matching lines
+	 * 
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return number of matched lines
+	 */
 	@Override
 	public int getCountOfMatchingLines(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
@@ -68,6 +98,15 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		return output;
 	}
+
+	/**
+	 * get only the matching lines
+	 * 
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the matched lines
+	 */
 
 	@Override
 	public String getOnlyMatchingLines(String pattern, String input) {
@@ -102,6 +141,15 @@ public class GREPTool extends ATool implements IGrepTool {
 		return output;
 	}
 
+	/**
+	 * get matching lines with trailing context
+	 * 
+	 * @param optionA number of trailing context
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the matched lines with trailing context
+	 */
 	@Override
 	public String getMatchingLinesWithTrailingContext(int optionA,
 			String pattern, String input) {
@@ -140,7 +188,16 @@ public class GREPTool extends ATool implements IGrepTool {
 		
 		return output;
 	}
-
+	
+	/**
+	 * get the matching lines with leading context
+	 * 
+	 * @param optionB number of leading context
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the matched lines
+	 */
 	@Override
 	public String getMatchingLinesWithLeadingContext(int optionB,
 			String pattern, String input) {
@@ -178,7 +235,16 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		return output;
 	}
-
+	
+	/**
+	 * get the matching lines with output context
+	 * 
+	 * @param optionC number of output context lines
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the matched lines with context
+	 */
 	@Override
 	public String getMatchingLinesWithOutputContext(int optionC,
 			String pattern, String input) {
@@ -230,7 +296,15 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		return output;
 	}
-
+	
+	/**
+	 * get only the matching parts
+	 * 
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the matched parts
+	 */
 	@Override
 	public String getMatchingLinesOnlyMatchingPart(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
@@ -263,7 +337,15 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		return output;
 	}
-
+	
+	/**
+	 * get the non-matching lines
+	 * 
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the not matched lines
+	 */
 	@Override
 	public String getNonMatchingLines(String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
@@ -296,7 +378,12 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		return output;
 	}
-
+	
+	/**
+	 * get helps
+	 * 
+	 * @return help information
+	 */
 	@Override
 	public String getHelp() {
 		StringBuilder help = new StringBuilder();
@@ -315,7 +402,15 @@ public class GREPTool extends ATool implements IGrepTool {
 
 		return help.toString();
 	}
-
+	
+	/**
+	 * execute the grep tool
+	 * 
+	 * @param option
+	 * @param input
+	 * 
+	 * @return stdout from grep tool
+	 */
 	private String executeOption(String option, String input) {
 		if (option.equals("A")) {
 			return getMatchingLinesWithTrailingContext(
@@ -345,6 +440,15 @@ public class GREPTool extends ATool implements IGrepTool {
 			return "Error: Invalid Option -" + option;
 		}
 	}
+	
+	/**
+	 * get only the matching lines
+	 * 
+	 * @param pattern
+	 * @param input
+	 * 
+	 * @return the matched lines
+	 */
 
 	@Override
 	public String execute(File workingDir, String stdin) {
@@ -391,7 +495,10 @@ public class GREPTool extends ATool implements IGrepTool {
 		// default
 		return getOnlyMatchingLines(argList.getParam(0), input);
 	}
-
+	
+	/**
+	 * class to handler line buffer used in matching lines
+	 */
 	class LineBuffer {
 		private LinkedList<String> lines;
 		private int size;

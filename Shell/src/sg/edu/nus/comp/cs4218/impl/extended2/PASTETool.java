@@ -29,6 +29,11 @@ public class PASTETool extends ATool implements IPasteTool {
 	private ArgList argList = new ArgList();
 	private final String DELIM = "\t";
 
+	/**
+	 * Initialize Paste tool
+	 * 
+	 * @param arguments
+	 */
 	public PASTETool(String[] arguments) {
 		super(arguments);
 
@@ -42,6 +47,13 @@ public class PASTETool extends ATool implements IPasteTool {
 				"Brief information about supported options");
 	}
 
+	/**
+	 * paste inputs array in serialized string
+	 * 
+	 * @param input String Array
+	 * 
+	 * @return serialized string
+	 */
 	@Override
 	public String pasteSerial(String[] input) {
 		StringBuilder sb = new StringBuilder();
@@ -58,6 +70,14 @@ public class PASTETool extends ATool implements IPasteTool {
 		return sb.toString();
 	}
 
+	/**
+	 * paste inputs array in serialized string using delim passed in
+	 * 
+	 * @param delim
+	 * @param input
+	 * 
+	 * @return serialized string
+	 */
 	@Override
 	public String pasteUseDelimiter(String delim, String[] input) {
 		StringBuilder sb = new StringBuilder();
@@ -74,6 +94,11 @@ public class PASTETool extends ATool implements IPasteTool {
 		return sb.toString();
 	}
 
+	/**
+	 * get help information
+	 * 
+	 * @return help information string
+	 */
 	@Override
 	public String getHelp() {
 		StringBuilder help = new StringBuilder();
@@ -92,6 +117,14 @@ public class PASTETool extends ATool implements IPasteTool {
 		return help.toString();
 	}
 
+	/**
+	 * execute paste tool
+	 * 
+	 * @param workingDir
+	 * @param stdin
+	 * 
+	 * @return stdout of paste tool
+	 */
 	@Override
 	public String execute(File workingDir, String stdin) {
 		// parse arguments
@@ -128,6 +161,15 @@ public class PASTETool extends ATool implements IPasteTool {
 		}
 	}
 
+	/**
+	 * actual execution of paste tool depending on inputs
+	 * 
+	 * @param inputs
+	 * @param maxInputLength
+	 * @param workingDir
+	 * 
+	 * @return stdout of paste tool
+	 */
 	private String processInputs(ArrayList<String[]> inputs,
 			int maxInputLength, File workingDir) {
 		// process inputs in serial
@@ -183,6 +225,13 @@ public class PASTETool extends ATool implements IPasteTool {
 		return maxLen;
 	}
 
+	/**
+	 * read input to an array of string lines
+	 * 
+	 * @param input
+	 * 
+	 * @return an array of lines
+	 */
 	private String[] getStringLines(String input) {
 		if (input == null) {
 			return new String[0];
