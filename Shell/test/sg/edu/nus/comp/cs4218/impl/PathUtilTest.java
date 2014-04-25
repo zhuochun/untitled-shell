@@ -336,4 +336,11 @@ public class PathUtilTest {
 		
 		assertEquals(newP.toString() + "/", PathUtils.pathResolver(currentDir, newP.toString()));
 	}
+	
+	@Test
+	public void testGetRandomSubpathWithDepthLessThanTwo() {
+		Path newP = PathUtils.getRandomSubpath(Paths.get("/"));
+		
+		assertEquals("/", newP.toString());
+	}
 }
