@@ -103,7 +103,7 @@ public class GREPTool extends ATool implements IGrepTool {
 	}
 
 	@Override
-	public String getMatchingLinesWithTrailingContext(int option_A,
+	public String getMatchingLinesWithTrailingContext(int optionA,
 			String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
@@ -118,7 +118,7 @@ public class GREPTool extends ATool implements IGrepTool {
 
 				if (m.find()) {
 					stdout.append(line + "\n");
-					trailingCount = option_A;
+					trailingCount = optionA;
 				} else if (trailingCount > 0) {
 					stdout.append(line + "\n");
 					trailingCount -= 1;
@@ -142,7 +142,7 @@ public class GREPTool extends ATool implements IGrepTool {
 	}
 
 	@Override
-	public String getMatchingLinesWithLeadingContext(int option_B,
+	public String getMatchingLinesWithLeadingContext(int optionB,
 			String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
@@ -151,7 +151,7 @@ public class GREPTool extends ATool implements IGrepTool {
 		StringBuffer stdout = new StringBuffer();
 		try {
 			String line;
-			LineBuffer lineBuffer = new LineBuffer(option_B);
+			LineBuffer lineBuffer = new LineBuffer(optionB);
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
 
@@ -180,7 +180,7 @@ public class GREPTool extends ATool implements IGrepTool {
 	}
 
 	@Override
-	public String getMatchingLinesWithOutputContext(int option_C,
+	public String getMatchingLinesWithOutputContext(int optionC,
 			String pattern, String input) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		Matcher m = Pattern.compile(pattern).matcher("");
@@ -190,12 +190,12 @@ public class GREPTool extends ATool implements IGrepTool {
 		try {
 			String line;
 			int trailingCount = -1;
-			LineBuffer lineBuffer = new LineBuffer(option_C);
+			LineBuffer lineBuffer = new LineBuffer(optionC);
 			while ((line = br.readLine()) != null) {
 				m.reset(line);
 
 				if (m.find()) {
-					if (trailingCount > 0 && trailingCount != option_C) {
+					if (trailingCount > 0 && trailingCount != optionC) {
 						stdout.append("--\n");
 					} else if (trailingCount == 0) {
 						stdout.append("--\n--\n");
@@ -204,7 +204,7 @@ public class GREPTool extends ATool implements IGrepTool {
 					stdout.append(lineBuffer.popAllToString());
 					stdout.append(line + "\n");
 
-					trailingCount = option_C;
+					trailingCount = optionC;
 				} else {
 					if (trailingCount > 0) {
 						stdout.append(line + "\n");

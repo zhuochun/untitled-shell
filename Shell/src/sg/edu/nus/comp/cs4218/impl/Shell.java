@@ -29,7 +29,7 @@ public class Shell implements IShell {
 		ITool tool = CommandInterpreter.cmdToITool(cmd, params.toArray(new String[0]));
 		
 		if (tool == null) {
-			System.err.println("Command not found: " + cmd);
+			System.err.println("Command not found: " + cmd); // NOPMD
 		}
 		
 		return tool;
@@ -64,7 +64,7 @@ public class Shell implements IShell {
 		InputRunnable input = new InputRunnable();
 		input.start();
 
-		System.out.print("[" + Directory.get().toString() + "] $ ");
+		System.out.print("[" + Directory.get().toString() + "] $ "); // NOPMD
 		
 		while (true) {
 			String commandLine = input.get();
@@ -72,7 +72,7 @@ public class Shell implements IShell {
 			if (commandLine == null && runnable != null) {
 				if (runnable.isFinished()) {
 					runnable = null;
-					System.out.print("[" + Directory.get().toString() + "] $ ");
+					System.out.print("[" + Directory.get().toString() + "] $ "); // NOPMD
 				}
 			}
 			
@@ -83,12 +83,12 @@ public class Shell implements IShell {
 					if (tool != null) {
 						shell.execute(tool);
 					} else {
-						System.out.print("[" + Directory.get().toString() + "] $ ");
+						System.out.print("[" + Directory.get().toString() + "] $ "); // NOPMD
 					}
 				} else {
 					if (commandLine.equalsIgnoreCase("Ctrl-Z")) {
 						shell.stop(null);
-						System.out.print("[" + Directory.get().toString() + "] $ ");
+						System.out.print("[" + Directory.get().toString() + "] $ "); // NOPMD
 					}
 				}
 			}
