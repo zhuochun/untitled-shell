@@ -9,7 +9,7 @@
  *      -w : Print only the word counts
  *      -l : Print only the newline counts
  *		-help : Brief information about supported options
-*/
+ */
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
 import java.io.File;
@@ -17,6 +17,8 @@ import java.io.File;
 import sg.edu.nus.comp.cs4218.extended2.IWcTool;
 import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
+import sg.edu.nus.comp.cs4218.impl.FileUtils;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class WCTool extends ATool implements IWcTool {
 
@@ -24,7 +26,7 @@ public class WCTool extends ATool implements IWcTool {
 	public WCTool(String[] arguments) {
 		super(arguments);
 		argList.invalidOptionCheck=true;
-		
+
 		argList.registerAcceptableOption("m", 
 				"Print only the character counts.");
 		argList.registerAcceptableOption("w", 
@@ -33,7 +35,7 @@ public class WCTool extends ATool implements IWcTool {
 				"Print only the newline counts");
 		argList.registerAcceptableOption("help", 
 				"Brief information about supported options");
-		
+
 	}
 
 	@Override
@@ -106,20 +108,29 @@ public class WCTool extends ATool implements IWcTool {
 		}
 
 
+		try{
+			String file = argList.getParam(0);
+			String filePath = PathUtils.pathResolver(workingDir, file);
+			String content = FileUtils.readFileContent(new File(filePath));
 
-		String input = new String(argList.getParam(0));
-
-		if(argList.hasOption("m")){
-			return getCharacterCount(input);
-
-		}
-		else if(argList.hasOption("w")){
-			return getWordCount(input);
-
-		}
-		else if(argList.hasOption("l")){
-			return getNewLineCount(input);
-
+			if(argList.hasOption("m")){
+				return getCharacterCount(content);
+			}
+			else if(argList.hasOption("w")){
+				return getWordCount(content);
+			}
+			else if(argList.hasOption("l")){
+				return getNewLineCount(content);
+			}
+			if(!argList.hasOptions()){
+				String result = getCharacterCount(content)+" "+getWordCount(content)+" "+
+						getNewLineCount(content);
+				return result;
+			
+			}
+		}catch(Exception e){
+			setStatusCode(0);
+			return e.getMessage();
 		}
 		return null;
 	}

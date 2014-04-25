@@ -27,6 +27,7 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;
 public class SORTTool extends ATool implements ISortTool {
 
 	private ArgList argList = new ArgList();
+	
 
 	public SORTTool(String[] arguments) {
 		super(arguments);
@@ -58,7 +59,8 @@ public class SORTTool extends ATool implements ISortTool {
 	public String checkIfSorted(String input) {
 		StringBuilder disorderInfo = new StringBuilder();
 		int disorderLineIndex = -1;  
-		String []stringToCheck = input.split("\r\n");
+		input = input.replace("\r", "");
+		String []stringToCheck = input.split("\n");
 		Vector <String> stringToCheckVect = new Vector<String>(Arrays.asList(stringToCheck));
 
 		for(int i = 0;i < stringToCheckVect.size()-1; i++){
@@ -118,7 +120,7 @@ public class SORTTool extends ATool implements ISortTool {
 				return sortFile(content);
 			}
 		}catch(Exception e){
-			setStatusCode(9);
+			setStatusCode(0);
 			return e.getMessage();
 		}
 	}
