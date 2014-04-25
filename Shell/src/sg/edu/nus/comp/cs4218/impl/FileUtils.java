@@ -23,7 +23,7 @@ public class FileUtils {
 	 * @return
 	 * 		the content of the file, store in one String.
 	 * @throws IOException
-	 * 		when reading encouters any problem.
+	 * 		when reading encounters any problem.
 	 */
 	private static String readFileContentHelper(File file) throws IOException {
 		StringBuilder sb = new StringBuilder();
@@ -41,11 +41,17 @@ public class FileUtils {
 
 	/**
 	 * This function is used to read in an entire file and store it in a String.
+	 * If the file does not exist or the file is a directory instead of a
+	 * readable file, corresponding error messages will be returned. 
 	 * 
 	 * @param file
+	 * 		is the target file that is going to be read.
 	 * @return
+	 * 		the content of the file, store in one String.
 	 * @throws IOException
+	 * 		when reading encounters any problem.
 	 * @throws RuntimeException
+	 * 		when file does not exist or the file is a directory.
 	 */
 	public static String readFileContent(File file) throws IOException, RuntimeException {
 		if (file == null || !file.exists()){
@@ -57,6 +63,17 @@ public class FileUtils {
 		return readFileContentHelper(file);
 	}
 
+	/**
+	 * This function is used to read a valid file and store the content in a
+	 * String arrays.
+	 * 
+	 * @param file
+	 * 		is the valid file that is going to be read.
+	 * @return
+	 * 		a String array that contains the content of the file.
+	 * @throws IOException
+	 * 		when reading encounters any problem.
+	 */
 	private static String[] readFileLinesHelper(File file) throws IOException {
 		ArrayList<String> lines = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -71,6 +88,20 @@ public class FileUtils {
 		return lines.toArray(new String[0]);
 	}
 	
+	/**
+	 * This function is used to read in the entire file and store the content in
+	 * a String arrays. If the file does not exist or the file is a directory
+	 * instead of a readable file, corresponding error messages will be returned.
+	 *  
+	 * @param file
+	 * 		is the target file that is going to be read.
+	 * @return
+	 * 		a String array that contains the content of the file.
+	 * @throws IOException
+	 * 		when reading encounters any problem.
+	 * @throws RuntimeException
+	 * 		when file does not exist or the file is a directory.
+	 */
 	public static String[] readFileLines(File file) throws IOException, RuntimeException {
 		if (file == null || !file.exists()){
 			throw new FileSystemNotFoundException("Error: No such file or directory");

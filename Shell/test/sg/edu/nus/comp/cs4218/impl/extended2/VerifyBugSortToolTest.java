@@ -59,7 +59,7 @@ public class VerifyBugSortToolTest {
 	@Test
 	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
 		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "testData3.txt");
-		assertEquals(result, "sort: testData3.txt:2 disorder: dolor sit amet\n");
+		assertEquals(result, "sort: " + PathUtils.getCurrentPath()+ "/" + "testData3.txt:2 disorder: dolor sit amet\n");
 	}
 	
 	@Test
