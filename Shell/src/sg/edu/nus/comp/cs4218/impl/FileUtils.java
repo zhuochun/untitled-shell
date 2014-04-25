@@ -112,40 +112,63 @@ public class FileUtils {
 		return readFileLinesHelper(file);
 	}
 	
-	public static boolean diffTwoFiles(File origin, File copy) throws IOException {
+	/**
+	 * This function is used to tell if two files are identical.
+	 * 
+	 * @param origin
+	 * 		is the origin file under comparison.
+	 * @param other
+	 * 		is the other file under comparison.
+	 * @return
+	 * 		true if two files are identical; false the other wise.
+	 * @throws IOException
+	 * 		when either of the file is not readable.
+	 */
+	public static boolean diffTwoFiles(File origin, File other) throws IOException {
 		boolean compareResult = true; 
 		
-		if (!origin.exists() || !copy.exists()) {
+		if (!origin.exists() || !other.exists()) {
 			throw new FileNotFoundException();
 		}
 		
 		BufferedInputStream originInput = new BufferedInputStream(new FileInputStream(origin));
-		BufferedInputStream copyInput = new BufferedInputStream(new FileInputStream(copy));
+		BufferedInputStream otherInput = new BufferedInputStream(new FileInputStream(other));
 		
 		boolean finish = false;
 		
 		int originRead = -1;
-		int copyRead = -1;
+		int otherRead = -1;
 		
 		while (!finish) {
 			originRead = originInput.read();
-			copyRead = copyInput.read();
+			otherRead = otherInput.read();
 			
-			if (originRead == -1 && copyRead == -1) {
+			if (originRead == -1 && otherRead == -1) {
 				finish = true;
 			}
 			
-			if (originRead != copyRead) {
+			if (originRead != otherRead) {
 				compareResult = false;
 			}
 		}
 		
 		originInput.close();
-		copyInput.close();
+		otherInput.close();
 				
 		return compareResult;
 	}
 	
+	/**
+	 * This function is used to create a dummy file with a specified length.
+	 * The content of the file is a string of "0" with a specified length.
+	 * 
+	 * @param file
+	 * 		is the [path/]name of the dummy file.
+	 * @param length
+	 * 		is the expected length of the dummy file.
+	 * @throws IOException
+	 * 		when the location specified cannot be resolved.
+	 */
 	public static void createDummyFile(File file, int length) throws IOException {
 		if (!file.exists()) {
 			file.createNewFile();
@@ -160,6 +183,16 @@ public class FileUtils {
 		output.close();
 	}
 
+	/**
+	 * This function is used to create a dummy file with a specified content.
+	 * 
+	 * @param file
+	 * 		is the [path/]name of the dummy file.
+	 * @param content
+	 * 		is the specified content.
+	 * @throws IOException
+	 * 		when the location specified cannot be resolved.
+	 */
 	public static void createDummyFile(File file, String content) throws IOException {
 		if (!file.exists()) {
 			file.createNewFile();
