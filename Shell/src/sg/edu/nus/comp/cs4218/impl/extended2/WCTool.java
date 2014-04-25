@@ -49,34 +49,41 @@ public class WCTool extends ATool implements IWcTool {
 
 	@Override
 	public String getWordCount(String input) {
+		String result = "0";
 		if(input == null)
-			return "0";
+			return result;
 		else{
-			input=input.replaceAll("\n", " ");
-			input=input.trim();
-			String []words = input.split(" ");
-			return words.length+"";
+			String newInput;
+			newInput=input.replaceAll("\n", " ");
+			newInput=newInput.trim();
+			String []words = newInput.split(" ");
+			result = words.length+"";
+			return result;
 		}
 	}
 
 	@Override
 	public String getNewLineCount(String input) {
+		String result = "0";
 		if(input == null)
-			return "0";
+			return result;
 		else{
 			int count=0;
 			int index = input.indexOf("\r"); 
+			String output = input;
 			while(index>=0){
 				count++;
-				input = input.substring(index+1);
-				index = input.indexOf("\r");
+				output = output.substring(index+1);
+				index = output.indexOf("\r");
 			}
-			return (count+1)+"";
+			result = (count+1)+"";
+			return result;
 		}
 	}
 
 	@Override
 	public String getHelp() {
+		String output;
 		StringBuilder helpInfo = new StringBuilder();
 		helpInfo = helpInfo.append("Command Format - wc [OPTIONS] [FILE]\n");
 		helpInfo = helpInfo.append(" FILE - Name of the file, when no file is present (denoted by -) use standard input\n");
@@ -85,7 +92,8 @@ public class WCTool extends ATool implements IWcTool {
 		helpInfo = helpInfo.append("       -w : Print only the word counts\n");
 		helpInfo = helpInfo.append("       -l : Print only the newline counts\n");
 		helpInfo = helpInfo.append("       -help : Brief information about supported options");
-		return new String(helpInfo);
+		output = new String(helpInfo);
+		return output;
 	}
 
 	@Override

@@ -2,6 +2,11 @@ package sg.edu.nus.comp.cs4218.impl.extended2;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -9,22 +14,47 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.extended2.IWcTool;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class WCToolTest {
 	private IWcTool wcTool;
+	File tmpFile1;
+	File tmpFile2;
 	
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
-
+	public static void writeFile(String fileName, String s) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+		out.write(s);
+		out.close();
+	}
 
 	@Before
-	public void before() {
+	public void before() throws IOException{
 		wcTool = new WCTool(null);
+		
+		tmpFile1 = new File("tmpFile1.txt");
+		tmpFile1.createNewFile();
+		writeFile("tmpFile1.txt", "hello world");
+		
+		
+		tmpFile2 = new File("tmpFile2.txt");
+		tmpFile2.createNewFile();
+		
 	}
 
 	@After
 	public void after() {
 		wcTool = null;
+		File file1 = new File("tmpFile1.txt");
+		if (file1.exists()) {
+			file1.delete();
+		}
+
+		File file2 = new File("tmpFile2.txt");
+		if (file2.exists()) {
+			file2.delete();
+		}
 	}
 
 	//test getCharacterCount method with string
@@ -108,14 +138,14 @@ public class WCToolTest {
 	public void executeWithNoOption(){
 		
 		IWcTool newWCTool = new WCTool(new String[]{});
-		String result = newWCTool.execute(null, null);
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
 		assertEquals(result, wcTool.getHelp());
 	}
 	
 	@Test
 	public void executeWithHelpOption(){
 		IWcTool newWCTool = new WCTool(new String[]{"-help"});
-		String result = newWCTool.execute(null, null);
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
 		assertEquals(result, wcTool.getHelp());
 	}
 	
@@ -123,22 +153,22 @@ public class WCToolTest {
 	
 	@Test
 	public void executeWithMOption(){
-		IWcTool newWCTool = new WCTool(new String[]{"-m", "hello world"});
-		String result = newWCTool.execute(null, null);
+		IWcTool newWCTool = new WCTool(new String[]{"-m", "tmpFile1.txt"});
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
 		assertEquals(result, wcTool.getCharacterCount("hello world"));
 	}
 	
 	@Test
 	public void executeWithWOption(){
-		IWcTool newWCTool = new WCTool(new String[]{"-w", "hello world"});
-		String result = newWCTool.execute(null, null);
+		IWcTool newWCTool = new WCTool(new String[]{"-w", "tmpFile1.txt"});
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
 		assertEquals(result, wcTool.getWordCount("hello world"));
 	}
 	
 	@Test
 	public void executeWithIOption(){
-		IWcTool newWCTool = new WCTool(new String[]{"-l", "hello world"});
-		String result = newWCTool.execute(null, null);
+		IWcTool newWCTool = new WCTool(new String[]{"-l", "tmpFile1.txt"});
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
 		assertEquals(result, wcTool.getNewLineCount("hello world"));
 	}
 }
