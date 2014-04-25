@@ -22,6 +22,16 @@ public class CUTTool extends ATool implements ICutTool {
 	private ArrayList<Range> rangeList;
 	private String prevList;
 	
+	/**
+	 * This function is used to cut the specified characters from the input.
+	 * 
+	 * @param list
+	 * 		is an ArrayList of Range that specifies the cutting range.
+	 * @param input
+	 * 		is the origin input under cut.
+	 * @return
+	 * 		a String of cut result.
+	 */
 	private String cutSpecfiedCharacters(ArrayList<Range> list, String input) {
 		StringBuilder finalString = new StringBuilder();
 		ArrayList<Range> rangeList = RangeUtils.mergeRange(list); 
@@ -39,6 +49,22 @@ public class CUTTool extends ATool implements ICutTool {
 		return finalString.toString();
 	}
 	
+	/**
+	 * This function is used to cut specified fields delimited by delim from
+	 * input.
+	 * 
+	 * Please be noted that the equivalent UNIX operation of this function is
+	 * cut -f delim -c LIST INPUT
+	 *   
+	 * @param list
+	 * 		is an ArrayList of Range that specifies the cutting range.
+	 * @param delim
+	 * 		is the delimiter of fields.
+	 * @param input
+	 * 		is the origin input under cut.
+	 * @return
+	 * 		a String of cut result delimited by delim.
+	 */
 	private String cutSpecifiedCharactersUseDelimiter(ArrayList<Range> list, String delim,
 													  String input) {
 		StringBuilder finalString = new StringBuilder();
@@ -62,6 +88,13 @@ public class CUTTool extends ATool implements ICutTool {
 		return finalString.toString();
 	}
 
+	/**
+	 * Alternative constructor. Construct an executable Comm tool with a
+	 * specified arguments.
+	 * 
+	 * @param arguments
+	 * 		is the specified arguments of Comm tool.
+	 */
 	public CUTTool(String[] arguments) {
 		super(arguments);
 		
@@ -77,6 +110,9 @@ public class CUTTool extends ATool implements ICutTool {
 	}
 
 	@Override
+	/**
+	 * This function is used to cut the specified characters from the input.
+	 */
 	public String cutSpecfiedCharacters(String list, String input) {
 		if (prevList == null || prevList != list) {
 			rangeList = RangeUtils.parseRange(list);
@@ -94,6 +130,10 @@ public class CUTTool extends ATool implements ICutTool {
 	}
 
 	@Override
+	/**
+	 * This function is used to cut specified fields delimited by delim from
+	 * input.
+	 */
 	public String cutSpecifiedCharactersUseDelimiter(String list, String delim,
 			String input) {
 		if (prevList == null || prevList != list) {
@@ -153,51 +193,43 @@ public class CUTTool extends ATool implements ICutTool {
 			setStatusCode(9);
 			return "Error: More than one option.\n" + getHelp();
 		} else {
-			if (argList.hasOption("help")) {
-				return getHelp();
-			} else
-			if (argList.hasOption("c")) {
-				list = argList.getOptionValue("c");
-				
-				if (argList.hasParams() && argList.getParams().length == 1) {
-					if (argList.getParam(0) != "-") {
-						try {
+			try {
+				if (argList.hasOption("help")) {
+					return getHelp();
+				} else
+				if (argList.hasOption("c")) {
+					list = argList.getOptionValue("c");
+					
+					if (argList.hasParams() && argList.getParams().length == 1) {
+						if (argList.getParam(0) != "-") {
 							input = FileUtils.readFileContent(new File(PathUtils.
 									pathResolver(workingDir, argList.getParam(0))));
-						} catch (IOException e) {
-							setStatusCode(1);
-							return e.getMessage();
-						} catch (RuntimeException e) {
-							setStatusCode(2);
-							return e.getMessage();
 						}
+					} else
+					if (!argList.hasParams() || argList.getParams().length != 1) {
+						setStatusCode(9);
+						return getHelp();
 					}
 				} else
-				if (!argList.hasParams() || argList.getParams().length != 1) {
-					setStatusCode(9);
-					return getHelp();
-				}
-			} else
-			if (argList.hasOption("d")) {
-				if (argList.hasParams() && argList.getParams().length == 2) {
-					list = argList.getParam(0);
-					
-					if (argList.getParam(1) != "-") {
-						try {
+				if (argList.hasOption("d")) {
+					if (argList.hasParams() && argList.getParams().length == 2) {
+						list = argList.getParam(0);
+						
+						if (argList.getParam(1) != "-") {
 							input = FileUtils.readFileContent(new File(PathUtils.
 									pathResolver(workingDir, argList.getParam(1))));
-						} catch (IOException e) {
-							setStatusCode(1);
-							return e.getMessage();
-						} catch (RuntimeException e) {
-							setStatusCode(2);
-							return e.getMessage();
 						}
+					} else {
+						setStatusCode(9);
+						return getHelp();
 					}
-				} else {
-					setStatusCode(9);
-					return getHelp();
 				}
+			} catch (IOException e) {
+				setStatusCode(1);
+				return e.getMessage();
+			} catch (RuntimeException e) {
+				setStatusCode(2);
+				return e.getMessage();
 			}
 		}
 
@@ -215,7 +247,7 @@ public class CUTTool extends ATool implements ICutTool {
 				result.append(lineResult);
 				result.append("\n");
 				
-				// if something wrong when cutting the line
+				// if something wrong when cutting the line, break the routine
 				if (getStatusCode() != 0) {
 					break;
 				}
