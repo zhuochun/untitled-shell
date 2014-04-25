@@ -79,15 +79,7 @@ public class UNIQTool extends ATool implements IUniqTool {
 			return input;
 		}
 	}
-/**
- * This function is to get the unique input string from an arbitrary start index without white spaces
- * 
- * @param num the start index
- * @param checkCase the boolean value to indicate whether need to ignore case difference
- * @param input the input string
- * Use {@link #sliceByWhiteSpace(String, int) and #stripWhiteSpace(String) to remove whitespaces and start from a particular index}
- * @return the unique input string from an arbitrary index without \s and \t 
- */
+
 	@Override
 	public String getUniqueSkipNum(int num, boolean checkCase, String input) {
 		if (input == null) {
@@ -111,14 +103,7 @@ public class UNIQTool extends ATool implements IUniqTool {
 		}
 	}
 	
-	/**
-	 * This function is to get string after a int num which indicates the start index, it split the input string by tab
-	 * and append each word to a new stringbuilder
-	 * 
-	 * @param input the input string
-	 * @param startIdx the starting index
-	 * @return  input string if startIdx<=1 otherwise a new stringbuilder after removing all the tabs
-	 */
+	
 	private String sliceByWhiteSpace(String input, int startIdx) {
 		if (startIdx <= 1) {
 			return input;
