@@ -57,11 +57,14 @@ public class PASTETool extends ATool implements IPasteTool {
 	@Override
 	public String pasteSerial(String[] input) {
 		StringBuilder sb = new StringBuilder();
-
-		for (String s : input) {
-			if (s != null) {
-				sb.append(s);
-				sb.append(DELIM);
+		
+		for (int i = 0; i < input.length; i++) {
+			if (input[i] != null) {
+				sb.append(input[i]);
+				
+				if (i + 1 < input.length) {
+					sb.append(DELIM);
+				}
 			}
 		}
 
@@ -82,10 +85,13 @@ public class PASTETool extends ATool implements IPasteTool {
 	public String pasteUseDelimiter(String delim, String[] input) {
 		StringBuilder sb = new StringBuilder();
 
-		for (String s : input) {
-			if (s != null) {
-				sb.append(s);
-				sb.append(delim);
+		for (int i = 0; i < input.length; i++) {
+			if (input[i] != null) {
+				sb.append(input[i]);
+				
+				if (i + 1 < input.length) {
+					sb.append(delim);
+				}
 			}
 		}
 
@@ -189,6 +195,8 @@ public class PASTETool extends ATool implements IPasteTool {
 				for (int j = 0; j < inputs.size(); j++) {
 					if (i < inputs.get(j).length) {
 						lines[j] = inputs.get(j)[i];
+					} else {
+						lines[j] = "";
 					}
 				}
 

@@ -1,24 +1,25 @@
 package sg.edu.nus.comp.cs4218.impl.hackathon;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.Before;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.extended1.PIPINGTool;
+import sg.edu.nus.comp.cs4218.impl.extended2.PASTETool;
 
 public class HackathonTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-	@After
-	public void tearDown() throws Exception {
-	}
-	
 	/**
 	 * 5.1
 	 * Test Case: Tests the -c flag case of sort on multiple files (3) (See Appendix (5.1))
@@ -50,11 +51,20 @@ public class HackathonTest {
 	 * Test Case: N/A
 	 * Buggy Source Code: public String pasteUseDelimiter();
 	 * Description: delimiter should only be in between the columns, not after all columns
-	 *              this is a complete showstopper bug as method does not work as expected
+	 *              this is a complete show stopper bug as method does not work as expected
+	 * @throws IOException 
 	 */
 	@Test
-	public void test_6_1() {
-		fail("Not yet implemented");
+	public void test_6_1() throws IOException {
+		createFile("test1.txt", "1\n2\n3\n");
+		createFile("test2.txt", "a\nb\n");
+		createFile("test3.txt", "1\n2\n3\n4\n");
+
+		PASTETool pasteTool = new PASTETool(
+				"-d ; test1.txt test2.txt test3.txt".split(" "));
+		String stdout = pasteTool.execute(folder.getRoot(), null);
+
+		assertEquals("1;a;1\n2;b;2\n3;;3\n;;4\n", stdout);		
 	}
 
 	/**
@@ -96,4 +106,13 @@ public class HackathonTest {
 		assertEquals("1\n", stdout);
 	}
 
+	private File createFile(String filename, String content) throws IOException {
+		File file = folder.newFile(filename);
+
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		bw.write(content);
+		bw.close();
+
+        return file;
+	}
 }
