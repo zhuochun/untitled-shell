@@ -15,6 +15,16 @@ public class COMMTool extends ATool implements ICommTool {
 	private ArgList argList = new ArgList();
 	private String[] prevLine;
 	
+	/**
+	 * This function is used to check if the file is still sorted.
+	 * 
+	 * @param curLine
+	 * 		is the current line of the file.
+	 * @param fileIndex
+	 * 		is the file index that identifies the file. 0 = file1, 1 = file2. 
+	 * @return
+	 * 		true if the file is still sorted; false the otherwise.
+	 */
 	private boolean isSorted(String curLine, int fileIndex) {
 		boolean sortStatus;
 		
@@ -29,7 +39,24 @@ public class COMMTool extends ATool implements ICommTool {
 		return sortStatus;
 	}
 	
-	private void flushRestOfFile(String[] lines, int curFile,
+	/**
+	 * This function is used to flush the rest of the file into a StringBuilder.
+	 *  
+	 * @param lines
+	 * 		is the String array that contains all lines of the file.
+	 * @param fileIndex
+	 * 		is the file index that identifies the file. 0 = file1, 1 = file2.
+	 * @param curLineParam
+	 * 		is the line index that identifies the current line. 
+	 * @param checkSorted
+	 * 		is the flag that tells if we need to check for sorted.
+	 * @param continueAfterUnsorted
+	 * 		is the flag that tells if we need to continue if the current file.
+	 * is unsorted.
+	 * @param result
+	 * 		is the StringBuilder that records the output.
+	 */
+	private void flushRestOfFile(String[] lines, int fileIndex,
 								 int curLineParam, boolean checkSorted,
 								 boolean continueAfterUnsorted,
 								 StringBuilder result) {
@@ -38,24 +65,24 @@ public class COMMTool extends ATool implements ICommTool {
 		
 		while (curLine < lines.length) {
 			if (checkSorted) {
-				if (!sorted || !isSorted(lines[curLine], curFile)) {
+				if (!sorted || !isSorted(lines[curLine], fileIndex)) {
 					if (sorted) {
 						result.append(String.format("comm: File %d is not in sorted order \n", 
-									  curFile + 1));
+									  fileIndex + 1));
 						sorted = false;
 					}
 				}
 			}
 			
 			if (sorted || continueAfterUnsorted) {
-				if (curFile == 1) {
+				if (fileIndex == 1) {
 					result.append("\t");
 				}
 				
 				result.append(lines[curLine]);
 				result.append("\n");
 				
-				prevLine[curFile] = lines[curLine];
+				prevLine[fileIndex] = lines[curLine];
 				curLine ++;
 			} else {
 				break;
@@ -63,6 +90,22 @@ public class COMMTool extends ATool implements ICommTool {
 		}
 	}
 	
+	/**
+	 * This function is used to update the sorted status.
+	 * 
+	 * @param checkSorted
+	 * 		is the flag that tells if we need to check for sorted.
+	 * @param isSorted
+	 * 		is the flag that tells the current sorted status of the file.
+	 * @param line
+	 * 		is the current line of the file.
+	 * @param fileIndex
+	 * 		is the file index that identifies the file. 0 = file1, 1 = file2.
+	 * @param result
+	 * 		is the StringBuilder that records the output.
+	 * @return
+	 * 		the updated sorted status of the current file.
+	 */
 	private boolean updateSortedStatus(boolean checkSorted, boolean isSorted,
 									   String line, int fileIndex,
 									   StringBuilder result) {
@@ -80,6 +123,27 @@ public class COMMTool extends ATool implements ICommTool {
 		return updatedSortedStatus;
 	}
 	
+	/**
+	 * This function is used to determine if we could continue to the next line
+	 * of the current file.
+	 * 
+	 * @param isSorted
+	 * 		is the flag that tells the current sorted status of the file.
+	 * @param continueAfterUnsorted
+	 * 		is the flag that tells if we need to continue if the current file.
+	 * @param preced
+	 * 		is one of the preceded character {"", "\t", "\t\t"}. This depends
+	 * on which file we are dealing with. 
+	 * @param line
+	 * 		is the current line of the file.
+	 * @param result
+	 * 		is the StringBuilder that records the output.
+	 * @param fileIndex
+	 * 		is the file index that identifies the file. 0 = file1, 1 = file2.
+	 * Specially, 2 = both file in the this function.
+	 * @return
+	 * 		true if we could continue to the next line; false the other wise.
+	 */
 	private boolean continueToNexPos(boolean isSorted, boolean continueAfterUnsorted,
 									 String preced, String line,
 									 StringBuilder result, int fileIndex) {
@@ -96,6 +160,25 @@ public class COMMTool extends ATool implements ICommTool {
 		return false;
 	}
 	
+	/**
+	 * This function is used to compare two files. It will return the compare
+	 * result in a format of Comm command.
+	 * 
+	 * @param input1
+	 * 		is the location of the first file.
+	 * @param input2
+	 * 		is the location of the second file.
+	 * @param checkSorted
+	 * 		is the flag that tells if we need to check for sorted.
+	 * @param continueAfterUnsorted
+	 * 		is the flag that tells if we need to continue if the current file.
+	 * @return
+	 * 		the formated Comm result.
+	 * @throws IOException
+	 * 		when reading files encounter any problem.
+	 * @throws RuntimeException
+	 * 		when file does not exist or the file is a directory.
+	 */
 	private String compareFilesGeneric(String input1,
 									 String input2,
 									 boolean checkSorted,
@@ -184,6 +267,13 @@ public class COMMTool extends ATool implements ICommTool {
 		return result.toString();
 	}
 	
+	/**
+	 * Alternative constructor. Construct an executable Comm tool with a
+	 * specified arguments.
+	 * 
+	 * @param arguments
+	 * 		is the specified arguments of Comm tool.
+	 */
 	public COMMTool(String[] arguments) {
 		super(arguments);
 		
@@ -198,6 +288,11 @@ public class COMMTool extends ATool implements ICommTool {
 	}
 
 	@Override
+	/**
+	 * This function is used to compare two input files. It is aware of sorting
+	 * status of the files, but won't stop comparing even if either of the files
+	 * is determined to be unsorted. 
+	 */
 	public String compareFiles(String input1, String input2) {
 		String result = "";
 		
@@ -215,6 +310,11 @@ public class COMMTool extends ATool implements ICommTool {
 	}
 
 	@Override
+	/**
+	 * This function is used to compare two input files. It is aware of sorting
+	 * status of the files, but will stop comparing when either of the files
+	 * is determined to be unsorted. 
+	 */
 	public String compareFilesCheckSortStatus(String input1, String input2) {
 		String result = "";
 		
@@ -232,6 +332,10 @@ public class COMMTool extends ATool implements ICommTool {
 	}
 
 	@Override
+	/**
+	 * This function is used to compare two input files. It is NOT aware of
+	 * sorting status of the files.
+	 */
 	public String compareFilesDoNotCheckSortStatus(String input1, String input2) {
 		String result = "";
 		
