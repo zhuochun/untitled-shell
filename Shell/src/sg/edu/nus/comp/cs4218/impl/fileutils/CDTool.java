@@ -22,11 +22,20 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;;
  * 
  * If the directory cannot be found, an error message will be returned and an
  * error code will be set.
+ * 
+ * Please be noted that our program only takes care of file system under MAC OS.
  */
 public class CDTool extends ATool implements ICdTool {
 	
 	private ArgList argList = new ArgList();
 	
+	/**
+	 * Alternative constructor. Construct an executable CD tool with a
+	 * specified arguments.
+	 * 
+	 * @param arguments
+	 * 		is the specified arguments of CD tool.
+	 */
 	public CDTool(String[] arguments) {
 		super(arguments);
 	}

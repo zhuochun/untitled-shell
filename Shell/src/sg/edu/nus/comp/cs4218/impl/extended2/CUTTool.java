@@ -89,11 +89,11 @@ public class CUTTool extends ATool implements ICutTool {
 	}
 
 	/**
-	 * Alternative constructor. Construct an executable Comm tool with a
+	 * Alternative constructor. Construct an executable Cut tool with a
 	 * specified arguments.
 	 * 
 	 * @param arguments
-	 * 		is the specified arguments of Comm tool.
+	 * 		is the specified arguments of Cut tool.
 	 */
 	public CUTTool(String[] arguments) {
 		super(arguments);
