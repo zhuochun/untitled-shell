@@ -51,8 +51,7 @@ public class PIPINGTool extends ATool implements IPipingTool {
 	@Override
 	public String execute(File workingDir, String stdin) {
 		this.workingDir = workingDir;
-
-		endIdx = -1;
+		this.endIdx = -1;
 		
 		String stdout = null;
 		
@@ -62,29 +61,26 @@ public class PIPINGTool extends ATool implements IPipingTool {
 
 			stdout = pipe(fromTool, toTool);
 
+			// exit if previous pipe runs to error
 			if (getStatusCode() != 0) {
 				return stdout;
 			}
-		} catch (RuntimeException e) {
-			return e.getMessage();
-		}
-		
-		// any more tools in pipe?
-		while (endIdx < args.length) {
-			try {
-				ITool nextTool = getITool();
 
+			// any more tools in pipe?
+			while (endIdx < args.length) {
+				ITool nextTool = getITool();
 				stdout = pipe(stdout, nextTool);
 
+				// exit if previous pipe runs to error
 				if (getStatusCode() != 0) {
 					return stdout;
 				}
-			} catch (RuntimeException e) {
-				return e.getMessage();
 			}
+
+			return stdout;
+		} catch (IllegalArgumentException e) {
+			return e.getMessage();
 		}
-		
-		return stdout;
 	}
 	
 	private ITool getITool() {
@@ -93,14 +89,14 @@ public class PIPINGTool extends ATool implements IPipingTool {
 		
 		if (startIdx == endIdx) {
 			setStatusCode(8);
-			throw new RuntimeException("Error: Parse Error Near '|'");
+			throw new IllegalArgumentException("Error: Parse Error Near '|'");
 		}
 		
 		ITool tool = CommandInterpreter.cmdToITool(args[startIdx], Arrays.copyOfRange(args, startIdx + 1, endIdx));
 		
 		if (tool == null) {
 			setStatusCode(7);
-			throw new RuntimeException("Error: Command Not Found '" + args[startIdx] + "'");
+			throw new IllegalArgumentException("Error: Command Not Found '" + args[startIdx] + "'");
 		}
 		
 		return tool;

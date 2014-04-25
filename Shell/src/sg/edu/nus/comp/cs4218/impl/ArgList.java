@@ -11,6 +11,25 @@ import java.util.regex.Pattern;
 
 public class ArgList {
 
+	/* regular expressions to handle arguments */
+	private static final Pattern REGEX_SPACESTR = Pattern
+			.compile("^.*(?<!\\\\)(?:(?:\\\\\\\\)*\\\\)$");
+	private static final Pattern REGEX_QUOTESTR = Pattern
+			.compile("^.*?(?<!\\\\)(?:\\\\\\\\)*(\"|').*$");
+	private static final Pattern REGEX_QUOTE = Pattern
+			.compile("(?<!\\\\)(?:\\\\\\\\)*(\"|')");
+
+	/* comparator for options */
+	private final Comparator<String> compare = new Comparator<String>() {
+		public int compare(String o1, String o2) {
+			if (o1.length() != o2.length()) {
+				return o1.length() - o2.length();
+			} else {
+				return o1.compareTo(o2);
+			}
+		}
+	};
+
 	public enum ArgType {
 		RAW, NUM, STRING
 	}
@@ -63,16 +82,6 @@ public class ArgList {
 	public boolean invalidOptionCheck = true;
 
 	public ArgList() {
-		Comparator<String> compare = new Comparator<String>() {
-			public int compare(String o1, String o2) {
-				if (o1.length() != o2.length()) {
-					return o1.length() - o2.length();
-				} else {
-					return o1.compareTo(o2);
-				}
-			}
-		};
-
 		acceptableOptions = new TreeMap<String, Option>(compare);
 		arguments = new ArrayList<String>();
 		options = new ArrayList<String>();
@@ -128,7 +137,7 @@ public class ArgList {
 		return arguments.toArray(new String[0]);
 	}
 
-	public String getArgument(int idx) {
+	public String getArgument(final int idx) {
 		return arguments.get(idx);
 	}
 
@@ -151,7 +160,7 @@ public class ArgList {
 		return options.contains(option);
 	}
 
-	public String getOption(int idx) {
+	public String getOption(final int idx) {
 		return options.get(idx);
 	}
 
@@ -222,7 +231,8 @@ public class ArgList {
 			if (arg.isEmpty()) {
 				continue;
 			} else if (isAnOption(arg)) {
-				parseOptionStr(arg.substring(1), argIter);
+				arg = arg.substring(1); // remove the - in front
+				parseOptionStr(arg, argIter);
 			} else if (REGEX_QUOTESTR.matcher(arg).matches()) {
 				parseQuotedStr(arg, argIter);
 			} else {
@@ -237,33 +247,33 @@ public class ArgList {
 			throw new IllegalArgumentException("Error: Option -" + option + " should appear in front");
 		}
 		
-		option = removeBackslash(option);
-		arguments.add("-" + option);
+		String optStr = removeBackslash(option);
+		arguments.add("-" + optStr);
 
 		// invalid option?
-		Option opt = acceptableOptions.get(option);
+		Option opt = acceptableOptions.get(optStr);
 
 		if (opt == null) {
 			if (invalidOptionCheck) {
-				throw new IllegalArgumentException("Error: Illegal option -" + option);
+				throw new IllegalArgumentException("Error: Illegal option -" + optStr);
 			}
 
-			addWithoutDuplicate(invalidOptions, option);
+			addWithoutDuplicate(invalidOptions, optStr);
 			return;
 		}
 
 		// valid option
-		addWithoutDuplicate(options, option);
+		addWithoutDuplicate(options, optStr);
 
 		if (opt.type != ArgType.RAW) {
 			if (!iter.hasNext()) {
-				throw new IllegalArgumentException("Error: Invalid option -" + option);
+				throw new IllegalArgumentException("Error: Invalid option -" + optStr);
 			}
 
 			String val = iter.next();
 
 			if (isAnOption(val)) {
-				throw new IllegalArgumentException("Error: Invalid option -" + option);
+				throw new IllegalArgumentException("Error: Invalid option -" + optStr);
 			} else if (!opt.matchType(val)) {
 				throw new IllegalArgumentException("Error: Illegal value: " + val);
 			}
@@ -278,10 +288,10 @@ public class ArgList {
 			throw new IllegalArgumentException("Error: Incomplete quotation");
 		}
 		
-		arg = removeQuoteMarks(removeBackslash(arg));
+		String cleanArg = removeQuoteMarks(removeBackslash(arg));
 
-		params.add(arg);
-		arguments.add(arg);
+		params.add(cleanArg);
+		arguments.add(cleanArg);
 	}
 
 	private boolean isAnOption(String arg) {
@@ -302,13 +312,6 @@ public class ArgList {
 		}
 	}
 
-	private static Pattern REGEX_SPACESTR = Pattern
-			.compile("^.*(?<!\\\\)(?:(?:\\\\\\\\)*\\\\)$");
-	private static Pattern REGEX_QUOTESTR = Pattern
-			.compile("^.*?(?<!\\\\)(?:\\\\\\\\)*(\"|').*$");
-	private static Pattern REGEX_QUOTE = Pattern
-			.compile("(?<!\\\\)(?:\\\\\\\\)*(\"|')");
-
 	/**
 	 * split input line into command + params[]
 	 * 
@@ -320,10 +323,7 @@ public class ArgList {
 	 */
 	public static String split(String line, ArrayList<String> params)
 			throws IllegalArgumentException {
-		// split by \s
-		String[] result = line.split("\\s+");
-		// command
-		String command = null;
+		String[] result = line.split("\\s+"); // commands are in empty spaces
 
 		for (int i = 0; i < result.length; i++) {
 			String t = result[i];
@@ -352,37 +352,37 @@ public class ArgList {
 				}
 			}
 
-			if (t.equals("|")) {
-				command = "pipe";
-			}
-
 			params.add(t);
 		}
 
 		if (params.isEmpty()) {
 			return "";
-		} else if (command == null) {
-			return params.remove(0);
+		} else if (params.contains("|")) {
+			return "pipe";
 		} else {
-			return command;
+			return params.remove(0);
 		}
 	}
 
 	private static boolean isQuoteMatcherCompleted(Matcher matcher) {
 		// get start mark
 		matcher.find();
-		String startMark = matcher.group();
-
+		// begin quote mark
+		final String beginMark = matcher.group();
 		// find the rest
-		boolean alone = true;
+		boolean completed = false;
 
 		while (matcher.find()) {
-			if (matcher.group().equals(startMark)) {
-				alone = !alone;
+			if (beginMark.equals(matcher.group())) {
+				if (completed) {
+					completed = false;
+				} else {
+					completed = true;
+				}
 			}
 		}
 
-		return !alone;
+		return completed;
 	}
 
 }
