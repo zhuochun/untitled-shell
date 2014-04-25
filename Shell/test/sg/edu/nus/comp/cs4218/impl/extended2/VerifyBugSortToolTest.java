@@ -14,7 +14,7 @@ import org.junit.Test;
 import sg.edu.nus.comp.cs4218.extended2.ISortTool;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
-/* This test case is used to verify the bug 5.2
+/* This test case is used to verify the bug 5.1 and bug 5.2
  * 
  */
 
@@ -60,5 +60,26 @@ public class VerifyBugSortToolTest {
 	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
 		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "testData3.txt");
 		assertEquals(result, "sort: testData3.txt:2 disorder: dolor sit amet\n");
+	}
+	
+	@Test
+	public void checkIfSortedForMultipleFile(){
+		ISortTool newSortTool = new SORTTool(new String[]{"-c", "sortFile.txt","testData3.txt"});
+		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		assertEquals(result,newSortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "sortFile.txt"));
+	}
+	
+	@Test
+	public void sortedTestForMultipleFile(){
+		ISortTool newSortTool = new SORTTool(new String[]{"sortFile.txt","testData3.txt"});
+		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		assertEquals(result, newSortTool.sortFile("aaa\r\nbbb\r\nccc\r\nddd\r\neee"));
+	}
+	
+	@Test
+	public void sortedTestForMultipleFileTwo(){
+		ISortTool newSortTool = new SORTTool(new String[]{"testData3.txt", "sortFile.txt"});
+		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		assertEquals(result, newSortTool.sortFile("lorem ipsum\ndolor sit amet"));
 	}
 }
