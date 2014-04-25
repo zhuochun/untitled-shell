@@ -65,8 +65,9 @@ public class WCTool extends ATool implements IWcTool {
 		if(input == null)
 			return result;
 		else{
-			String newInput;
-			newInput=input.replaceAll("\n", " ");
+			String newInput = input;
+			
+			newInput=newInput.replaceAll("\n", " ");
 			newInput=newInput.trim();
 			String []words = newInput.split(" ");
 			result = words.length+"";
