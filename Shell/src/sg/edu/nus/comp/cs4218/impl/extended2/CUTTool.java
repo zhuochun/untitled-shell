@@ -201,7 +201,7 @@ public class CUTTool extends ATool implements ICutTool {
 					list = argList.getOptionValue("c");
 					
 					if (argList.hasParams() && argList.getParams().length == 1) {
-						if (argList.getParam(0) != "-") {
+						if (!argList.getParam(0).equals("-")) {
 							input = FileUtils.readFileContent(new File(PathUtils.
 									pathResolver(workingDir, argList.getParam(0))));
 						}
@@ -215,7 +215,7 @@ public class CUTTool extends ATool implements ICutTool {
 					if (argList.hasParams() && argList.getParams().length == 2) {
 						list = argList.getParam(0);
 						
-						if (argList.getParam(1) != "-") {
+						if (!argList.getParam(1).equals("-")) {
 							input = FileUtils.readFileContent(new File(PathUtils.
 									pathResolver(workingDir, argList.getParam(1))));
 						}
