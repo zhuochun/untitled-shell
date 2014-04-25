@@ -6,7 +6,17 @@ import sg.edu.nus.comp.cs4218.impl.extended2.*;
 import sg.edu.nus.comp.cs4218.impl.fileutils.*;
 
 public class CommandInterpreter {
-
+	
+	/**
+	 * This function is used to interpret a command from string to a executable tool.
+	 * 
+	 * @param cmd
+	 * 		is the command to be interpreted in String type.
+	 * @param args
+	 * 		is the arguments that are going to be passed to the tool.
+	 * @return
+	 * 		an executable tool object.
+	 */
 	public static ITool cmdToITool(String cmd, String[] args) {
 		String regulatedCmd = cmd.toLowerCase();
 

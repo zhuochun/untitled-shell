@@ -9,10 +9,22 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
+import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
 public class FileUtils {
-	
+	/**
+	 * This function is used to read in an entire file given the file is a valid
+	 * file and stored the content in a String.
+	 * 
+	 * @param file
+	 * 		is a valid file that is going to be read.
+	 * @return
+	 * 		the content of the file, store in one String.
+	 * @throws IOException
+	 * 		when reading encouters any problem.
+	 */
 	private static String readFileContentHelper(File file) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -27,11 +39,19 @@ public class FileUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * This function is used to read in an entire file and store it in a String.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 * @throws RuntimeException
+	 */
 	public static String readFileContent(File file) throws IOException, RuntimeException {
 		if (file == null || !file.exists()){
-			throw new RuntimeException("Error: No such file or directory");
+			throw new FileSystemNotFoundException("Error: No such file or directory");
 		} else if (file.isDirectory()) {
-			throw new RuntimeException("Error: " + file.getName() + " is a directory");
+			throw new FileSystemException("Error: " + file.getName() + " is a directory");
 		}
 
 		return readFileContentHelper(file);
@@ -53,9 +73,9 @@ public class FileUtils {
 	
 	public static String[] readFileLines(File file) throws IOException, RuntimeException {
 		if (file == null || !file.exists()){
-			throw new RuntimeException("Error: No such file or directory");
+			throw new FileSystemNotFoundException("Error: No such file or directory");
 		} else if (file.isDirectory()) {
-			throw new RuntimeException("Error: " + file.getName() + " is a directory");
+			throw new FileSystemException("Error: " + file.getName() + " is a directory");
 		}
 
 		return readFileLinesHelper(file);
