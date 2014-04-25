@@ -348,4 +348,11 @@ public class RangeUtilTest {
 		
 		assertRangeListEqual(expected, range);
 	}
+	
+	@Test
+	public void testMergeRangeWithNullList() {
+		ArrayList<Range> range = RangeUtils.mergeRange(null);
+		
+		assertEquals(null, range);
+	}
 }
