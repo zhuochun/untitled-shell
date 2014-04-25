@@ -31,7 +31,11 @@ public class UNIQTool extends ATool implements IUniqTool {
 
 	private ArgList argList = new ArgList();
 	private String lastLine = null;
-
+/**
+ * Constructor of the UNIQTool Class, register the acceptable options of the UNIQTool
+ * 
+ * @param arguments the input array of string arguments
+ */
 	public UNIQTool(String[] arguments) {
 		super(arguments);
 
@@ -45,6 +49,14 @@ public class UNIQTool extends ATool implements IUniqTool {
 				"Brief information about supported options");
 	}
 
+	/**
+	 * This function is to get the unique input string and make sure it is not an empty string
+	 * 
+	 * @param checkCase
+	 * @param input
+	 * Use {@link UNIQTool#sliceByWhiteSpace(String, int) to remove the \s and \t of input string}
+	 * @return the input string without white spaces
+	 */
 	@Override
 	public String getUnique(boolean checkCase, String input) {
 		if (input == null) {
@@ -67,7 +79,15 @@ public class UNIQTool extends ATool implements IUniqTool {
 			return input;
 		}
 	}
-
+/**
+ * This function is to get the unique input string from an arbitrary start index without white spaces
+ * 
+ * @param num the start index
+ * @param checkCase the boolean value to indicate whether need to ignore case difference
+ * @param input the input string
+ * Use {@link #sliceByWhiteSpace(String, int) and #stripWhiteSpace(String) to remove whitespaces and start from a particular index}
+ * @return the unique input string from an arbitrary index without \s and \t 
+ */
 	@Override
 	public String getUniqueSkipNum(int num, boolean checkCase, String input) {
 		if (input == null) {
@@ -91,7 +111,14 @@ public class UNIQTool extends ATool implements IUniqTool {
 		}
 	}
 	
-	// get string after a num
+	/**
+	 * This function is to get string after a int num which indicates the start index, it split the input string by tab
+	 * and append each word to a new stringbuilder
+	 * 
+	 * @param input the input string
+	 * @param startIdx the starting index
+	 * @return  input string if startIdx<=1 otherwise a new stringbuilder after removing all the tabs
+	 */
 	private String sliceByWhiteSpace(String input, int startIdx) {
 		if (startIdx <= 1) {
 			return input;
@@ -108,13 +135,25 @@ public class UNIQTool extends ATool implements IUniqTool {
 		return newStr.toString();
 	}
 	
-	// replace \s or \t
+	/**
+	 * This function is to remove all the \s and \t in a string 
+	 *
+	 * @param input the string of input
+	 * @return the new string with all the \s and \t removed
+	 */
 	private String stripWhiteSpace(String input) {
 		return input.replaceAll(" +|\t+", " ")
 					.replaceAll("^( +|\t+)|( +|\t+)$", "");
 	}
 	
-	// check two strings equals (case)
+	/**
+	 * This function is to check and return whether 2 input strings are equal or not
+	 * 
+	 * @param a an input string
+	 * @param b another input string
+	 * @param checkCase the boolean value of whether we want to check the case of 2 strings or not
+	 * @return a.equals(b) if checkCase is true, otherwise return a.equalsIgnoreCase(b)
+	 */
 	private boolean stringEquals(String a, String b, boolean checkCase) {
 		if (checkCase) {
 			return a.equals(b);
@@ -122,7 +161,11 @@ public class UNIQTool extends ATool implements IUniqTool {
 			return a.equalsIgnoreCase(b);
 		}
 	}
-
+	/**
+	 * This function is the return the help message of UNIQTool
+	 * 
+	 * @return   the help log of the UNIQTool
+	 */
 	@Override
 	public String getHelp() {
 		StringBuilder help = new StringBuilder();
@@ -140,7 +183,16 @@ public class UNIQTool extends ATool implements IUniqTool {
 
 		return help.toString();
 	}
-
+/**
+ * This function is to execute all the UNIQTool methods and get the result unique strings
+ * 
+ * @param workingDir the working directory of the file
+ * @param stdin the standard input string from the file or stdin
+ * @return     the result string after removing the duplicates and remain only the unique strings
+ * Use {@link #getInput(File, String)} to set the input from stdin or a file
+ * Use {@link UNIQTool#getHelp()} to check if the stdin has an argument
+ * @exception error message if there is IllegalArgumentException
+ */
 	@Override
 	public String execute(File workingDir, String stdin) {
 		// parse arguments
@@ -170,7 +222,20 @@ public class UNIQTool extends ATool implements IUniqTool {
 		// process inputs
 		return processInput(input, checkCase, skipNum);
 	}
-	
+	/**
+	 * The function is to process input, which means that to eliminate duplicates and remain unique string
+	 * 
+	 * @param input 
+	 *        the input string going to be processed
+	 * @param checkCase
+	 *        the boolean value that indicates whether checkCase or not 
+	 * @param skipNum
+	 *        the int value that check if the string has an option
+	 * Use {@link #getUnique(boolean, String) and #getUniqueSkipNum(int, boolean, String) to append to the result string}
+	 * @return
+	 *        the unique string result after removing all the duplicates
+	 * @exception throw error message if there is IOExecption
+	 */
 	private String processInput(String input, boolean checkCase, int skipNum) {
 		BufferedReader br = new BufferedReader(new StringReader(input));
 		StringBuilder result = new StringBuilder();
@@ -190,7 +255,14 @@ public class UNIQTool extends ATool implements IUniqTool {
 
 		return result.toString();
 	}
-
+/**
+ * This function is to get the input text from a file from a particular directory
+ * 
+ * @param workingDir the directory of the file we are using
+ * @param stdin the string of standard input
+ * @return the file contents in the file if is has params else return stdin as the input
+ * @exception throw error message if got IOException or RuntimeException
+ */
 	private String getInput(File workingDir, String stdin) {
 		if (argList.hasParams() && !argList.getParam(0).equals("-")) {
 			try {

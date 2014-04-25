@@ -12,12 +12,23 @@ public class MOVETool extends ATool implements IMoveTool {
 	private ArgList argList = new ArgList();
 	private String currentDir;
 
+	/**
+	 * Constructor of the MOVETool class
+	 * @param arguments
+	 *        the string array that being parsed into the console
+	 */
 	public MOVETool(String[] arguments) {
 		super(arguments);
 		
 		currentDir = System.getProperty("user.dir");
 	}
-
+/**
+ * This boolean function is to check whether the move file is valid
+ * 
+ * @param origin the original file location
+ * @param copy the destination file location
+ * @return true if the move file is valid otherwise false
+ */
 	@Override
 	public boolean move(File origin, File copy) {
 		boolean result = false;
@@ -35,7 +46,14 @@ public class MOVETool extends ATool implements IMoveTool {
 		
 		return result;
 	}
-
+/**
+ * This function is to execute the MOVETool methods and get the output
+ * @param workingDir the workingDir of the file
+ * @param stdin the standard input string
+ * Use {@link #argList} to get the arguments being parsed and check the length of the arguments
+ * @return output string according to difference conditions
+ * @exception IllegalArgumentException
+ */
 	@Override
 	public String execute(File workingDir, String stdin) {
 		String output;
