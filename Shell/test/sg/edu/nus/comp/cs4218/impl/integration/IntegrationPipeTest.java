@@ -1,4 +1,4 @@
-package sg.edu.nus.comp.cs4218.impl;
+package sg.edu.nus.comp.cs4218.impl.integration;
 
 import static org.junit.Assert.*;
 
@@ -14,6 +14,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import sg.edu.nus.comp.cs4218.ITool;
+import sg.edu.nus.comp.cs4218.impl.Directory;
+import sg.edu.nus.comp.cs4218.impl.Shell;
+import sg.edu.nus.comp.cs4218.impl.ToolRunnable;
 
 public class IntegrationPipeTest {
 
