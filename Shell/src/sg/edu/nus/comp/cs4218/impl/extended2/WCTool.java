@@ -1,4 +1,4 @@
-/*
+/**
  * 
  * wc : Prints the number of bytes, words, and lines in given file
  *
@@ -9,6 +9,8 @@
  *      -w : Print only the word counts
  *      -l : Print only the newline counts
  *		-help : Brief information about supported options
+ * if there is no option, return the characters, words and new lines of the 
+ * if there is option but no file parameters, return error messages and status cosde will be set
  */
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
@@ -39,6 +41,11 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to count the characters in the given content
+	 * @param input  the given content
+	 * @return the number of characters in the content
+	 */
 	public String getCharacterCount(String input) {
 		if(input == null)
 			return "0";
@@ -48,6 +55,11 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to count the words in the given content
+	 * @param input  the given content
+	 * @return the number of words in the content
+	 */
 	public String getWordCount(String input) {
 		String result = "0";
 		if(input == null)
@@ -63,6 +75,11 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to count the newlines in the given content
+	 * @param input  the given content
+	 * @return the number of newlines in the content
+	 */
 	public String getNewLineCount(String input) {
 		String result = "0";
 		if(input == null)
@@ -82,6 +99,10 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to output the help information
+	 * @return help information
+	 */
 	public String getHelp() {
 		String output;
 		StringBuilder helpInfo = new StringBuilder();
@@ -97,6 +118,12 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to execute and call the respective methods in wc command
+	 * @param workingDir the directory of current working environment
+	 * @param stdin the input command
+	 * @return the execute result and information 
+	 */
 	public String execute(File workingDir, String stdin) {
 		try {
 			argList.parseArgs(this.args);

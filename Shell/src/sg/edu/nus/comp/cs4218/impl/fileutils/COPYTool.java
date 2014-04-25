@@ -10,6 +10,15 @@ import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
+/**
+ * copy - copy the chosen file to a target location
+ *
+ * copy [file] [location]
+ * 
+ * If the file cannot be found or the chosen file is a directory or the location cannot be found, an error message will be returned and an
+ * error code will be set.
+ */
+
 public class COPYTool extends ATool implements ICopyTool {
 
 	private ArgList argList = new ArgList();
@@ -22,6 +31,13 @@ public class COPYTool extends ATool implements ICopyTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to copy the chosen file to a given location
+	 * @param from  is the chosen file
+	 * @param to  the given target location
+	 * @return the copy operation information, whether it is successful or not
+	 */
+	
 	public boolean copy(File from, File to) {
 		boolean result = false;
 
@@ -51,6 +67,12 @@ public class COPYTool extends ATool implements ICopyTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to execute and call the respective methods in copy command
+	 * @param workingDir the directory of current working environment
+	 * @param stdin the input command
+	 * @return the execute result and information 
+	 */
 	public String execute(File workingDir, String stdin) {
 		// parse arguments
 		try {

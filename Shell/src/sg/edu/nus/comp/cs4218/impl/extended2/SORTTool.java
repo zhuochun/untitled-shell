@@ -1,5 +1,4 @@
-/*
- * 
+/**
  * sort : sort lines of text file
  *
  * Command Format - sort [OPTIONS] [FILE]
@@ -8,6 +7,8 @@
  *		-c : Check whether the given file is already sorted, if it is not all sorted, print a
  *           diagnostic containing the first line that is out of order
  *	    -help : Brief information about supported options
+ *if the input command is invalid such as no file exception, an error message will be returned and 
+ *status code will be set
  */
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
@@ -23,7 +24,11 @@ import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
-
+/*
+ * This function is used to sort the given content
+ * @param input  the given content
+ * @return the sorted content
+ */
 public class SORTTool extends ATool implements ISortTool {
 
 	private ArgList argList = new ArgList();
@@ -43,6 +48,11 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to sort the given content
+	 * @param input  the given content
+	 * @return the sorted content
+	 */
 	public String sortFile(String input) {
 
 		StringBuilder sortedString = new StringBuilder();
@@ -56,6 +66,11 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to check whether the given content is sorted
+	 * @param input  the given content
+	 * @return the result of checking the given content
+	 */
 	public String checkIfSorted(String input) {
 		try{
 
@@ -94,6 +109,10 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to output the help information
+	 * @return help information
+	 */
 	public String getHelp() {
 		StringBuilder helpInfo = new StringBuilder();
 		helpInfo = helpInfo.append("Command Format - sort [OPTIONS] [FILE]\r");
@@ -107,6 +126,12 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
+	/*
+	 * This function is used to execute and call the respective methods in sort command
+	 * @param workingDir the directory of current working environment
+	 * @param stdin the input command
+	 * @return the execute result and information 
+	 */
 	public String execute(File workingDir, String stdin) {
 		try {
 			argList.parseArgs(this.args);

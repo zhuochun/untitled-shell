@@ -14,7 +14,11 @@ import org.junit.Test;
 import sg.edu.nus.comp.cs4218.extended2.ISortTool;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
-public class NewSORTToolTest {
+/* This test case is used to verify the bug 5.2
+ * 
+ */
+
+public class VerifyBugSortToolTest {
 	private ISortTool sortTool;
 	File testData3;
 	File myFile2;

@@ -1,5 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,8 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.extended2.IWcTool;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
-public class NewWEToolTest {
+public class VerifyBugWCToolTest {
 	private IWcTool wcTool;
 	File tmpFile1;
 	File tmpFile2;
@@ -28,11 +31,11 @@ public class NewWEToolTest {
 		wcTool = new WCTool(null);
 		tmpFile1 = new File("tmpFile1.txt");
 		tmpFile1.createNewFile();
-		writeFile("tmpFile1.txt", "zzz\r\nbbb\r\naaa\r\nggg\r\nfff");
+		writeFile("tmpFile1.txt", "hello world");
 		
 		tmpFile2 = new File("tmpFile2.txt");
 		tmpFile2.createNewFile();
-		writeFile("tmpFile2.txt", "zzz\r\nbbb\r\naaa\r\nggg\r\nfff");
+		writeFile("tmpFile2.txt", "hello world");
 	}
 
 	@After
@@ -49,6 +52,18 @@ public class NewWEToolTest {
 		}
 		
 	}
+	
+	@Test
+	public void testHasParamButNoOption(){
+		IWcTool newWCTool = new WCTool(new String[]{"", "tmpFile1.txt"});
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		String expectedResult = wcTool.getCharacterCount("hello world")+" "+ 
+		wcTool.getWordCount("hello world") + " " +
+		wcTool.getNewLineCount("hello world");		
+		assertEquals(result, expectedResult);
+	}
+	
+
 	
 
 
