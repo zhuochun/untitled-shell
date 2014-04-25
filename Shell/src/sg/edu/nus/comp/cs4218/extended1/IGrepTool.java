@@ -22,9 +22,9 @@ import sg.edu.nus.comp.cs4218.ITool;
 public interface IGrepTool extends ITool {
 	String getOnlyMatchingLines(String pattern, String input);
 
-	String getMatchingLinesWithTrailingContext(int option_A, String pattern, String input);
-	String getMatchingLinesWithLeadingContext(int option_B, String pattern, String input);
-	String getMatchingLinesWithOutputContext(int option_C, String pattern, String input);
+	String getMatchingLinesWithTrailingContext(int optionA, String pattern, String input);
+	String getMatchingLinesWithLeadingContext(int optionB, String pattern, String input);
+	String getMatchingLinesWithOutputContext(int optionC, String pattern, String input);
 
 	int getCountOfMatchingLines(String pattern, String input);
 	String getMatchingLinesOnlyMatchingPart(String pattern, String input);

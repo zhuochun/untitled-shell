@@ -21,15 +21,16 @@ public class MOVETool extends ATool implements IMoveTool {
 	@Override
 	public boolean move(File origin, File copy) {
 		boolean result = false;
+		File newDir = copy;
 		
 		if (origin.equals(copy)) {
 			result = true;
 		} else {
 			if (copy.isDirectory()) {
-				copy = new File(copy.toString() + "/" + origin.getName());
+				newDir = new File(copy.toString() + "/" + origin.getName());
 			}
 			
-			result = origin.renameTo(copy);
+			result = origin.renameTo(newDir);
 		}
 		
 		return result;

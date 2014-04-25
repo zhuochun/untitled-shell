@@ -40,6 +40,7 @@ public class COPYTool extends ATool implements ICopyTool {
 	
 	public boolean copy(File from, File to) {
 		boolean result = false;
+		File newDir = to;
 
 		try {
 			if (from.isDirectory()) {
@@ -47,10 +48,10 @@ public class COPYTool extends ATool implements ICopyTool {
 				lastError = "Error: " + from.getName() + " is a directory";
 			} else {
 				if (to.isDirectory()) {
-					to = new File(to, from.getName());
+					newDir = new File(to, from.getName());
 				}
 
-				result = Files.copy(from.toPath(), to.toPath()) != null;
+				result = Files.copy(from.toPath(), newDir.toPath()) != null;
 			}
 		} catch (FileAlreadyExistsException e) {
 			setStatusCode(7);
