@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystemException;
-import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
 public class FileUtils {
@@ -55,7 +54,7 @@ public class FileUtils {
 	 */
 	public static String readFileContent(File file) throws IOException, RuntimeException {
 		if (file == null || !file.exists()){
-			throw new FileSystemNotFoundException("Error: No such file or directory");
+			throw new FileNotFoundException("Error: No such file or directory");
 		} else if (file.isDirectory()) {
 			throw new FileSystemException("Error: " + file.getName() + " is a directory");
 		}
@@ -104,7 +103,7 @@ public class FileUtils {
 	 */
 	public static String[] readFileLines(File file) throws IOException, RuntimeException {
 		if (file == null || !file.exists()){
-			throw new FileSystemNotFoundException("Error: No such file or directory");
+			throw new FileNotFoundException("Error: No such file or directory");
 		} else if (file.isDirectory()) {
 			throw new FileSystemException("Error: " + file.getName() + " is a directory");
 		}

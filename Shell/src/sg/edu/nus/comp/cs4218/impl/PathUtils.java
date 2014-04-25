@@ -100,15 +100,18 @@ public class PathUtils {
 	public static Path getRandomSubpath(Path path) {
 		int depth = path.getNameCount();
 		int newDepth;
+		String newPath;
 
 		if (depth > 2) {
 			newDepth = 2 + (int)(Math.random() * 1000000) % (depth - 2);
+			newPath = "/" + path.subpath(0, newDepth).toString();
 		} else {
 			newDepth = depth;
+			newPath = path.toString();
 		}
 			
 		
-		return Paths.get("/" + path.subpath(0, newDepth).toString());
+		return Paths.get(newPath);
 	}
 	
 	/**
