@@ -201,7 +201,7 @@ public class COMMTool extends ATool implements ICommTool {
 					curPosA < linesA.length && curPosB < linesB.length &&
 				    linesA[curPosA].compareTo(linesB[curPosB]) < 0) {
 				
-				sortedA = updateSortedStatus(checkSorted, sortedA, linesA[curPosA], 0, result);
+				sortedA = (sortedA && updateSortedStatus(checkSorted, sortedA, linesA[curPosA], 0, result));
 				
 				if (continueToNexPos(sortedA, continueAfterUnsorted, "", linesA[curPosA], result, 0)) {
 					curPosA ++;
@@ -219,7 +219,7 @@ public class COMMTool extends ATool implements ICommTool {
 					curPosA < linesA.length && curPosB < linesB.length &&
 				    linesA[curPosA].compareTo(linesB[curPosB]) > 0) {
 				
-				sortedB = updateSortedStatus(checkSorted, sortedB, linesB[curPosB], 1, result);
+				sortedB = (sortedB && updateSortedStatus(checkSorted, sortedB, linesB[curPosB], 1, result));
 				
 				if (continueToNexPos(sortedB, continueAfterUnsorted, "\t", linesB[curPosB], result, 1)) {
 					curPosB ++;
@@ -237,8 +237,8 @@ public class COMMTool extends ATool implements ICommTool {
 					curPosA < linesA.length && curPosB < linesB.length &&
 					linesA[curPosA].compareTo(linesB[curPosB]) == 0) {
 				
-				sortedA = updateSortedStatus(checkSorted, sortedA, linesA[curPosA], 0, result);
-				sortedB = updateSortedStatus(checkSorted, sortedB, linesB[curPosB], 1, result);
+				sortedA = (sortedA && updateSortedStatus(checkSorted, sortedA, linesA[curPosA], 0, result));
+				sortedB = (sortedB && updateSortedStatus(checkSorted, sortedB, linesB[curPosB], 1, result));
 				
 				if (continueToNexPos(sortedA && sortedB, continueAfterUnsorted, "\t\t", linesA[curPosA], result, 2)) {
 					curPosA ++;

@@ -24,6 +24,9 @@ public class COMMToolTest {
 	private static String testFile2 = "testFile2.txt";
 	private static String testFile3 = "testFile3.txt";
 	private static String testFile4 = "testFile4.txt";
+	private static String testFile5 = "testFile5.txt";
+	private static String testFile6 = "testFile6.txt";
+	private static String shortFile = "short.txt";
 	private static String sortedFileName = "sortedFile.txt";
 	private static String unSortedFileName = "unSortedFile.txt";
 	private static String nonExistFile = "askldjflksdfj.txt";
@@ -39,21 +42,34 @@ public class COMMToolTest {
 
 		File myFile1 = new File(testFile1);
 		myFile1.createNewFile();
-		writeFile("testFile1.txt", "aaa\r\nbbb\r\nccc\r\nddd");
+		writeFile("testFile1.txt", "aaa\nbbb\nccc\nddd");
 
 		File myFile2 = new File(testFile2);
 		myFile2.createNewFile();
-		writeFile("testFile2.txt", "aaf\r\nabb\r\nccc\r\nfff");
+		writeFile("testFile2.txt", "aaf\nabb\nccc\nfff");
 
 		//testFile 3 will be the file in unsorted order 
 		File myFile3 = new File(testFile3);
 		myFile3.createNewFile();
-		writeFile("testFile3.txt", "zzz\r\nccc\r\naaa\r\nbbb");
-		
-		//testFile 3 will be the file in unsorted order 
+		writeFile("testFile3.txt", "zzz\nccc\naaa\nbbb");
+		 
 		File myFile4 = new File(testFile4);
 		myFile4.createNewFile();
-		writeFile("testFile4.txt", "aaa\r\nbba\r\nccc\r\nddd");
+		writeFile("testFile4.txt", "aaa\nbba\nccc\nddd");
+		 
+		File myFile5 = new File(testFile5);
+		myFile5.createNewFile();
+		writeFile("testFile5.txt", "aaa\ncaa\nccc\ndda");
+		
+		// testFile6 contains consecutive disorder
+		File myFile6 = new File(testFile6);
+		myFile6.createNewFile();
+		writeFile("testFile6.txt", "zzz\nyyy\nxxx\naaa\nbbb\nccc\nddd");
+		
+		// short contains only 2 lines
+		File sFile = new File(shortFile);
+		myFile6.createNewFile();
+		writeFile(shortFile, "zzz\nzzz");
 
 		// another sorted file
 		File sortedFile = new File(sortedFileName);
@@ -80,6 +96,15 @@ public class COMMToolTest {
 		
 		File myFile4 = new File(testFile4);
 		myFile4.delete();
+		
+		File myFile5 = new File(testFile5);
+		myFile5.delete();
+		
+		File myFile6 = new File(testFile6);
+		myFile6.delete();
+		
+		File sFile = new File(shortFile);
+		sFile.delete();
 		
 		File sortedFile = new File(sortedFileName);
 		sortedFile.delete();
@@ -278,12 +303,57 @@ public class COMMToolTest {
 	}
 	
 	@Test
+	public void executeNoOptionWithSortedAndAnotherUnsortedFile() {
+		commTool = new COMMTool(new String[] {testFile1, testFile6});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("aaa\nbbb\nccc\nddd\n\tzzz\n");
+		sb.append("comm: File 2 is not in sorted order \n\tyyy\n\txxx\n\taaa\n\tbbb\n\tccc\n\tddd\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
 	public void executeNoOptionWithUnsortedAndSortedFile() {
 		commTool = new COMMTool(new String[] {testFile3, testFile1});
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\taaa\n\tbbb\n\tccc\n\tddd\nzzz\n");
 		sb.append("comm: File 1 is not in sorted order \nccc\naaa\nbbb\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithAnotherUnsortedFileAndSorted() {
+		commTool = new COMMTool(new String[] {testFile6, testFile1});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\taaa\n\tbbb\n\tccc\n\tddd\nzzz\n");
+		sb.append("comm: File 1 is not in sorted order \nyyy\nxxx\naaa\nbbb\nccc\nddd\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithAnotherUnsortedFileAndAnotherSorted() {
+		commTool = new COMMTool(new String[] {testFile6, shortFile});
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t\tzzz\n");
+		sb.append("comm: File 1 is not in sorted order \nyyy\nxxx\naaa\nbbb\nccc\nddd\n\tzzz\n");
 		
 		String expected = sb.toString();
 		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
@@ -301,6 +371,40 @@ public class COMMToolTest {
 		sb.append("\taaa\n\tcaa\n\tdda\n");
 		sb.append("comm: File 2 is not in sorted order \n\tccc\n\tddx\n\teee\nzzz\n");
 		sb.append("comm: File 1 is not in sorted order \nccc\naaa\nbbb\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithAnotherUnsortedAndAnotherUnSortedFile() {
+		commTool = new COMMTool(new String[] {testFile6, testFile6});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\t\tzzz\n");
+		sb.append("comm: File 1 is not in sorted order \ncomm: File 2 is not in sorted order \n");
+		sb.append("\t\tyyy\n\t\txxx\n\t\taaa\n\t\tbbb\n\t\tccc\n\t\tddd\n");
+		
+		String expected = sb.toString();
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeNoOptionWithAnotherUnsortedAndUnSortedFile() {
+		commTool = new COMMTool(new String[] {testFile6, testFile3});
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\t\tzzz\n");
+		sb.append("comm: File 2 is not in sorted order \n\tccc\n\taaa\n\tbbb\n");
+		sb.append("comm: File 1 is not in sorted order \nyyy\nxxx\naaa\nbbb\nccc\nddd\n");
 		
 		String expected = sb.toString();
 		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
@@ -511,5 +615,16 @@ public class COMMToolTest {
 		
 		assertEquals(expected, actual);
 		assertNotEquals(0, commTool.getStatusCode());
+	}
+	
+	@Test
+	public void executeCompareWithCommonPrefixContent() {
+		commTool = new COMMTool(new String[] {testFile5, sortedFileName});
+		
+		String expected = "\t\taaa\n\t\tcaa\n\t\tccc\n\t\tdda\n\tddx\n\teee\n"; 
+		String actual = commTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		
+		assertEquals(expected, actual);
+		assertEquals(0, commTool.getStatusCode());
 	}
 }
