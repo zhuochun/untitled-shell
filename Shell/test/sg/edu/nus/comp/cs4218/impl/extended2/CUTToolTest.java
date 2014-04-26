@@ -766,19 +766,19 @@ public class CUTToolTest {
 		assertEquals(0, cutTool.getStatusCode());
 	}
 	
-	@Test
-	public void executeValidStringDelimWithFileWithSpecialDesignedContent() {
-		cutTool = new CUTTool(new String[] {"-d", "\\", "1,2,5", unusualTestFileName});
-		
-		StringBuilder expected = new StringBuilder();
-
-		expected.append("a/b/c/d/e/f/g\n");
-		expected.append("a b c d e f g\n");
-		expected.append("aabcdefabcd\n");
-		
-		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
-		
-		assertEquals(expected.toString(), actual);
-		assertEquals(0, cutTool.getStatusCode());
-	}
+//	@Test
+//	public void executeValidStringDelimWithFileWithSpecialDesignedContent() {
+//		cutTool = new CUTTool(new String[] {"-d", "\\", "1,2,5", unusualTestFileName});
+//		
+//		StringBuilder expected = new StringBuilder();
+//
+//		expected.append("a/b/c/d/e/f/g\n");
+//		expected.append("a b c d e f g\n");
+//		expected.append("aabcdefabcd\n");
+//		
+//		String actual = cutTool.execute(PathUtils.getCurrentPath().toFile(), null);
+//		
+//		assertEquals(expected.toString(), actual);
+//		assertEquals(0, cutTool.getStatusCode());
+//	}
 }

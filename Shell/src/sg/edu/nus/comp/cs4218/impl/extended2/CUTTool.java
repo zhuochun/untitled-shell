@@ -114,7 +114,12 @@ public class CUTTool extends ATool implements ICutTool {
 	 * This function is used to cut the specified characters from the input.
 	 */
 	public String cutSpecfiedCharacters(String list, String input) {
-		if (prevList == null || prevList != list) {
+		// To increase calculation speed, we only parse the raw list once.
+		// Therefore here we assume the list won't change through out the
+		// execution of the tool. If this assumption does not hold any more in
+		// later development, add !prevList.equals(list) as disjunction
+		// condition.
+		if (prevList == null) {
 			rangeList = RangeUtils.parseRange(list);
 			
 			// if the start of the range is smaller than 1
@@ -136,7 +141,12 @@ public class CUTTool extends ATool implements ICutTool {
 	 */
 	public String cutSpecifiedCharactersUseDelimiter(String list, String delim,
 			String input) {
-		if (prevList == null || prevList != list) {
+		// To increase calculation speed, we only parse the raw list once.
+		// Therefore here we assume the list won't change through out the
+		// execution of the tool. If this assumption does not hold any more in
+		// later development, add !prevList.equals(list) as disjunction
+		// condition.
+		if (prevList == null) {
 			rangeList = RangeUtils.parseRange(list);
 			
 			// if the start of the range is smaller than 1
@@ -205,13 +215,11 @@ public class CUTTool extends ATool implements ICutTool {
 							input = FileUtils.readFileContent(new File(PathUtils.
 									pathResolver(workingDir, argList.getParam(0))));
 						}
-					} else
-					if (!argList.hasParams() || argList.getParams().length != 1) {
+					} else {
 						setStatusCode(9);
 						return getHelp();
 					}
-				} else
-				if (argList.hasOption("d")) {
+				} else {
 					if (argList.hasParams() && argList.getParams().length == 2) {
 						list = argList.getParam(0);
 						
