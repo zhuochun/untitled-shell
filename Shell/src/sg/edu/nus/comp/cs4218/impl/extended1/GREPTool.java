@@ -433,11 +433,8 @@ public class GREPTool extends ATool implements IGrepTool {
 		} else if (option.equals("o")) {
 			return getMatchingLinesOnlyMatchingPart(argList.getParams()[0],
 					input);
-		} else if (option.equals("v")) {
+		} else { // if (option.equals("v"))
 			return getNonMatchingLines(argList.getParams()[0], input);
-		} else {
-			setStatusCode(9);
-			return "Error: Invalid Option -" + option;
 		}
 	}
 	

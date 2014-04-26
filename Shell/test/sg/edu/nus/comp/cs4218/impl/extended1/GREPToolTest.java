@@ -74,9 +74,21 @@ public class GREPToolTest {
 	}
 
 	@Test
+	public void testGetMatchingLinesWithTrailingContextWithNoMatching() {
+		String output = grep.getMatchingLinesWithTrailingContext(30, "abc", input);
+		assertEquals("", output);
+	}
+
+	@Test
 	public void testGetMatchingLinesWithTrailingContextMoreLines() {
 		String output = grep.getMatchingLinesWithTrailingContext(30, "test", input);
 		assertEquals(input, output);
+	}
+
+	@Test
+	public void testGetMatchingLinesWithLeadingContextWithNoMatching() {
+		String output = grep.getMatchingLinesWithLeadingContext(30, "abc", input);
+		assertEquals("", output);
 	}
 
 	@Test
@@ -89,6 +101,12 @@ public class GREPToolTest {
 	public void testGetMatchingLinesWithLeadingContextMoreLines() {
 		String output = grep.getMatchingLinesWithLeadingContext(30, "test", input);
 		assertEquals(matchLeadingOutputAll, output);
+	}
+
+	@Test
+	public void testGetMatchingLinesWithOutputContextWithNoMatching() {
+		String output = grep.getMatchingLinesWithOutputContext(30, "abc", input);
+		assertEquals("", output);
 	}
 
 	@Test
@@ -112,6 +130,12 @@ public class GREPToolTest {
 	@Test
 	public void testGetMatchingLinesOnlyMatchingPartNoMatching() {
 		String output = grep.getMatchingLinesOnlyMatchingPart("abc", input);
+		assertEquals("", output);
+	}
+
+	@Test
+	public void testGetNonMatchingLinesNoMatching() {
+		String output = grep.getNonMatchingLines("test", "");
 		assertEquals("", output);
 	}
 
@@ -183,17 +207,19 @@ public class GREPToolTest {
 	}
 
 	@Test
-	public void testExecuteWithOptionA() throws IOException {
-		File test = folder.newFile("test.txt");
-		FileUtils.createDummyFile(test, input);
-
-		grep = new GREPTool("-A 30 test test.txt".split(" "));
-		String stdout = grep.execute(folder.getRoot(), null);
-		assertEquals(input, stdout);
+	public void testExecuteWithOptions() throws IOException {
+		String[] options = new String[] { "A 30", "B 30", "C 30", "o", "v" };
+		
+		for (String option : options) {
+			String args = "-" + option + " $ -";
+			grep = new GREPTool(args.split(" "));
+			String stdout = grep.execute(folder.getRoot(), "");
+			assertEquals("", stdout);
+		}
 	}
 
 	@Test
-	public void testExecuteWithOptionC() throws IOException {
+	public void testExecuteWithOptionc() throws IOException {
 		File test = folder.newFile("test.txt");
 		FileUtils.createDummyFile(test, input);
 
@@ -201,4 +227,5 @@ public class GREPToolTest {
 		String stdout = grep.execute(folder.getRoot(), null);
 		assertEquals("3", stdout);
 	}
+
 }
