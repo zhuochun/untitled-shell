@@ -42,15 +42,15 @@ public class RangeUtils {
 		}
 		
 		/**
-		 * Alternative constructor. Initialize the range to be A, where A
+		 * Alternative constructor. Initialize the range to be a, where a
 		 * should be specified by the caller.
 		 *  
-		 * @param A
+		 * @param a
 		 * 		is the expected range.
 		 */
-		public Range(Range A) {
-			left = A.left;
-			right = A.right;
+		public Range(Range a) {
+			left = a.left;
+			right = a.right;
 		}
 	};
 	

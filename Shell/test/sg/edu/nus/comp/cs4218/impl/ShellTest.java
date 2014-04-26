@@ -106,6 +106,7 @@ public class ShellTest {
 	public void testExecute() {
 		ToolRunnable tool = (ToolRunnable) shell.execute(new GREPTool(null));
 		assertEquals(ToolRunnable.class, tool.getClass());
+		tool.isFinished();
 		shell.stop(null);
 	}
 	
