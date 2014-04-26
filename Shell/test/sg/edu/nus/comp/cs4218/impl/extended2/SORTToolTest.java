@@ -71,7 +71,7 @@ public class SORTToolTest {
 	@Test
 	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
 		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "unSortFile.txt");
-		assertEquals(result, "sort: " + PathUtils.getCurrentPath()+ "/" + "unSortFile.txt:2 disorder: bbb\n");
+		assertEquals(result, "sort: " + "unSortFile.txt:2 disorder: bbb\n");
 	}
 
 	//test checkIfSorted method on sorted file
