@@ -24,7 +24,7 @@ import sg.edu.nus.comp.cs4218.impl.ATool;
 import sg.edu.nus.comp.cs4218.impl.ArgList;
 import sg.edu.nus.comp.cs4218.impl.FileUtils;
 import sg.edu.nus.comp.cs4218.impl.PathUtils;
-/*
+/**
  * This function is used to sort the given content
  * @param input  the given content
  * @return the sorted content
@@ -48,7 +48,7 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to sort the given content
 	 * @param input  the given content
 	 * @return the sorted content
@@ -66,7 +66,7 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to check whether the given content is sorted
 	 * @param input  the given content
 	 * @return the result of checking the given content
@@ -74,8 +74,10 @@ public class SORTTool extends ATool implements ISortTool {
 	public String checkIfSorted(String input) {
 		try{
 
-			int index = input.lastIndexOf("\\");
+			int index = input.lastIndexOf("/");
+			
 			String file = input.substring(index+1);
+			
 			String content = FileUtils.readFileContent(new File(input));
 			StringBuilder disorderInfo = new StringBuilder();
 			int disorderLineIndex = -1;  
@@ -126,7 +128,7 @@ public class SORTTool extends ATool implements ISortTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to execute and call the respective methods in sort command
 	 * @param workingDir the directory of current working environment
 	 * @param stdin the input command

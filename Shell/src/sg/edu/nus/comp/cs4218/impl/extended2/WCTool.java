@@ -41,7 +41,7 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to count the characters in the given content
 	 * @param input  the given content
 	 * @return the number of characters in the content
@@ -55,7 +55,7 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to count the words in the given content
 	 * @param input  the given content
 	 * @return the number of words in the content
@@ -76,7 +76,7 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to count the newlines in the given content
 	 * @param input  the given content
 	 * @return the number of newlines in the content
@@ -100,7 +100,7 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to output the help information
 	 * @return help information
 	 */
@@ -119,7 +119,7 @@ public class WCTool extends ATool implements IWcTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to execute and call the respective methods in wc command
 	 * @param workingDir the directory of current working environment
 	 * @param stdin the input command
