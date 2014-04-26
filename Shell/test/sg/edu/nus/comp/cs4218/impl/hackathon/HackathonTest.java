@@ -8,14 +8,95 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import sg.edu.nus.comp.cs4218.extended2.ISortTool;
+import sg.edu.nus.comp.cs4218.extended2.IWcTool;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.impl.extended1.PIPINGTool;
 import sg.edu.nus.comp.cs4218.impl.extended2.PASTETool;
+import sg.edu.nus.comp.cs4218.impl.extended2.SORTTool;
+import sg.edu.nus.comp.cs4218.impl.extended2.WCTool;
 
 public class HackathonTest {
+	private ISortTool sortTool;
+	private IWcTool wcTool;
+	File testData3;
+	File myFile2;
+	File tmpFile1;
+	File tmpFile2;
+
+	public static void writeFile(String fileName, String s) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+		out.write(s);
+		out.close();
+	}
+	
+	@Before
+	public void before() throws IOException {
+		callBeforeSort();
+		callBeforeWC();
+	}
+
+	@After
+	public void after() {
+		callAfterSort();
+		callAfterWC();
+	}
+	
+	public void callBeforeSort() throws IOException {
+		sortTool = new SORTTool(null);
+		// creating testFile of unsorted order
+		testData3 = new File("testData3.txt");
+		testData3.createNewFile();
+		writeFile("testData3.txt", "lorem ipsum\ndolor sit amet");
+
+		// creating testFile of sorted order
+		myFile2 = new File("sortFile.txt");
+		myFile2.createNewFile();
+		writeFile("sortFile.txt", "aaa\r\nbbb\r\nccc\r\nddd\r\neee");
+	}
+	
+	public void callAfterSort(){
+		sortTool = null;
+		File file1 = new File("sortFile.txt");
+		if (file1.exists()) {
+			file1.delete();
+		}
+
+		File file2 = new File("testData3.txt");
+		if (file2.exists()) {
+			file2.delete();
+		}
+	}
+	
+	public void callBeforeWC() throws IOException{
+		wcTool = new WCTool(null);
+		tmpFile1 = new File("tmpFile1.txt");
+		tmpFile1.createNewFile();
+		writeFile("tmpFile1.txt", "hello world");
+		
+		tmpFile2 = new File("tmpFile2.txt");
+		tmpFile2.createNewFile();
+		writeFile("tmpFile2.txt", "hello world");
+	}
+	
+	public void callAfterWC(){
+		wcTool = null;
+		File file1 = new File("tmpFile1.txt");
+		if (file1.exists()) {
+			file1.delete();
+		}
+
+		File file2 = new File("tmpFile2.txt");
+		if (file2.exists()) {
+			file2.delete();
+		}
+	}
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -27,9 +108,25 @@ public class HackathonTest {
 	 * Description: Status code expected not 0, actual result 0 - only one file
 	 * 				can be passed as an argument when sort is called with -c flag
 	 */
+    @Test
+	public void checkIfSortedForMultipleFile(){
+		ISortTool newSortTool = new SORTTool(new String[]{"-c", "sortFile.txt","testData3.txt"});
+		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		assertEquals(result,newSortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "sortFile.txt"));
+	}
+
+    @Test
+	public void sortedTestForMultipleFile(){
+		ISortTool newSortTool = new SORTTool(new String[]{"sortFile.txt","testData3.txt"});
+		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		assertEquals(result, newSortTool.sortFile("aaa\r\nbbb\r\nccc\r\nddd\r\neee"));
+	}
+	
 	@Test
-	public void test_5_1() {
-		fail("Not yet implemented");
+	public void sortedTestForMultipleFileTwo(){
+		ISortTool newSortTool = new SORTTool(new String[]{"testData3.txt", "sortFile.txt"});
+		String result = newSortTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		assertEquals(result, newSortTool.sortFile("lorem ipsum\ndolor sit amet"));
 	}
 
 	/**
@@ -42,10 +139,11 @@ public class HackathonTest {
 	 * The disorder should be found in provided file, but is not found. (See Appendix (5.0))
 	 */
 	@Test
-	public void test_5_2() {
-		fail("Not yet implemented");
+	public void checkIfSortedTestForUnsortedFile() {// the input is file, function input in a string recheck
+		String result = sortTool.checkIfSorted(PathUtils.getCurrentPath()+ "/" + "testData3.txt");
+		assertEquals(result, "sort: " +"testData3.txt:2 disorder: dolor sit amet\n");
 	}
-
+	
 	/**
 	 * 6.1
 	 * Test Case: N/A
@@ -84,10 +182,14 @@ public class HackathonTest {
 	 * Description: Executing wc on the above file result in “null”, whereas we expect to receive the information regarding the number of character, word, and new line.
 	 */
 	@Test
-	public void test_8_1() {
-		fail("Not yet implemented");
+	public void testHasParamButNoOption(){
+		IWcTool newWCTool = new WCTool(new String[]{"", "tmpFile1.txt"});
+		String result = newWCTool.execute(PathUtils.getCurrentPath().toFile(), null);
+		String expectedResult = wcTool.getCharacterCount("hello world")+" "+ 
+		wcTool.getWordCount("hello world") + " " +
+		wcTool.getNewLineCount("hello world");		
+		assertEquals(result, expectedResult);
 	}
-
 	/**
 	 * 12.1
 	 * Test Case: Creating piping tool with echo '1' | cut -c 1 - (See Appendix 12.1)
