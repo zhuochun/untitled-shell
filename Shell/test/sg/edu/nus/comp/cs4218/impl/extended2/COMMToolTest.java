@@ -68,7 +68,7 @@ public class COMMToolTest {
 		
 		// short contains only 2 lines
 		File sFile = new File(shortFile);
-		myFile6.createNewFile();
+		sFile.createNewFile();
 		writeFile(shortFile, "zzz\nzzz");
 
 		// another sorted file
