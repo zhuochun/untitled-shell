@@ -1,7 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.hackathon;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,6 +19,7 @@ import sg.edu.nus.comp.cs4218.impl.PathUtils;
 import sg.edu.nus.comp.cs4218.impl.extended1.PIPINGTool;
 import sg.edu.nus.comp.cs4218.impl.extended2.PASTETool;
 import sg.edu.nus.comp.cs4218.impl.extended2.SORTTool;
+import sg.edu.nus.comp.cs4218.impl.extended2.UNIQTool;
 import sg.edu.nus.comp.cs4218.impl.extended2.WCTool;
 
 public class HackathonTest {
@@ -169,10 +169,54 @@ public class HackathonTest {
 	 * 7.1
 	 * Test Case:  Execute Uniq Tool Without Any Option Using The Above File (See Appendix 7.1))
 	 * Buggy Source Code: public String getUnique(boolean checkCase, String input)
+	 * @throws IOException 
 	 */
 	@Test
-	public void test_7_1() {
-		fail("Not yet implemented");
+	public void test_7_1() throws IOException {
+		String content = "not dummy file content\n"
+				+ "a dummy file content\n"
+				+ "a dummy file content\n"
+				+ "A DUMMY FILE CONTENT\n"
+				+ "NOT DUMMY FILE CONTENT\n"
+				+ "The End\n";
+
+		String expected = "not dummy file content\n"
+				+ "a dummy file content\n"
+				+ "A DUMMY FILE CONTENT\n"
+				+ "NOT DUMMY FILE CONTENT\n"
+				+ "The End\n";
+
+		createFile("test.txt", content);
+		
+		UNIQTool uniq = new UNIQTool("test.txt".split(" "));
+		String stdout = uniq.execute(folder.getRoot(), null);
+
+		assertEquals(expected, stdout);
+	}
+
+	/**
+	 * 7.1 Extended Case Sensitive
+	 */
+	@Test
+	public void test_7_1_case() throws IOException {
+		String content = "not dummy file content\n"
+				+ "a dummy file content\n"
+				+ "a dummy file content\n"
+				+ "A DUMMY FILE CONTENT\n"
+				+ "NOT DUMMY FILE CONTENT\n"
+				+ "The End\n";
+
+		String expected = "not dummy file content\n"
+				+ "a dummy file content\n"
+				+ "NOT DUMMY FILE CONTENT\n"
+				+ "The End\n";
+
+		createFile("test.txt", content);
+		
+		UNIQTool uniq = new UNIQTool("-i test.txt".split(" "));
+		String stdout = uniq.execute(folder.getRoot(), null);
+
+		assertEquals(expected, stdout);
 	}
 
 	/**
