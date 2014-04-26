@@ -12,9 +12,7 @@
  */
 package sg.edu.nus.comp.cs4218.impl.extended2;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
