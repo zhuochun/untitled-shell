@@ -152,8 +152,8 @@ public class COPYToolTest {
 	
 	@Test
 	public void testWithException() throws IllegalArgumentException{
-		iCopyTool = new COPYTool(new String[]{"a","b"});
+		iCopyTool = new COPYTool(new String[]{"-a","-b"});
 		iCopyTool.execute(folder.getRoot(), null);
-		assertNotEquals(9, iCopyTool.getStatusCode());
+		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
 }
