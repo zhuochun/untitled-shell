@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.fileutils.IPwdTool;
+import sg.edu.nus.comp.cs4218.impl.PathUtils;
 
 public class PWDToolTest {
 	//TODO Always test against the interface! 
@@ -52,5 +53,21 @@ public class PWDToolTest {
 		//Test error-handling 2
 		pwdtool.getStringForDirectory(null);
 		assertNotEquals(pwdtool.getStatusCode(), 0);
+	}
+	
+	@Test
+	public void getStringForFileTest() throws IOException { 
+		//Test error-handling 3
+		File file = new File("test.txt");
+		file.createNewFile();
+		pwdtool.getStringForDirectory(file);
+		assertNotEquals(pwdtool.getStatusCode(), 0);
+		file.delete();
+	}
+	
+	@Test
+	public void executeTest() {
+		String actual = pwdtool.execute(PathUtils.getCurrentPath().toFile(), "");
+		assertEquals(PathUtils.getCurrentPath().toString(), actual);
 	}
 }
