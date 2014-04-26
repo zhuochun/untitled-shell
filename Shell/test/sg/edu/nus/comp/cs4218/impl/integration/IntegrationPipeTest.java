@@ -106,7 +106,7 @@ public class IntegrationPipeTest {
 	@Test
 	public void testEchoPasteCommand() {
 		runCommand("echo hello | paste -");
-		assertEquals("hello\t\n\n", outContent.toString());
+		assertEquals("hello\n\n", outContent.toString());
 		clearStdoutAndStderr();
 	}
 	
