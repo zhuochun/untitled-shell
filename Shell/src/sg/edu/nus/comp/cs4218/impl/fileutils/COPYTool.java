@@ -31,7 +31,7 @@ public class COPYTool extends ATool implements ICopyTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to copy the chosen file to a given location
 	 * @param from  is the chosen file
 	 * @param to  the given target location
@@ -68,7 +68,7 @@ public class COPYTool extends ATool implements ICopyTool {
 	}
 
 	@Override
-	/*
+	/**
 	 * This function is used to execute and call the respective methods in copy command
 	 * @param workingDir the directory of current working environment
 	 * @param stdin the input command
