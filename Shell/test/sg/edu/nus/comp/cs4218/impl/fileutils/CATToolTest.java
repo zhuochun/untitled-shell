@@ -90,12 +90,26 @@ public class CATToolTest {
 	}
 	
 	@Test
-	public void testExecuteWithFileAndStdIn() throws IOException {
+	public void testExecuteWithStdInAndFile() throws IOException {
 		String filename = "test.txt";
 		String content  = "abc\ncde\nfgh\t\nijk\r\n!@#$%^&*()";
 		createFile(filename, content);
 
 		cattool = new CATTool(new String[] { "-", filename });
+
+		String stdout = cattool.execute(folder.getRoot(), "abc");
+		
+		assertEquals("abc", stdout);
+		assertEquals(0, cattool.getStatusCode());
+	}
+
+	@Test
+	public void testExecuteWithFileAndStdIn() throws IOException {
+		String filename = "test.txt";
+		String content  = "abc\ncde\nfgh\t\nijk\r\n!@#$%^&*()";
+		createFile(filename, content);
+
+		cattool = new CATTool(new String[] { filename, "-" });
 
 		String stdout = cattool.execute(folder.getRoot(), "abc");
 		

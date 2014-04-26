@@ -58,9 +58,7 @@ public class CATTool extends ATool implements ICatTool {
 			output.append(regulatedStdin);
 		} else {
 			for (String arg : argList.getParams()) {
-				if (arg.equals(">")) {
-					break;
-				} else if (arg.equals("-")) {
+				if (arg.equals("-")) {
 					continue;
 				} else {
 					File toRead = new File(PathUtils.pathResolver(workingDir, arg));
