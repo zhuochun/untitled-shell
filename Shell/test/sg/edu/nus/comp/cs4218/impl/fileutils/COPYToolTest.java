@@ -149,5 +149,11 @@ public class COPYToolTest {
 
 		assertNotEquals(0, iCopyTool.getStatusCode());
 	}
-
+	
+	@Test
+	public void testWithException() throws IllegalArgumentException{
+		iCopyTool = new COPYTool(new String[]{"a","b"});
+		iCopyTool.execute(folder.getRoot(), null);
+		assertNotEquals(9, iCopyTool.getStatusCode());
+	}
 }
