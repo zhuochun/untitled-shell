@@ -46,7 +46,7 @@ public class LSTool extends ATool implements ILsTool {
 			setStatusCode(1);
 		} else if (directory.isFile()) {
 			files.add(directory);
-		} else if (directory.isDirectory()) {
+		} else { // if (directory.isDirectory())
 			String[] list = directory.list();
 			
 			for (String file : list) {
