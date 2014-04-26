@@ -68,13 +68,15 @@ public class IntegrationCdTest {
 
 	@Test
 	public void testCdUpAtRoot() {
-		Directory.set(PathUtils.pathResolver(currentPath, "/")); // set to root
+		String root = PathUtils.pathResolver(currentPath, "/");
+
+		Directory.set(root); // set to root
 		tool = shell.parse("cd ../..");
 
 		runnable = new ToolRunnable(tool, "");
 		runnable.run();
 
-		assertEquals("/", Directory.get().toString());
+		assertEquals(root, Directory.get().toString());
 	}
 
 	@Test
